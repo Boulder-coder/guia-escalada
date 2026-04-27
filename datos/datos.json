@@ -1,146 +1,580 @@
 {
   "sectores": [
     {
-      "nombre": "Monte La Cruz",
-      "subsectores": [
+      "nombre": "Monte La Cruz - Norte",
+      "croquis": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_NORTE_CROQUIS.jpg",
+      "hotspots": [],
+      "bloques": [
         {
-          "nombre": "Norte",
-          "croquis": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_NORTE_CROQUIS.jpg",
-          "hotspots": [],
-          "bloques": [
+          "id": "B1",
+          "fotos": [
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_NORTE_B1.jpg"
+          ],
+          "vias": [
             {
-              "id": "B1",
-              "foto": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_NORTE_B1.jpg",
+              "linea_id": "A",
               "nombre": "Sin abrir",
-              "vias": [
-                {
-                  "linea_id": "A",
-                  "grado": "",
-                  "entrada": "",
-                  "mano_izq": "",
-                  "mano_der": "",
-                  "manos_juntas": "",
-                  "definicion": "",
-                  "salida": "",
-                  "expuesta": ""
-                }
-              ]
+              "grado": "",
+              "entrada": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "salida": "",
+              "expuesta": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "nombre": "Monte La Cruz - Este",
+      "croquis": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_CROQUIS.jpg",
+      "hotspots": [],
+      "bloques": [
+        {
+          "id": "B1",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B1.jpg"],
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Cueva culo",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "mano_izq": "",
+              "mano_der": "Canto al fondo",
+              "manos_juntas": "",
+              "definicion": "Entra al fondo de la cueva, sale recto",
+              "salida": "",
+              "expuesta": ""
             }
           ]
         },
         {
-          "nombre": "Este",
-          "croquis": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_CROQUIS.jpg",
-          "hotspots": [],
-          "bloques": [
+          "id": "B2",
+          "fotos": [
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B2_1.jpg",
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B2_2.jpg",
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B2_3.jpg"
+          ],
+          "vias": [
             {
-              "id": "B1",
-              "foto": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B1.jpg",
-              "nombre": "Cueva culo",
-              "vias": [
-                {
-                  "linea_id": "A",
-                  "grado": "Pr",
-                  "entrada": "Sit",
-                  "mano_izq": "",
-                  "mano_der": "Canto al fondo",
-                  "manos_juntas": "",
-                  "definicion": "Entra al fondo de la cueva, sale recto",
-                  "salida": "Top-out",
-                  "expuesta": ""
-                }
-              ]
+              "linea_id": "A",
+              "nombre": "Perromut",
+              "grado": "5",
+              "entrada": "Sit",
+              "mano_izq": "Regleta",
+              "mano_der": "Garbanzo plano",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "salida": "",
+              "expuesta": ""
             },
             {
-              "id": "B2",
-              "foto": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B2_1.jpg",
-              "nombre": "Sin definir (bloque B2)",
-              "vias": [
-                {
-                  "linea_id": "A",
-                  "grado": "5",
-                  "entrada": "Sit",
-                  "mano_izq": "Regleta",
-                  "mano_der": "Garbanzo plano",
-                  "manos_juntas": "",
-                  "definicion": "Sale recto",
-                  "salida": "Top-out",
-                  "expuesta": ""
-                },
-                {
-                  "linea_id": "B",
-                  "grado": "4+",
-                  "entrada": "Sit",
-                  "mano_izq": "Pinza alta buena",
-                  "mano_der": "Agujero",
-                  "manos_juntas": "",
-                  "definicion": "Sale recto por la izquierda",
-                  "salida": "Top-out",
-                  "expuesta": ""
-                },
-                {
-                  "linea_id": "C",
-                  "grado": "6A",
-                  "entrada": "Sit",
-                  "mano_izq": "Pinza alta buena",
-                  "mano_der": "Agujero",
-                  "manos_juntas": "",
-                  "definicion": "Mismo inicio que B, sale hacia la derecha",
-                  "salida": "Top-out",
-                  "expuesta": ""
-                }
-              ]
+              "linea_id": "B",
+              "nombre": "Gusanomut",
+              "grado": "4+",
+              "entrada": "Sit",
+              "mano_izq": "Pinza alta buena",
+              "mano_der": "Agujero",
+              "manos_juntas": "",
+              "definicion": "Sale recto por la izquierda",
+              "salida": "",
+              "expuesta": ""
             },
             {
-              "id": "B3",
-              "foto": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B3_1.jpg",
-              "nombre": "Sin definir (bloque B3)",
-              "vias": [
-                {
-                  "linea_id": "A",
-                  "grado": "6A",
-                  "entrada": "Sit",
-                  "mano_izq": "Lateral abierta",
-                  "mano_der": "Plano horizontal",
-                  "manos_juntas": "",
-                  "definicion": "Sale recto",
-                  "salida": "Top-out",
-                  "expuesta": ""
-                },
-                {
-                  "linea_id": "B",
-                  "grado": "6A",
-                  "entrada": "Sit",
-                  "mano_izq": "Presa lateral en pinza",
-                  "mano_der": "Rugosidad dentro de la grieta",
-                  "manos_juntas": "",
-                  "definicion": "¡Eliminatorio! No vale bloque derecho",
-                  "salida": "Top-out",
-                  "expuesta": ""
-                },
-                {
-                  "linea_id": "C",
-                  "grado": "5",
-                  "entrada": "Sit",
-                  "mano_izq": "Presa lateral en pinza",
-                  "mano_der": "Rugosidad dentro de la grieta",
-                  "manos_juntas": "",
-                  "definicion": "Mismo inicio que B, recorre la grieta",
-                  "salida": "Top-out",
-                  "expuesta": ""
-                },
-                {
-                  "linea_id": "D",
-                  "grado": "6B",
-                  "entrada": "Sit",
-                  "mano_izq": "Pinza en arista",
-                  "mano_der": "Regleta roma",
-                  "manos_juntas": "",
-                  "definicion": "¡Eliminatorio! No vale grieta ni bloque izquierdo",
-                  "salida": "Top-out",
-                  "expuesta": ""
-                }
-              ]
+              "linea_id": "C",
+              "nombre": "Escarabajomut",
+              "grado": "6A",
+              "entrada": "Sit",
+              "mano_izq": "Pinza alta buena",
+              "mano_der": "Agujero",
+              "manos_juntas": "",
+              "definicion": "Mismo inicio que B, sale hacia la derecha",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D",
+              "nombre": "Taluego",
+              "grado": "6A+",
+              "entrada": "Sit",
+              "mano_izq": "Repisita",
+              "mano_der": "Presa lateral",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "E",
+              "nombre": "¿Dónde está la bolita?",
+              "grado": "6A",
+              "entrada": "Sit",
+              "mano_izq": "Regleta",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "Travesía hacia la izquierda, sale por A",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "F",
+              "nombre": "Piedra",
+              "grado": "5",
+              "entrada": "Sit",
+              "mano_izq": "Regleta",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "Mismo inicio que E, sale recto",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "G",
+              "nombre": "Cascanueces",
+              "grado": "3",
+              "entrada": "De Pie",
+              "mano_izq": "Repisa",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "G",
+              "nombre": "El juego del cascanueces",
+              "grado": "*",
+              "entrada": "De Pie",
+              "mano_izq": "",
+              "mano_der": "Repisa",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatoria! Solo valen las presas en el plano de la repisa",
+              "salida": "Top, de pie sobre la repisa",
+              "expuesta": "¡Cuidado con el árbol!"
+            }
+          ]
+        },
+        {
+          "id": "B3",
+          "fotos": [
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B3_1.jpg",
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B3_2.jpg",
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B3_3.jpg"
+          ],
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Cardumen",
+              "grado": "6A",
+              "entrada": "Sit",
+              "mano_izq": "Lateral abierta",
+              "mano_der": "Plano horizontal",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B",
+              "nombre": "Cardamomo",
+              "grado": "6A",
+              "entrada": "Sit",
+              "mano_izq": "Presa lateral en pinza",
+              "mano_der": "Rugosidad dentro de la grieta",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatorio! No vale bloque derecho",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Cúrcuma",
+              "grado": "5",
+              "entrada": "Sit",
+              "mano_izq": "Presa lateral en pinza",
+              "mano_der": "Rugosidad dentro de la grieta",
+              "manos_juntas": "",
+              "definicion": "Mismo inicio que B, recorre la grieta",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D",
+              "nombre": "La flecha blanca",
+              "grado": "6B",
+              "entrada": "Sit",
+              "mano_izq": "Pinza en arista",
+              "mano_der": "Regleta roma",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatorio! No vale grieta ni bloque izquierdo",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "E",
+              "nombre": "Batualmón",
+              "grado": "7A",
+              "entrada": "Sit",
+              "mano_izq": "Agujero horizontal",
+              "mano_der": "Agujero horizontal",
+              "manos_juntas": "",
+              "definicion": "Sale hacia la izquierda",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "F",
+              "nombre": "El deshollinador",
+              "grado": "6A+",
+              "entrada": "Sit",
+              "mano_izq": "Agujero horizontal",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "Sale recto por la fisura",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "G",
+              "nombre": "Bancal exprés",
+              "grado": "5",
+              "entrada": "Semi-Sit",
+              "mano_izq": "",
+              "mano_der": "Agujero",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "salida": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "B4",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B4.jpg"],
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin nombre",
+              "grado": "Pr",
+              "entrada": "De Pie",
+              "mano_izq": "",
+              "mano_der": "Presa grande",
+              "manos_juntas": "",
+              "definicion": "Sale hacia la izquierda",
+              "salida": "",
+              "expuesta": "Caída en desnivel"
+            },
+            {
+              "linea_id": "B",
+              "nombre": "El faro",
+              "grado": "6B+",
+              "entrada": "De Pie",
+              "mano_izq": "",
+              "mano_der": "Presa grande",
+              "manos_juntas": "",
+              "definicion": "Misma entrada que A, sale recto",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Galleta chocopinchos",
+              "grado": "6C",
+              "entrada": "De Pie",
+              "mano_izq": "",
+              "mano_der": "Presa grande",
+              "manos_juntas": "",
+              "definicion": "Misma entrada que A, sale hacia la derecha. No vale pisar la tierra",
+              "salida": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "B5",
+          "fotos": [
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B5_1.jpg",
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B5_2.jpg"
+          ],
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Afronta sin frontal",
+              "grado": "5",
+              "entrada": "Sit",
+              "mano_izq": "Triángulo en pinza",
+              "mano_der": "Al aire",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Abrazapiedras",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "mano_izq": "No me acuerdo",
+              "mano_der": "Presa buena conglomerada",
+              "manos_juntas": "",
+              "definicion": "Hacia la derecha",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Abrazapiedras",
+              "grado": "6B",
+              "entrada": "De Pie",
+              "mano_izq": "Rugosidad lateral",
+              "mano_der": "Regleta lateral",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "E",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "F",
+              "nombre": "Sin nombre",
+              "grado": "3",
+              "entrada": "Sit",
+              "mano_izq": "No me acuerdo",
+              "mano_der": "No me acuerdo",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "salida": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "B6",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B6.jpg"],
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "El arca perdida",
+              "grado": "6B+",
+              "entrada": "Sit",
+              "mano_izq": "No me acuerdo",
+              "mano_der": "No me acuerdo",
+              "manos_juntas": "",
+              "definicion": "Sentado desde arista",
+              "salida": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "B7",
+          "fotos": [
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B7_1.jpg",
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B7_2.jpg",
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B7_3.jpg"
+          ],
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B",
+              "nombre": "La hamburguesa",
+              "grado": "6B",
+              "entrada": "Sit",
+              "mano_izq": "Arista izquierda",
+              "mano_der": "Arista derecha",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Gumersinda Raimunda",
+              "grado": "6B+",
+              "entrada": "Sit",
+              "mano_izq": "Arista izquierda",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "¡Morfa! Sale recto",
+              "salida": "",
+              "expuesta": "Caída delicada"
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Gumersinda Raimunda",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "mano_izq": "Arista izquierda",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatoria! Sin la arista derecha. Variante no morfa",
+              "salida": "",
+              "expuesta": "Caída delicada"
+            }
+          ]
+        },
+        {
+          "id": "B8",
+          "fotos": [
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B8_1.jpg",
+            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B8_2.jpg"
+          ],
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Langostino Romero",
+              "grado": "5",
+              "entrada": "Sit",
+              "mano_izq": "Arista izquierda",
+              "mano_der": "Presa lateral alta",
+              "manos_juntas": "",
+              "definicion": "Recorre la arista",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B",
+              "nombre": "Dulce deleite",
+              "grado": "6B+",
+              "entrada": "Sit",
+              "mano_izq": "Arista izquierda",
+              "mano_der": "Presa lateral alta",
+              "manos_juntas": "",
+              "definicion": "Misma entrada que A, salida hacia la derecha",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B",
+              "nombre": "Dulce deleite",
+              "grado": "6C",
+              "entrada": "Sit",
+              "mano_izq": "Al aire",
+              "mano_der": "Presa lateral alta",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatoria! No vale la arista izquierda",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Boccato di coordinate",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "mano_izq": "Al aire",
+              "mano_der": "Presa lateral alta",
+              "manos_juntas": "",
+              "definicion": "Misma entrada que A, travesía hacia la derecha",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D",
+              "nombre": "Saltamonty Burns",
+              "grado": "6A",
+              "entrada": "De Pie",
+              "mano_izq": "Presa lateral",
+              "mano_der": "Galleta blanca lateral",
+              "manos_juntas": "",
+              "definicion": "Sale recto hacia la izquierda",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D",
+              "nombre": "Saltamonty Burns",
+              "grado": "6B",
+              "entrada": "De Pie",
+              "mano_izq": "Presa lateral",
+              "mano_der": "Galleta blanca lateral",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatoria! Sin arista. Lance directo",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D",
+              "nombre": "Saltamonty Burns",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "E",
+              "nombre": "Aristogatos",
+              "grado": "6A+",
+              "entrada": "Sit",
+              "mano_izq": "Presa pequeña",
+              "mano_der": "Regleta en el plano tumbado",
+              "manos_juntas": "",
+              "definicion": "Recorre la arista",
+              "salida": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "F",
+              "nombre": "Mi primera chamba",
+              "grado": "4",
+              "entrada": "Semi-Sit",
+              "mano_izq": "",
+              "mano_der": "Plano tumbado",
+              "manos_juntas": "",
+              "definicion": "",
+              "salida": "",
+              "expuesta": "Caída sin porteo"
             }
           ]
         }
