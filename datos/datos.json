@@ -1,0 +1,150 @@
+{
+  "sectores": [
+    {
+      "nombre": "Monte La Cruz",
+      "subsectores": [
+        {
+          "nombre": "Norte",
+          "croquis": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_NORTE_CROQUIS.jpg",
+          "hotspots": [],
+          "bloques": [
+            {
+              "id": "B1",
+              "foto": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_NORTE_B1.jpg",
+              "nombre": "Sin abrir",
+              "vias": [
+                {
+                  "linea_id": "A",
+                  "grado": "",
+                  "entrada": "",
+                  "mano_izq": "",
+                  "mano_der": "",
+                  "manos_juntas": "",
+                  "definicion": "",
+                  "salida": "",
+                  "expuesta": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Este",
+          "croquis": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_CROQUIS.jpg",
+          "hotspots": [],
+          "bloques": [
+            {
+              "id": "B1",
+              "foto": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B1.jpg",
+              "nombre": "Cueva culo",
+              "vias": [
+                {
+                  "linea_id": "A",
+                  "grado": "Pr",
+                  "entrada": "Sit",
+                  "mano_izq": "",
+                  "mano_der": "Canto al fondo",
+                  "manos_juntas": "",
+                  "definicion": "Entra al fondo de la cueva, sale recto",
+                  "salida": "Top-out",
+                  "expuesta": ""
+                }
+              ]
+            },
+            {
+              "id": "B2",
+              "foto": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B2_1.jpg",
+              "nombre": "Sin definir (bloque B2)",
+              "vias": [
+                {
+                  "linea_id": "A",
+                  "grado": "5",
+                  "entrada": "Sit",
+                  "mano_izq": "Regleta",
+                  "mano_der": "Garbanzo plano",
+                  "manos_juntas": "",
+                  "definicion": "Sale recto",
+                  "salida": "Top-out",
+                  "expuesta": ""
+                },
+                {
+                  "linea_id": "B",
+                  "grado": "4+",
+                  "entrada": "Sit",
+                  "mano_izq": "Pinza alta buena",
+                  "mano_der": "Agujero",
+                  "manos_juntas": "",
+                  "definicion": "Sale recto por la izquierda",
+                  "salida": "Top-out",
+                  "expuesta": ""
+                },
+                {
+                  "linea_id": "C",
+                  "grado": "6A",
+                  "entrada": "Sit",
+                  "mano_izq": "Pinza alta buena",
+                  "mano_der": "Agujero",
+                  "manos_juntas": "",
+                  "definicion": "Mismo inicio que B, sale hacia la derecha",
+                  "salida": "Top-out",
+                  "expuesta": ""
+                }
+              ]
+            },
+            {
+              "id": "B3",
+              "foto": "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B3_1.jpg",
+              "nombre": "Sin definir (bloque B3)",
+              "vias": [
+                {
+                  "linea_id": "A",
+                  "grado": "6A",
+                  "entrada": "Sit",
+                  "mano_izq": "Lateral abierta",
+                  "mano_der": "Plano horizontal",
+                  "manos_juntas": "",
+                  "definicion": "Sale recto",
+                  "salida": "Top-out",
+                  "expuesta": ""
+                },
+                {
+                  "linea_id": "B",
+                  "grado": "6A",
+                  "entrada": "Sit",
+                  "mano_izq": "Presa lateral en pinza",
+                  "mano_der": "Rugosidad dentro de la grieta",
+                  "manos_juntas": "",
+                  "definicion": "¡Eliminatorio! No vale bloque derecho",
+                  "salida": "Top-out",
+                  "expuesta": ""
+                },
+                {
+                  "linea_id": "C",
+                  "grado": "5",
+                  "entrada": "Sit",
+                  "mano_izq": "Presa lateral en pinza",
+                  "mano_der": "Rugosidad dentro de la grieta",
+                  "manos_juntas": "",
+                  "definicion": "Mismo inicio que B, recorre la grieta",
+                  "salida": "Top-out",
+                  "expuesta": ""
+                },
+                {
+                  "linea_id": "D",
+                  "grado": "6B",
+                  "entrada": "Sit",
+                  "mano_izq": "Pinza en arista",
+                  "mano_der": "Regleta roma",
+                  "manos_juntas": "",
+                  "definicion": "¡Eliminatorio! No vale grieta ni bloque izquierdo",
+                  "salida": "Top-out",
+                  "expuesta": ""
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
