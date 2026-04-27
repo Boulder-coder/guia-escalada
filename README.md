@@ -1,2 +1,2 @@
-# Gu-a-de-escalada
+# guia-escalada
 Guía de escalada
