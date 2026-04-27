@@ -6,10 +6,8 @@
       "hotspots": [],
       "bloques": [
         {
-          "id": "B1",
-          "fotos": [
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_NORTE_B1.jpg"
-          ],
+          "id": "B1.0",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_NORTE_B1.jpg"],
           "vias": [
             {
               "linea_id": "A",
@@ -33,7 +31,7 @@
       "hotspots": [],
       "bloques": [
         {
-          "id": "B1",
+          "id": "B1.0",
           "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B1.jpg"],
           "vias": [
             {
@@ -51,12 +49,8 @@
           ]
         },
         {
-          "id": "B2",
-          "fotos": [
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B2_1.jpg",
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B2_2.jpg",
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B2_3.jpg"
-          ],
+          "id": "B2.1",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B2_1.jpg"],
           "vias": [
             {
               "linea_id": "A",
@@ -93,7 +87,13 @@
               "definicion": "Mismo inicio que B, sale hacia la derecha",
               "salida": "",
               "expuesta": ""
-            },
+            }
+          ]
+        },
+        {
+          "id": "B2.2",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B2_2.jpg"],
+          "vias": [
             {
               "linea_id": "D",
               "nombre": "Taluego",
@@ -129,7 +129,13 @@
               "definicion": "Mismo inicio que E, sale recto",
               "salida": "",
               "expuesta": ""
-            },
+            }
+          ]
+        },
+        {
+          "id": "B2.3",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B2_3.jpg"],
+          "vias": [
             {
               "linea_id": "G",
               "nombre": "Cascanueces",
@@ -157,12 +163,8 @@
           ]
         },
         {
-          "id": "B3",
-          "fotos": [
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B3_1.jpg",
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B3_2.jpg",
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B3_3.jpg"
-          ],
+          "id": "B3.1",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B3_1.jpg"],
           "vias": [
             {
               "linea_id": "A",
@@ -211,7 +213,13 @@
               "definicion": "¡Eliminatorio! No vale grieta ni bloque izquierdo",
               "salida": "",
               "expuesta": ""
-            },
+            }
+          ]
+        },
+        {
+          "id": "B3.2",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B3_2.jpg"],
+          "vias": [
             {
               "linea_id": "E",
               "nombre": "Batualmón",
@@ -223,7 +231,13 @@
               "definicion": "Sale hacia la izquierda",
               "salida": "",
               "expuesta": ""
-            },
+            }
+          ]
+        },
+        {
+          "id": "B3.3",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B3_3.jpg"],
+          "vias": [
             {
               "linea_id": "F",
               "nombre": "El deshollinador",
@@ -251,7 +265,7 @@
           ]
         },
         {
-          "id": "B4",
+          "id": "B4.0",
           "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B4.jpg"],
           "vias": [
             {
@@ -293,11 +307,8 @@
           ]
         },
         {
-          "id": "B5",
-          "fotos": [
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B5_1.jpg",
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B5_2.jpg"
-          ],
+          "id": "B5.1",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B5_1.jpg"],
           "vias": [
             {
               "linea_id": "A",
@@ -346,7 +357,13 @@
               "definicion": "Sale recto",
               "salida": "",
               "expuesta": ""
-            },
+            }
+          ]
+        },
+        {
+          "id": "B5.2",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B5_2.jpg"],
+          "vias": [
             {
               "linea_id": "D",
               "nombre": "Sin abrir",
@@ -386,7 +403,7 @@
           ]
         },
         {
-          "id": "B6",
+          "id": "B6.0",
           "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B6.jpg"],
           "vias": [
             {
@@ -404,12 +421,8 @@
           ]
         },
         {
-          "id": "B7",
-          "fotos": [
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B7_1.jpg",
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B7_2.jpg",
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B7_3.jpg"
-          ],
+          "id": "B7.1",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B7_1.JPG"],
           "vias": [
             {
               "linea_id": "A",
@@ -422,7 +435,13 @@
               "definicion": "",
               "salida": "",
               "expuesta": ""
-            },
+            }
+          ]
+        },
+        {
+          "id": "B7.2",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B7_2.jpg"],
+          "vias": [
             {
               "linea_id": "B",
               "nombre": "La hamburguesa",
@@ -434,7 +453,13 @@
               "definicion": "Sale recto",
               "salida": "",
               "expuesta": ""
-            },
+            }
+          ]
+        },
+        {
+          "id": "B7.3",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B7_3.jpg"],
+          "vias": [
             {
               "linea_id": "C",
               "nombre": "Gumersinda Raimunda",
@@ -462,11 +487,8 @@
           ]
         },
         {
-          "id": "B8",
-          "fotos": [
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B8_1.jpg",
-            "https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B8_2.jpg"
-          ],
+          "id": "B8.1",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B8_1.jpg"],
           "vias": [
             {
               "linea_id": "A",
@@ -563,7 +585,13 @@
               "definicion": "Recorre la arista",
               "salida": "",
               "expuesta": ""
-            },
+            }
+          ]
+        },
+        {
+          "id": "B8.2",
+          "fotos": ["https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B8_2.jpg"],
+          "vias": [
             {
               "linea_id": "F",
               "nombre": "Mi primera chamba",
