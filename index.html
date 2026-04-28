@@ -147,6 +147,7 @@
             background: white;
             border-radius: 12px;
             overflow: hidden;
+            margin-bottom: 0;
         }
         .media-container {
             position: relative;
@@ -167,22 +168,22 @@
             pointer-events: none;
         }
         .bloque-id {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 600;
             color: #1a472a;
-            padding: 12px 16px 0;
+            padding: 10px 16px 5px;
         }
         .bloque-id-small {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: normal;
             color: #5a8f6c;
         }
         .ficha-vias {
-            padding: 12px 16px;
+            padding: 5px 16px 12px;
         }
         .ficha-via-item {
             border-bottom: 1px solid #eee;
-            padding: 10px 0;
+            padding: 8px 0;
         }
         .ficha-via-item:last-child {
             border-bottom: none;
@@ -191,40 +192,46 @@
             display: flex;
             flex-wrap: wrap;
             align-items: baseline;
-            gap: 8px;
-            margin-bottom: 5px;
+            gap: 6px;
+            margin-bottom: 4px;
         }
         .via-nombre {
             font-weight: 600;
+            font-size: 0.95rem;
         }
         .grado-badge {
-            background: #1a472a;
+            display: inline-block;
             color: white;
             border-radius: 20px;
             padding: 2px 10px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 500;
         }
         .entrada-texto {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #444;
         }
         .detalles-texto {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #555;
-            margin-top: 5px;
+            margin-top: 3px;
+            line-height: 1.3;
         }
         .detalles-texto div {
-            margin-top: 3px;
+            margin-top: 2px;
         }
         .swiper-button-next, .swiper-button-prev {
             color: #1a472a !important;
             background: rgba(255,255,255,0.7);
             border-radius: 50%;
-            width: 35px;
-            height: 35px;
+            width: 32px;
+            height: 32px;
         }
         .swiper-button-next:after, .swiper-button-prev:after {
-            font-size: 16px;
+            font-size: 14px;
+        }
+        .swiper-pagination-bullet-active {
+            background: #1a472a !important;
         }
         .loader {
             text-align: center;
@@ -233,9 +240,11 @@
         }
         .back-hint {
             text-align: center;
-            padding: 10px;
-            font-size: 0.7rem;
+            padding: 8px;
+            font-size: 0.65rem;
             color: #888;
+            border-top: 1px solid #ddd;
+            margin-top: 8px;
         }
     </style>
 </head>
@@ -264,14 +273,27 @@
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, navigationStack = [], swiperBloques = null;
 
-        // ========== FUNCIONES DE COLOR SEGÚN GRADO ==========
+        // ========== NUEVA PALETA DE COLORES POR GRADO ==========
         function getColorByGrado(grado) {
-            const num = parseFloat(grado);
-            if (isNaN(num)) return '#999999';  // grados no numéricos (Pr, *, etc.)
-            if (num <= 5) return '#FFD700';    // Amarillo
-            if (num <= 6.9) return '#4CAF50';  // Verde
-            if (num <= 7.9) return '#FF9800';  // Naranja
-            return '#F44336';                  // Rojo para 8+
+            if (!grado) return '#757575'; // Gris por defecto
+            
+            const g = grado.toUpperCase();
+            
+            // Pr → Negro
+            if (g === 'PR') return '#212121';
+            
+            // Extraer número base (6A, 6A+, 6B, 6B+ → 6)
+            let num = parseFloat(g);
+            if (isNaN(num)) return '#757575';
+            
+            // Casos especiales por rango
+            if (num >= 3 && num <= 5.5) return '#FFD700';     // Amarillo (3,4,5,5+)
+            if (num >= 6 && num <= 6.5) return '#4CAF50';     // Verde (6A,6A+,6B,6B+)
+            if (num >= 6.5 && num <= 7.5) return '#9C27B0';   // Morado (6C,6C+,7A,7A+)
+            if (num >= 7.5 && num <= 7.9) return '#F44336';   // Rojo (7B,7B+,7C,7C+)
+            if (num >= 8) return '#FF9800';                   // Naranja (8A...9A)
+            
+            return '#757575';
         }
 
         function getSalidaSymbol(salida) {
@@ -289,16 +311,13 @@
                 const color = getColorByGrado(via.grado);
                 const simbolo = getSalidaSymbol(via.salida);
                 
-                // Línea
                 const linea = svgDoc.getElementById(letra);
                 if (linea) linea.setAttribute('stroke', color);
                 
-                // Círculo inicio
                 const circuloInicio = svgDoc.getElementById(`${letra}-inicio`);
                 if (circuloInicio) {
                     circuloInicio.setAttribute('fill', color);
                     circuloInicio.setAttribute('stroke', color);
-                    // Añadir texto si no existe
                     if (!circuloInicio.querySelector('text')) {
                         const cx = circuloInicio.getAttribute('cx');
                         const cy = circuloInicio.getAttribute('cy');
@@ -308,14 +327,13 @@
                         texto.setAttribute('text-anchor', 'middle');
                         texto.setAttribute('dominant-baseline', 'central');
                         texto.setAttribute('fill', 'white');
-                        texto.setAttribute('font-size', '12');
+                        texto.setAttribute('font-size', '11');
                         texto.setAttribute('font-weight', 'bold');
                         texto.textContent = letra;
                         circuloInicio.parentNode.appendChild(texto);
                     }
                 }
                 
-                // Círculo final
                 const circuloFinal = svgDoc.getElementById(`${letra}-final`);
                 if (circuloFinal) {
                     circuloFinal.setAttribute('fill', color);
@@ -329,7 +347,7 @@
                         icono.setAttribute('text-anchor', 'middle');
                         icono.setAttribute('dominant-baseline', 'central');
                         icono.setAttribute('fill', 'white');
-                        icono.setAttribute('font-size', '12');
+                        icono.setAttribute('font-size', '11');
                         icono.setAttribute('font-weight', 'bold');
                         icono.textContent = simbolo;
                         circuloFinal.parentNode.appendChild(icono);
@@ -338,7 +356,7 @@
             });
         }
 
-        // ========== FUNCIONES DE NAVEGACIÓN ==========
+        // ========== NAVEGACIÓN ==========
         function navigateToScreen(screenId, stateData = null) {
             const currentVisible = document.querySelector('.screen:not([style*="display: none"])');
             if (currentVisible && currentVisible.id !== screenId) navigationStack.push({ screen: currentVisible.id, state: stateData });
@@ -352,7 +370,7 @@
                 const prev = navigationStack.pop();
                 navigateToScreen(prev.screen);
                 if (prev.state?.sectorNombre) currentSector = datosApp.sectores.find(s => s.nombre === prev.state.sectorNombre);
-                if (prev.screen === 'screen-ficha-bloque' && prev.state?.bloqueIndex) {
+                if (prev.screen === 'screen-ficha-bloque' && prev.state?.bloqueIndex !== undefined) {
                     setTimeout(() => { if (swiperBloques) swiperBloques.slideTo(prev.state.bloqueIndex); }, 100);
                 }
             } else {
@@ -373,7 +391,7 @@
                 datosApp = await res.json();
                 renderSectoresList();
             } catch (error) {
-                container.innerHTML = `<div class="loader" style="color:red;">Error: ${error.message}</div>`;
+                container.innerHTML = `<div class="loader" style="color:red;">Error: ${error.message}<br>Verifica que el JSON esté en datos/datos.json</div>`;
             }
         }
 
@@ -384,7 +402,8 @@
             datosApp.sectores.forEach(sector => {
                 const card = document.createElement('div');
                 card.className = 'sector-card';
-                card.innerHTML = `<img src="${sector.croquis}.jpg" onerror="this.src='https://picsum.photos/id/20/400/200'"><div class="sector-info"><h3>${sector.nombre}</h3><p>${sector.bloques.length} bloques</p></div>`;
+                const croquisUrl = sector.croquis ? `${sector.croquis}.jpg` : '';
+                card.innerHTML = `<img src="${croquisUrl}" onerror="this.src='https://picsum.photos/id/20/400/200'"><div class="sector-info"><h3>${sector.nombre}</h3><p>${sector.bloques.length} bloques</p></div>`;
                 card.onclick = () => openSector(sector.nombre);
                 container.appendChild(card);
             });
@@ -394,6 +413,7 @@
             currentSector = datosApp.sectores.find(s => s.nombre === sectorNombre);
             if (!currentSector) return;
             const container = document.getElementById('sector-detalle-content');
+            const croquisUrl = currentSector.croquis ? `${currentSector.croquis}.jpg` : '';
             container.innerHTML = `
                 <h2>${currentSector.nombre}</h2>
                 <div class="tabs">
@@ -402,7 +422,7 @@
                     <button class="tab-btn" data-tab="bloques">🧗 Bloques</button>
                 </div>
                 <div id="tab-info" class="tab-pane active"><div class="info-sector"><h4>Información</h4><p>Próximamente: aproximación, material, etc.</p></div></div>
-                <div id="tab-croquis" class="tab-pane"><div class="croquis-container"><img src="${currentSector.croquis}.jpg" class="croquis-img" onerror="this.src='https://picsum.photos/id/20/800/600'"></div></div>
+                <div id="tab-croquis" class="tab-pane"><div class="croquis-container"><img src="${croquisUrl}" class="croquis-img" onerror="this.src='https://picsum.photos/id/20/800/600'"></div></div>
                 <div id="tab-bloques" class="tab-pane"><div id="bloques-list"></div></div>
             `;
             container.querySelectorAll('.tab-btn').forEach(btn => {
@@ -427,13 +447,13 @@
             history.pushState({ sectorNombre: sectorNombre }, '');
         }
 
-        // ========== FICHA DE BLOQUE CON SWIPER Y SVG ==========
+        // ========== FICHA DE BLOQUE ==========
         function openFichaBloque(bloqueIndex) {
             if (!currentSector) return;
             const bloque = currentSector.bloques[bloqueIndex];
             const container = document.getElementById('ficha-bloque-content');
             container.innerHTML = `
-                <div class="bloque-swiper swiper">
+                <div class="bloque-swiper swiper" style="height: auto;">
                     <div class="swiper-wrapper" id="bloquesSwiperWrapper"></div>
                     <div class="swiper-pagination"></div>
                     <div class="swiper-button-prev"></div>
@@ -441,7 +461,7 @@
                 </div>
             `;
             const wrapper = document.getElementById('bloquesSwiperWrapper');
-            // Crear un slide por cada bloque del sector (navegación horizontal entre bloques)
+            
             currentSector.bloques.forEach((b, idx) => {
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
@@ -456,7 +476,6 @@
                 `;
                 wrapper.appendChild(slide);
                 
-                // Rellenar vías
                 const viasContainer = document.getElementById(`vias-${idx}`);
                 b.vias.forEach(via => {
                     const detalles = [];
@@ -466,12 +485,13 @@
                     if (via.definicion) detalles.push(`${via.definicion}`);
                     if (via.expuesta) detalles.push(`⚠️ ${via.expuesta}`);
                     
+                    const gradoColor = getColorByGrado(via.grado);
                     const viaDiv = document.createElement('div');
                     viaDiv.className = 'ficha-via-item';
                     viaDiv.innerHTML = `
                         <div class="via-header">
                             <span class="via-nombre">${via.linea_id} ${via.nombre}</span>
-                            ${via.grado ? `<span class="grado-badge">${via.grado}</span>` : ''}
+                            ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
                             ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
                         </div>
                         ${detalles.length ? `<div class="detalles-texto">${detalles.map(d => `<div>${d}</div>`).join('')}</div>` : ''}
@@ -482,13 +502,12 @@
                 // Cargar SVG superpuesto
                 fetch(`${b.foto_base}.svg`).then(res => res.text()).then(svgText => {
                     const mediaContainer = slide.querySelector('.media-container');
-                    const img = mediaContainer.querySelector('img');
                     const parser = new DOMParser();
                     const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
                     const svgElement = svgDoc.documentElement;
                     svgElement.classList.add('svg-overlay');
-                    // Ajustar viewBox para que escale correctamente
-                    if (!svgElement.getAttribute('viewBox') && img.complete && img.naturalWidth) {
+                    const img = mediaContainer.querySelector('img');
+                    if (img.complete && img.naturalWidth) {
                         svgElement.setAttribute('viewBox', `0 0 ${img.naturalWidth} ${img.naturalHeight}`);
                     }
                     svgElement.setAttribute('preserveAspectRatio', 'none');
@@ -496,7 +515,7 @@
                     svgElement.style.height = 'auto';
                     mediaContainer.appendChild(svgElement);
                     aplicarEstilosSVG(svgElement, b.vias);
-                }).catch(err => console.log('SVG no encontrado:', err));
+                }).catch(() => {});
             });
             
             if (swiperBloques) swiperBloques.destroy();
@@ -504,7 +523,8 @@
                 initialSlide: bloqueIndex,
                 navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
                 pagination: { el: '.swiper-pagination', clickable: true },
-                spaceBetween: 20
+                spaceBetween: 20,
+                autoHeight: true
             });
             
             navigateToScreen('screen-ficha-bloque');
