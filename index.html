@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>Guía de Escalada</title>
+    <title>Guía de Bloque</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -14,7 +14,7 @@
         }
         body {
             font-family: 'Roboto', sans-serif;
-            background: #f5f5f5;
+            background: #fff4d4;
             height: 100vh;
             overflow: hidden;
         }
@@ -23,18 +23,27 @@
             top: 0;
             left: 0;
             right: 0;
-            background: #1a472a;
-            color: white;
+            background: #576f61;
+            color: #ffffff;
             z-index: 1000;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .header-top {
             padding: 15px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            position: relative;
+        }
+        .header-top h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-align: center;
         }
         .menu-toggle {
+            position: absolute;
+            left: 15px;
             background: none;
             border: none;
             color: white;
@@ -44,7 +53,7 @@
         .dropdown-menu {
             display: none;
             flex-direction: column;
-            background: #0d2818;
+            background: #3d4f43;
         }
         .dropdown-menu.show {
             display: flex;
@@ -59,7 +68,7 @@
             cursor: pointer;
         }
         .dropdown-menu button:hover {
-            background: #2a5a3a;
+            background: #576f61;
         }
         .app-content {
             margin-top: 70px;
@@ -88,9 +97,11 @@
         }
         .sector-info {
             padding: 12px;
+            background: #c3b49d;
+            color: #ffffff;
         }
         .sector-info h3 {
-            color: #1a472a;
+            color: #ffffff;
         }
         .tabs {
             display: flex;
@@ -110,7 +121,7 @@
             font-weight: 500;
         }
         .tab-btn.active {
-            background: #1a472a;
+            background: #d2757d;
             color: white;
         }
         .tab-pane {
@@ -147,6 +158,7 @@
             background: white;
             border-radius: 12px;
             overflow: hidden;
+            margin-bottom: 0;
         }
         .media-container {
             position: relative;
@@ -166,23 +178,22 @@
             height: auto;
             pointer-events: none;
         }
-        .bloque-id {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #1a472a;
-            padding: 12px 16px 0;
-        }
-        .bloque-id-small {
+        .ficha-footer {
+            background: #c3b49d;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            color: #ffffff;
             font-size: 0.9rem;
-            font-weight: normal;
-            color: #5a8f6c;
         }
         .ficha-vias {
-            padding: 12px 16px;
+            padding: 8px 16px 12px;
+            background: white;
         }
         .ficha-via-item {
             border-bottom: 1px solid #eee;
-            padding: 10px 0;
+            padding: 8px 0;
         }
         .ficha-via-item:last-child {
             border-bottom: none;
@@ -191,40 +202,46 @@
             display: flex;
             flex-wrap: wrap;
             align-items: baseline;
-            gap: 8px;
-            margin-bottom: 5px;
+            gap: 6px;
+            margin-bottom: 4px;
         }
         .via-nombre {
             font-weight: 600;
+            font-size: 0.95rem;
         }
         .grado-badge {
-            background: #1a472a;
+            display: inline-block;
             color: white;
             border-radius: 20px;
             padding: 2px 10px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 500;
         }
         .entrada-texto {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #444;
         }
         .detalles-texto {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #555;
-            margin-top: 5px;
+            margin-top: 3px;
+            line-height: 1.3;
         }
         .detalles-texto div {
-            margin-top: 3px;
+            margin-top: 2px;
         }
         .swiper-button-next, .swiper-button-prev {
-            color: #1a472a !important;
-            background: rgba(255,255,255,0.7);
+            color: #576f61 !important;
+            background: rgba(255,255,255,0.8);
             border-radius: 50%;
-            width: 35px;
-            height: 35px;
+            width: 32px;
+            height: 32px;
         }
         .swiper-button-next:after, .swiper-button-prev:after {
-            font-size: 16px;
+            font-size: 14px;
+        }
+        .swiper-pagination-bullet-active {
+            background: #576f61 !important;
         }
         .loader {
             text-align: center;
@@ -233,17 +250,19 @@
         }
         .back-hint {
             text-align: center;
-            padding: 10px;
-            font-size: 0.7rem;
+            padding: 8px;
+            font-size: 0.65rem;
             color: #888;
+            border-top: 1px solid #ddd;
+            margin-top: 8px;
         }
     </style>
 </head>
 <body>
     <div class="app-header">
         <div class="header-top">
-            <h1>🧗‍♂️ Guía de Escalada</h1>
             <button class="menu-toggle" id="menuToggle">☰</button>
+            <h1>G U Í A   D E   B L O Q U E</h1>
         </div>
         <div class="dropdown-menu" id="dropdownMenu">
             <button data-screen="portada">🏠 Portada</button>
@@ -252,11 +271,33 @@
         </div>
     </div>
     <div class="app-content">
-        <div id="screen-portada" class="screen"><div style="text-align:center;padding:20px"><h2>Bienvenido</h2><p>Guía de escalada del club.</p><div style="background:#1a472a;color:white;padding:20px;border-radius:12px;margin-top:20px">⚠️ Lee las condiciones de uso.</div></div></div>
-        <div id="screen-condiciones" class="screen"><div class="condiciones-content"><h3>📋 Condiciones</h3><p>Uso exclusivo para miembros del club. La información es orientativa. Cada escalador es responsable de su seguridad.</p><p style="margin-top:15px">📅 Abril 2025</p></div></div>
-        <div id="screen-sectores" class="screen"><h2>🏔️ Sectores</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
-        <div id="screen-sector-detalle" class="screen"><div id="sector-detalle-content"></div></div>
-        <div id="screen-ficha-bloque" class="screen"><div id="ficha-bloque-content"></div><div class="back-hint">← Botón atrás del móvil para volver</div></div>
+        <div id="screen-portada" class="screen">
+            <div style="text-align:center;padding:20px">
+                <h2>Bienvenido</h2>
+                <p>Guía de escalada del club.</p>
+                <div style="background:#576f61;color:white;padding:20px;border-radius:12px;margin-top:20px">
+                    ⚠️ Lee las condiciones de uso.
+                </div>
+            </div>
+        </div>
+        <div id="screen-condiciones" class="screen">
+            <div class="condiciones-content">
+                <h3>📋 Condiciones</h3>
+                <p>Uso exclusivo para miembros del club. La información es orientativa. Cada escalador es responsable de su seguridad.</p>
+                <p style="margin-top:15px">📅 Abril 2025</p>
+            </div>
+        </div>
+        <div id="screen-sectores" class="screen">
+            <h2>🏔️ Sectores</h2>
+            <div id="sectores-list"><div class="loader">Cargando...</div></div>
+        </div>
+        <div id="screen-sector-detalle" class="screen">
+            <div id="sector-detalle-content"></div>
+        </div>
+        <div id="screen-ficha-bloque" class="screen">
+            <div id="ficha-bloque-content"></div>
+            <div class="back-hint">← Botón atrás del móvil para volver</div>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
@@ -264,14 +305,20 @@
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, navigationStack = [], swiperBloques = null;
 
-        // ========== FUNCIONES DE COLOR SEGÚN GRADO ==========
+        // ========== PALETA DE COLORES POR GRADO ==========
         function getColorByGrado(grado) {
-            const num = parseFloat(grado);
-            if (isNaN(num)) return '#999999';  // grados no numéricos (Pr, *, etc.)
-            if (num <= 5) return '#FFD700';    // Amarillo
-            if (num <= 6.9) return '#4CAF50';  // Verde
-            if (num <= 7.9) return '#FF9800';  // Naranja
-            return '#F44336';                  // Rojo para 8+
+            if (!grado) return '#87CEEB';
+            const g = grado.toUpperCase();
+            if (g === 'PR') return '#212121';
+            let num = parseFloat(g);
+            if (isNaN(num)) return '#87CEEB';
+            if (num >= 3 && num <= 5.5) return '#FFD700';
+            if (num >= 6 && num <= 6.2) return '#4CAF50';
+            if (num >= 6.2 && num <= 6.8) return '#1E88E5';
+            if (num >= 6.8 && num <= 7.2) return '#E91E63';
+            if (num >= 7.2 && num <= 7.9) return '#F44336';
+            if (num >= 8) return '#FF9800';
+            return '#87CEEB';
         }
 
         function getSalidaSymbol(salida) {
@@ -288,17 +335,12 @@
                 const letra = via.linea_id;
                 const color = getColorByGrado(via.grado);
                 const simbolo = getSalidaSymbol(via.salida);
-                
-                // Línea
                 const linea = svgDoc.getElementById(letra);
                 if (linea) linea.setAttribute('stroke', color);
-                
-                // Círculo inicio
                 const circuloInicio = svgDoc.getElementById(`${letra}-inicio`);
                 if (circuloInicio) {
                     circuloInicio.setAttribute('fill', color);
                     circuloInicio.setAttribute('stroke', color);
-                    // Añadir texto si no existe
                     if (!circuloInicio.querySelector('text')) {
                         const cx = circuloInicio.getAttribute('cx');
                         const cy = circuloInicio.getAttribute('cy');
@@ -308,14 +350,12 @@
                         texto.setAttribute('text-anchor', 'middle');
                         texto.setAttribute('dominant-baseline', 'central');
                         texto.setAttribute('fill', 'white');
-                        texto.setAttribute('font-size', '12');
+                        texto.setAttribute('font-size', '11');
                         texto.setAttribute('font-weight', 'bold');
                         texto.textContent = letra;
                         circuloInicio.parentNode.appendChild(texto);
                     }
                 }
-                
-                // Círculo final
                 const circuloFinal = svgDoc.getElementById(`${letra}-final`);
                 if (circuloFinal) {
                     circuloFinal.setAttribute('fill', color);
@@ -329,7 +369,7 @@
                         icono.setAttribute('text-anchor', 'middle');
                         icono.setAttribute('dominant-baseline', 'central');
                         icono.setAttribute('fill', 'white');
-                        icono.setAttribute('font-size', '12');
+                        icono.setAttribute('font-size', '11');
                         icono.setAttribute('font-weight', 'bold');
                         icono.textContent = simbolo;
                         circuloFinal.parentNode.appendChild(icono);
@@ -338,7 +378,7 @@
             });
         }
 
-        // ========== FUNCIONES DE NAVEGACIÓN ==========
+        // ========== NAVEGACIÓN ==========
         function navigateToScreen(screenId, stateData = null) {
             const currentVisible = document.querySelector('.screen:not([style*="display: none"])');
             if (currentVisible && currentVisible.id !== screenId) navigationStack.push({ screen: currentVisible.id, state: stateData });
@@ -352,7 +392,7 @@
                 const prev = navigationStack.pop();
                 navigateToScreen(prev.screen);
                 if (prev.state?.sectorNombre) currentSector = datosApp.sectores.find(s => s.nombre === prev.state.sectorNombre);
-                if (prev.screen === 'screen-ficha-bloque' && prev.state?.bloqueIndex) {
+                if (prev.screen === 'screen-ficha-bloque' && prev.state?.bloqueIndex !== undefined) {
                     setTimeout(() => { if (swiperBloques) swiperBloques.slideTo(prev.state.bloqueIndex); }, 100);
                 }
             } else {
@@ -373,7 +413,7 @@
                 datosApp = await res.json();
                 renderSectoresList();
             } catch (error) {
-                container.innerHTML = `<div class="loader" style="color:red;">Error: ${error.message}</div>`;
+                container.innerHTML = `<div class="loader" style="color:red;">Error: ${error.message}<br>Verifica que el JSON esté en datos/datos.json</div>`;
             }
         }
 
@@ -384,7 +424,8 @@
             datosApp.sectores.forEach(sector => {
                 const card = document.createElement('div');
                 card.className = 'sector-card';
-                card.innerHTML = `<img src="${sector.croquis}.jpg" onerror="this.src='https://picsum.photos/id/20/400/200'"><div class="sector-info"><h3>${sector.nombre}</h3><p>${sector.bloques.length} bloques</p></div>`;
+                const croquisUrl = sector.croquis ? `${sector.croquis}.jpg` : '';
+                card.innerHTML = `<img src="${croquisUrl}" onerror="this.src='https://picsum.photos/id/20/400/200'"><div class="sector-info"><h3>${sector.nombre}</h3><p>${sector.bloques.length} bloques</p></div>`;
                 card.onclick = () => openSector(sector.nombre);
                 container.appendChild(card);
             });
@@ -394,6 +435,7 @@
             currentSector = datosApp.sectores.find(s => s.nombre === sectorNombre);
             if (!currentSector) return;
             const container = document.getElementById('sector-detalle-content');
+            const croquisUrl = currentSector.croquis ? `${currentSector.croquis}.jpg` : '';
             container.innerHTML = `
                 <h2>${currentSector.nombre}</h2>
                 <div class="tabs">
@@ -402,7 +444,7 @@
                     <button class="tab-btn" data-tab="bloques">🧗 Bloques</button>
                 </div>
                 <div id="tab-info" class="tab-pane active"><div class="info-sector"><h4>Información</h4><p>Próximamente: aproximación, material, etc.</p></div></div>
-                <div id="tab-croquis" class="tab-pane"><div class="croquis-container"><img src="${currentSector.croquis}.jpg" class="croquis-img" onerror="this.src='https://picsum.photos/id/20/800/600'"></div></div>
+                <div id="tab-croquis" class="tab-pane"><div class="croquis-container"><img src="${croquisUrl}" class="croquis-img" onerror="this.src='https://picsum.photos/id/20/800/600'"></div></div>
                 <div id="tab-bloques" class="tab-pane"><div id="bloques-list"></div></div>
             `;
             container.querySelectorAll('.tab-btn').forEach(btn => {
@@ -427,13 +469,12 @@
             history.pushState({ sectorNombre: sectorNombre }, '');
         }
 
-        // ========== FICHA DE BLOQUE CON SWIPER Y SVG ==========
+        // ========== FICHA DE BLOQUE ==========
         function openFichaBloque(bloqueIndex) {
             if (!currentSector) return;
-            const bloque = currentSector.bloques[bloqueIndex];
             const container = document.getElementById('ficha-bloque-content');
             container.innerHTML = `
-                <div class="bloque-swiper swiper">
+                <div class="bloque-swiper swiper" style="height: auto;">
                     <div class="swiper-wrapper" id="bloquesSwiperWrapper"></div>
                     <div class="swiper-pagination"></div>
                     <div class="swiper-button-prev"></div>
@@ -441,7 +482,6 @@
                 </div>
             `;
             const wrapper = document.getElementById('bloquesSwiperWrapper');
-            // Crear un slide por cada bloque del sector (navegación horizontal entre bloques)
             currentSector.bloques.forEach((b, idx) => {
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
@@ -450,13 +490,14 @@
                         <div class="media-container">
                             <img src="${b.foto_base}.jpg" class="foto-bloque" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
                         </div>
-                        <div class="bloque-id">Bloque ${b.id.split('.')[0]}<span class="bloque-id-small">${b.id.includes('.') ? '.'+b.id.split('.')[1] : ''}</span></div>
+                        <div class="ficha-footer">
+                            <span>Bloque ${b.id}</span>
+                            <span>${currentSector.nombre}</span>
+                        </div>
                         <div class="ficha-vias" id="vias-${idx}"></div>
                     </div>
                 `;
                 wrapper.appendChild(slide);
-                
-                // Rellenar vías
                 const viasContainer = document.getElementById(`vias-${idx}`);
                 b.vias.forEach(via => {
                     const detalles = [];
@@ -465,30 +506,27 @@
                     if (via.manos_juntas) detalles.push(`Manos juntas: ${via.manos_juntas}`);
                     if (via.definicion) detalles.push(`${via.definicion}`);
                     if (via.expuesta) detalles.push(`⚠️ ${via.expuesta}`);
-                    
+                    const gradoColor = getColorByGrado(via.grado);
                     const viaDiv = document.createElement('div');
                     viaDiv.className = 'ficha-via-item';
                     viaDiv.innerHTML = `
                         <div class="via-header">
                             <span class="via-nombre">${via.linea_id} ${via.nombre}</span>
-                            ${via.grado ? `<span class="grado-badge">${via.grado}</span>` : ''}
+                            ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
                             ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
                         </div>
                         ${detalles.length ? `<div class="detalles-texto">${detalles.map(d => `<div>${d}</div>`).join('')}</div>` : ''}
                     `;
                     viasContainer.appendChild(viaDiv);
                 });
-                
-                // Cargar SVG superpuesto
                 fetch(`${b.foto_base}.svg`).then(res => res.text()).then(svgText => {
                     const mediaContainer = slide.querySelector('.media-container');
-                    const img = mediaContainer.querySelector('img');
                     const parser = new DOMParser();
                     const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
                     const svgElement = svgDoc.documentElement;
                     svgElement.classList.add('svg-overlay');
-                    // Ajustar viewBox para que escale correctamente
-                    if (!svgElement.getAttribute('viewBox') && img.complete && img.naturalWidth) {
+                    const img = mediaContainer.querySelector('img');
+                    if (img.complete && img.naturalWidth) {
                         svgElement.setAttribute('viewBox', `0 0 ${img.naturalWidth} ${img.naturalHeight}`);
                     }
                     svgElement.setAttribute('preserveAspectRatio', 'none');
@@ -496,17 +534,16 @@
                     svgElement.style.height = 'auto';
                     mediaContainer.appendChild(svgElement);
                     aplicarEstilosSVG(svgElement, b.vias);
-                }).catch(err => console.log('SVG no encontrado:', err));
+                }).catch(() => {});
             });
-            
             if (swiperBloques) swiperBloques.destroy();
             swiperBloques = new Swiper('.bloque-swiper', {
                 initialSlide: bloqueIndex,
                 navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
                 pagination: { el: '.swiper-pagination', clickable: true },
-                spaceBetween: 20
+                spaceBetween: 20,
+                autoHeight: true
             });
-            
             navigateToScreen('screen-ficha-bloque');
             history.pushState({ sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }, '');
         }
