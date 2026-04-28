@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>Guía de Escalada</title>
+    <title>Guía de Bloque</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -14,7 +14,7 @@
         }
         body {
             font-family: 'Roboto', sans-serif;
-            background: #f5f5f5;
+            background: #fff4d4;
             height: 100vh;
             overflow: hidden;
         }
@@ -23,18 +23,27 @@
             top: 0;
             left: 0;
             right: 0;
-            background: #1a472a;
-            color: white;
+            background: #576f61;
+            color: #ffffff;
             z-index: 1000;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .header-top {
             padding: 15px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            position: relative;
+        }
+        .header-top h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-align: center;
         }
         .menu-toggle {
+            position: absolute;
+            left: 15px;
             background: none;
             border: none;
             color: white;
@@ -44,7 +53,7 @@
         .dropdown-menu {
             display: none;
             flex-direction: column;
-            background: #0d2818;
+            background: #3d4f43;
         }
         .dropdown-menu.show {
             display: flex;
@@ -59,7 +68,7 @@
             cursor: pointer;
         }
         .dropdown-menu button:hover {
-            background: #2a5a3a;
+            background: #576f61;
         }
         .app-content {
             margin-top: 70px;
@@ -88,9 +97,11 @@
         }
         .sector-info {
             padding: 12px;
+            background: #c3b49d;
+            color: #ffffff;
         }
         .sector-info h3 {
-            color: #1a472a;
+            color: #ffffff;
         }
         .tabs {
             display: flex;
@@ -110,7 +121,7 @@
             font-weight: 500;
         }
         .tab-btn.active {
-            background: #1a472a;
+            background: #d2757d;
             color: white;
         }
         .tab-pane {
@@ -167,19 +178,18 @@
             height: auto;
             pointer-events: none;
         }
-        .bloque-id {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #1a472a;
-            padding: 10px 16px 5px;
-        }
-        .bloque-id-small {
-            font-size: 0.85rem;
-            font-weight: normal;
-            color: #5a8f6c;
+        .ficha-footer {
+            background: #c3b49d;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 0.9rem;
         }
         .ficha-vias {
-            padding: 5px 16px 12px;
+            padding: 8px 16px 12px;
+            background: white;
         }
         .ficha-via-item {
             border-bottom: 1px solid #eee;
@@ -221,8 +231,8 @@
             margin-top: 2px;
         }
         .swiper-button-next, .swiper-button-prev {
-            color: #1a472a !important;
-            background: rgba(255,255,255,0.7);
+            color: #576f61 !important;
+            background: rgba(255,255,255,0.8);
             border-radius: 50%;
             width: 32px;
             height: 32px;
@@ -231,7 +241,7 @@
             font-size: 14px;
         }
         .swiper-pagination-bullet-active {
-            background: #1a472a !important;
+            background: #576f61 !important;
         }
         .loader {
             text-align: center;
@@ -251,8 +261,8 @@
 <body>
     <div class="app-header">
         <div class="header-top">
-            <h1>🧗‍♂️ Guía de Escalada</h1>
             <button class="menu-toggle" id="menuToggle">☰</button>
+            <h1>G U Í A   D E   B L O Q U E</h1>
         </div>
         <div class="dropdown-menu" id="dropdownMenu">
             <button data-screen="portada">🏠 Portada</button>
@@ -261,7 +271,7 @@
         </div>
     </div>
     <div class="app-content">
-        <div id="screen-portada" class="screen"><div style="text-align:center;padding:20px"><h2>Bienvenido</h2><p>Guía de escalada del club.</p><div style="background:#1a472a;color:white;padding:20px;border-radius:12px;margin-top:20px">⚠️ Lee las condiciones de uso.</div></div></div>
+        <div id="screen-portada" class="screen"><div style="text-align:center;padding:20px"><h2>Bienvenido</h2><p>Guía de escalada del club.</p><div style="background:#576f61;color:white;padding:20px;border-radius:12px;margin-top:20px">⚠️ Lee las condiciones de uso.</div></div></div>
         <div id="screen-condiciones" class="screen"><div class="condiciones-content"><h3>📋 Condiciones</h3><p>Uso exclusivo para miembros del club. La información es orientativa. Cada escalador es responsable de su seguridad.</p><p style="margin-top:15px">📅 Abril 2025</p></div></div>
         <div id="screen-sectores" class="screen"><h2>🏔️ Sectores</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
         <div id="screen-sector-detalle" class="screen"><div id="sector-detalle-content"></div></div>
@@ -273,27 +283,28 @@
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, navigationStack = [], swiperBloques = null;
 
-        // ========== NUEVA PALETA DE COLORES POR GRADO ==========
+        // ========== NUEVA PALETA DE COLORES POR GRADO (CORREGIDA) ==========
         function getColorByGrado(grado) {
-            if (!grado) return '#757575'; // Gris por defecto
+            if (!grado) return '#87CEEB'; // Azul cielo por defecto
             
             const g = grado.toUpperCase();
             
             // Pr → Negro
             if (g === 'PR') return '#212121';
             
-            // Extraer número base (6A, 6A+, 6B, 6B+ → 6)
+            // Extraer número base para comparación
             let num = parseFloat(g);
-            if (isNaN(num)) return '#757575';
+            if (isNaN(num)) return '#87CEEB';
             
-            // Casos especiales por rango
+            // Degradado de niveles según la nueva escala
             if (num >= 3 && num <= 5.5) return '#FFD700';     // Amarillo (3,4,5,5+)
-            if (num >= 6 && num <= 6.5) return '#4CAF50';     // Verde (6A,6A+,6B,6B+)
-            if (num >= 6.5 && num <= 7.5) return '#9C27B0';   // Morado (6C,6C+,7A,7A+)
-            if (num >= 7.5 && num <= 7.9) return '#F44336';   // Rojo (7B,7B+,7C,7C+)
+            if (num >= 6 && num <= 6.2) return '#4CAF50';     // Verde (6A,6A+,6B)
+            if (num >= 6.2 && num <= 6.8) return '#1E88E5';   // Azul (6B+,6C,6C+)
+            if (num >= 6.8 && num <= 7.2) return '#E91E63';   // Rosa (7A,7A+,7B)
+            if (num >= 7.2 && num <= 7.9) return '#F44336';   // Rojo (7B+,7C,7C+)
             if (num >= 8) return '#FF9800';                   // Naranja (8A...9A)
             
-            return '#757575';
+            return '#87CEEB';
         }
 
         function getSalidaSymbol(salida) {
@@ -311,9 +322,11 @@
                 const color = getColorByGrado(via.grado);
                 const simbolo = getSalidaSymbol(via.salida);
                 
+                // Línea
                 const linea = svgDoc.getElementById(letra);
                 if (linea) linea.setAttribute('stroke', color);
                 
+                // Círculo inicio
                 const circuloInicio = svgDoc.getElementById(`${letra}-inicio`);
                 if (circuloInicio) {
                     circuloInicio.setAttribute('fill', color);
@@ -334,6 +347,7 @@
                     }
                 }
                 
+                // Círculo final
                 const circuloFinal = svgDoc.getElementById(`${letra}-final`);
                 if (circuloFinal) {
                     circuloFinal.setAttribute('fill', color);
@@ -447,7 +461,7 @@
             history.pushState({ sectorNombre: sectorNombre }, '');
         }
 
-        // ========== FICHA DE BLOQUE ==========
+        // ========== FICHA DE BLOQUE CON FALDÓN ==========
         function openFichaBloque(bloqueIndex) {
             if (!currentSector) return;
             const bloque = currentSector.bloques[bloqueIndex];
@@ -470,7 +484,10 @@
                         <div class="media-container">
                             <img src="${b.foto_base}.jpg" class="foto-bloque" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
                         </div>
-                        <div class="bloque-id">Bloque ${b.id.split('.')[0]}<span class="bloque-id-small">${b.id.includes('.') ? '.'+b.id.split('.')[1] : ''}</span></div>
+                        <div class="ficha-footer">
+                            <span>Bloque ${b.id}</span>
+                            <span>${currentSector.nombre}</span>
+                        </div>
                         <div class="ficha-vias" id="vias-${idx}"></div>
                     </div>
                 `;
