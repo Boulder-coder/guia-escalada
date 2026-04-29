@@ -8,11 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         .cocogoose-font, h1, .dropdown-menu button, .ficha-footer, h2, h3, h4, .tab-btn {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
@@ -53,9 +49,7 @@
             flex-direction: column;
             background: #3a3a3a;
         }
-        .dropdown-menu.show {
-            display: flex;
-        }
+        .dropdown-menu.show { display: flex; }
         .dropdown-menu button {
             background: none;
             border: none;
@@ -67,22 +61,15 @@
             cursor: pointer;
             letter-spacing: 0.5px;
         }
-        .dropdown-menu button:hover {
-            background: #6674FF;
-            color: #ffffff;
-        }
+        .dropdown-menu button:hover { background: #6674FF; color: #ffffff; }
         .app-content {
             margin-top: 70px;
             height: calc(100vh - 70px);
             overflow-y: auto;
             padding: 15px;
         }
-        .screen {
-            display: none;
-        }
-        .screen.active {
-            display: block;
-        }
+        .screen { display: none; }
+        .screen.active { display: block; }
         .sector-card {
             background: #ffffff;
             border-radius: 12px;
@@ -101,10 +88,7 @@
             background: #d4d4d4;
             color: #2c2c2c;
         }
-        .sector-info h3 {
-            color: #2c2c2c;
-            font-size: 1.2rem;
-        }
+        .sector-info h3 { color: #2c2c2c; font-size: 1.2rem; }
         .tabs {
             display: flex;
             gap: 5px;
@@ -125,16 +109,9 @@
             color: #2c2c2c;
             transition: all 0.2s;
         }
-        .tab-btn.active {
-            background: #FFDE66;
-            color: #2c2c2c;
-        }
-        .tab-pane {
-            display: none;
-        }
-        .tab-pane.active {
-            display: block;
-        }
+        .tab-btn.active { background: #FFDE66; color: #2c2c2c; }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
         .info-sector, .condiciones-content {
             background: #ffffff;
             border-radius: 12px;
@@ -212,9 +189,7 @@
             border-bottom: 1px solid #eee;
             padding: 8px 0;
         }
-        .ficha-via-item:last-child {
-            border-bottom: none;
-        }
+        .ficha-via-item:last-child { border-bottom: none; }
         .via-header {
             display: flex;
             flex-wrap: wrap;
@@ -244,9 +219,7 @@
             margin-top: 3px;
             line-height: 1.3;
         }
-        .detalles-texto div {
-            margin-top: 2px;
-        }
+        .detalles-texto div { margin-top: 2px; }
         .swiper-button-next, .swiper-button-prev {
             color: #6674FF !important;
             background: rgba(255,255,255,0.8);
@@ -254,17 +227,9 @@
             width: 32px;
             height: 32px;
         }
-        .swiper-button-next:after, .swiper-button-prev:after {
-            font-size: 14px;
-        }
-        .swiper-pagination-bullet-active {
-            background: #6674FF !important;
-        }
-        .loader {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
+        .swiper-button-next:after, .swiper-button-prev:after { font-size: 14px; }
+        .swiper-pagination-bullet-active { background: #6674FF !important; }
+        .loader { text-align: center; padding: 40px; color: #666; }
         .back-hint {
             text-align: center;
             padding: 8px;
@@ -273,14 +238,8 @@
             border-top: 1px solid #ddd;
             margin-top: 8px;
         }
-        h2, h3, h4 {
-            color: #6674FF;
-            letter-spacing: 0.5px;
-        }
-        h1 {
-            font-weight: 300 !important;
-            letter-spacing: 1px;
-        }
+        h2, h3, h4 { color: #6674FF; letter-spacing: 0.5px; }
+        h1 { font-weight: 300 !important; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -296,80 +255,48 @@
         </div>
     </div>
     <div class="app-content">
-        <div id="screen-portada" class="screen">
-            <div style="text-align:center;padding:20px">
-                <h2 style="font-family: 'Cocogoose', sans-serif;">Bienvenido</h2>
-                <p>Guía de boulder del club.</p>
-                <div style="background:#d4d4d4;color:#2c2c2c;padding:20px;border-radius:12px;margin-top:20px">⚠️ Lee las condiciones de uso.</div>
-            </div>
-        </div>
-        <div id="screen-condiciones" class="screen">
-            <div class="condiciones-content">
-                <h3 style="font-family: 'Cocogoose', sans-serif;">📋 Condiciones</h3>
-                <p>Uso exclusivo para miembros del club. La información es orientativa. Cada escalador es responsable de su seguridad.</p>
-                <p style="margin-top:15px">📅 Abril 2025</p>
-            </div>
-        </div>
-        <div id="screen-sectores" class="screen">
-            <h2 style="font-family: 'Cocogoose', sans-serif;">🏔️ Sectores</h2>
-            <div id="sectores-list"><div class="loader">Cargando...</div></div>
-        </div>
-        <div id="screen-sector-detalle" class="screen">
-            <div id="sector-detalle-content"></div>
-        </div>
-        <div id="screen-ficha-bloque" class="screen">
-            <div id="ficha-bloque-content"></div>
-            <div class="back-hint">← Botón atrás del móvil para volver</div>
-        </div>
+        <div id="screen-portada" class="screen"><div style="text-align:center;padding:20px"><h2 style="font-family: 'Cocogoose', sans-serif;">Bienvenido</h2><p>Guía de boulder del club.</p><div style="background:#d4d4d4;color:#2c2c2c;padding:20px;border-radius:12px;margin-top:20px">⚠️ Lee las condiciones de uso.</div></div></div>
+        <div id="screen-condiciones" class="screen"><div class="condiciones-content"><h3 style="font-family: 'Cocogoose', sans-serif;">📋 Condiciones</h3><p>Uso exclusivo para miembros del club. La información es orientativa. Cada escalador es responsable de su seguridad.</p><p style="margin-top:15px">📅 Abril 2025</p></div></div>
+        <div id="screen-sectores" class="screen"><h2 style="font-family: 'Cocogoose', sans-serif;">🏔️ Sectores</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
+        <div id="screen-sector-detalle" class="screen"><div id="sector-detalle-content"></div></div>
+        <div id="screen-ficha-bloque" class="screen"><div id="ficha-bloque-content"></div><div class="back-hint">← Botón atrás del móvil para volver</div></div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // ========== CONFIGURACIÓN ==========
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, navigationStack = [], swiperBloques = null;
 
-        // ========== PALETA DE COLORES POR GRADO (CORREGIDA) ==========
-        // Función mejorada que detecta correctamente 6A vs 6B vs 6C
+        // ====================== COLORES DE GRADOS ======================
         function getColorByGrado(grado) {
             if (!grado) return '#00DFEB';
-            
             const g = grado.toUpperCase().trim();
-            
-            // Pr → Negro
             if (g === 'PR') return '#212121';
-            
-            // Extraer número y letra
             const match = g.match(/(\d+)([A-Z]?)(\+?)/);
             if (!match) return '#00DFEB';
-            
             const num = parseInt(match[1], 10);
             const letra = match[2] || '';
             const mas = match[3] || '';
             
-            // Clasificación exacta por grado
-            // 3,4,5,5+ → Amarillo
             if (num >= 3 && num <= 5) return '#FFD700';
             if (num === 5 && mas === '+') return '#FFD700';
             
-            // 6A, 6A+, 6B → Verde
+            // 6A, 6A+, 6B -> Verde
             if (num === 6 && (letra === 'A' || letra === 'B') && mas !== '+') return '#4CAF50';
             if (num === 6 && letra === 'A' && mas === '+') return '#4CAF50';
             
-            // 6B+, 6C, 6C+ → Azul fuerte
+            // 6B+, 6C, 6C+ -> Azul
             if (num === 6 && letra === 'B' && mas === '+') return '#312EFF';
-            if (num === 6 && (letra === 'C' || letra === 'C' && mas === '+')) return '#312EFF';
+            if (num === 6 && letra === 'C') return '#312EFF';
             
-            // 7A, 7A+, 7B → Rosa vibrante
+            // 7A, 7A+, 7B -> Rosa
             if (num === 7 && (letra === 'A' || letra === 'B')) return '#FF48DA';
             if (num === 7 && letra === 'A' && mas === '+') return '#FF48DA';
             
-            // 7B+, 7C, 7C+ → Rojo intenso
+            // 7B+, 7C, 7C+ -> Rojo
             if (num === 7 && letra === 'B' && mas === '+') return '#FF1A1A';
-            if (num === 7 && (letra === 'C' || letra === 'C' && mas === '+')) return '#FF1A1A';
+            if (num === 7 && letra === 'C') return '#FF1A1A';
             
-            // 8+ → Naranja
             if (num >= 8) return '#FF9800';
-            
             return '#00DFEB';
         }
 
@@ -381,16 +308,36 @@
             return '●';
         }
 
-        // ========== APLICAR ESTILOS AL SVG ==========
+        // ====================== NUEVA FUNCIÓN PARA MANOS (SIN IZQ/DER SI HAY JUNTAS) ======================
+        function getTextoManos(via) {
+            // Caso 1: Si manos_juntas tiene contenido real
+            if (via.manos_juntas && via.manos_juntas.trim() !== "") {
+                return `Manos juntas: ${via.manos_juntas}`;
+            }
+            
+            // Caso 2: Manos separadas
+            let partes = [];
+            if (via.mano_izq && via.mano_izq.trim() !== "") {
+                partes.push(`Izq: ${via.mano_izq}`);
+            }
+            if (via.mano_der && via.mano_der.trim() !== "") {
+                partes.push(`Der: ${via.mano_der}`);
+            }
+            
+            if (partes.length > 0) {
+                return partes.join(" · ");
+            }
+            return "";
+        }
+
+        // ====================== APLICAR ESTILOS AL SVG ======================
         function aplicarEstilosSVG(svgDoc, vias) {
             vias.forEach(via => {
                 const letra = via.linea_id;
                 const color = getColorByGrado(via.grado);
                 const simbolo = getSalidaSymbol(via.salida);
-                
                 const linea = svgDoc.getElementById(letra);
                 if (linea) linea.setAttribute('stroke', color);
-                
                 const circuloInicio = svgDoc.getElementById(`${letra}-inicio`);
                 if (circuloInicio) {
                     circuloInicio.setAttribute('fill', color);
@@ -410,7 +357,6 @@
                         circuloInicio.parentNode.appendChild(texto);
                     }
                 }
-                
                 const circuloFinal = svgDoc.getElementById(`${letra}-final`);
                 if (circuloFinal) {
                     circuloFinal.setAttribute('fill', color);
@@ -433,33 +379,7 @@
             });
         }
 
-        // ========== GENERAR DETALLES DE VÍA CORRECTAMENTE ==========
-        function generarDetallesVia(via) {
-            const detalles = [];
-            
-            // Priorizar manos_juntas si tiene contenido
-            if (via.manos_juntas && via.manos_juntas.trim() !== '') {
-                detalles.push(`Manos juntas: ${via.manos_juntas}`);
-            } else {
-                if (via.mano_izq && via.mano_izq.trim() !== '') {
-                    detalles.push(`Izq: ${via.mano_izq}`);
-                }
-                if (via.mano_der && via.mano_der.trim() !== '') {
-                    detalles.push(`Der: ${via.mano_der}`);
-                }
-            }
-            
-            if (via.definicion && via.definicion.trim() !== '') {
-                detalles.push(via.definicion);
-            }
-            if (via.expuesta && via.expuesta.trim() !== '') {
-                detalles.push(`⚠️ ${via.expuesta}`);
-            }
-            
-            return detalles;
-        }
-
-        // ========== NAVEGACIÓN ==========
+        // ====================== NAVEGACIÓN Y CARGA ======================
         function navigateToScreen(screenId, stateData = null) {
             const currentVisible = document.querySelector('.screen:not([style*="display: none"])');
             if (currentVisible && currentVisible.id !== screenId) navigationStack.push({ screen: currentVisible.id, state: stateData });
@@ -484,7 +404,6 @@
         }
         window.addEventListener('popstate', () => goBack());
 
-        // ========== CARGAR DATOS ==========
         async function cargarDatos() {
             const container = document.getElementById('sectores-list');
             container.innerHTML = '<div class="loader">Cargando...</div>';
@@ -550,7 +469,7 @@
             history.pushState({ sectorNombre: sectorNombre }, '');
         }
 
-        // ========== FICHA DE BLOQUE ==========
+        // ====================== FICHA DE BLOQUE CON LA CORRECCIÓN DE MANOS ======================
         function openFichaBloque(bloqueIndex) {
             if (!currentSector) return;
             const container = document.getElementById('ficha-bloque-content');
@@ -583,7 +502,21 @@
                 
                 const viasContainer = document.getElementById(`vias-${idx}`);
                 b.vias.forEach(via => {
-                    const detalles = generarDetallesVia(via);
+                    // --- USAMOS LA NUEVA FUNCIÓN getTextoManos ---
+                    const textoManos = getTextoManos(via);
+                    
+                    // Construimos los detalles solo con la información no vacía
+                    let detallesHtml = "";
+                    if (textoManos) {
+                        detallesHtml += `<div>${textoManos}</div>`;
+                    }
+                    if (via.definicion && via.definicion.trim() !== "") {
+                        detallesHtml += `<div>${via.definicion}</div>`;
+                    }
+                    if (via.expuesta && via.expuesta.trim() !== "") {
+                        detallesHtml += `<div>⚠️ ${via.expuesta}</div>`;
+                    }
+                    
                     const gradoColor = getColorByGrado(via.grado);
                     const viaDiv = document.createElement('div');
                     viaDiv.className = 'ficha-via-item';
@@ -593,12 +526,11 @@
                             ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
                             ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
                         </div>
-                        ${detalles.length ? `<div class="detalles-texto">${detalles.map(d => `<div>${d}</div>`).join('')}</div>` : ''}
+                        ${detallesHtml ? `<div class="detalles-texto">${detallesHtml}</div>` : ''}
                     `;
                     viasContainer.appendChild(viaDiv);
                 });
                 
-                // Cargar SVG superpuesto
                 fetch(`${b.foto_base}.svg`).then(res => res.text()).then(svgText => {
                     const mediaContainer = slide.querySelector('.media-container');
                     const parser = new DOMParser();
@@ -630,7 +562,7 @@
             history.pushState({ sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }, '');
         }
 
-        // ========== MENÚ ==========
+        // ====================== MENÚ ======================
         function initMenu() {
             const toggle = document.getElementById('menuToggle');
             const dropdown = document.getElementById('dropdownMenu');
