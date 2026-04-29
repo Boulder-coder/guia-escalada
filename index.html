@@ -15,7 +15,7 @@
         }
         body {
             font-family: 'Roboto', sans-serif;
-            background: #fff4d4;
+            background: #FFE68C;
             height: 100vh;
             overflow: hidden;
         }
@@ -24,10 +24,10 @@
             top: 0;
             left: 0;
             right: 0;
-            background: #576f61;
-            color: #ffffff;
+            background: #8CFFAB;
+            color: #1a472a;
             z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .header-top {
             padding: 15px;
@@ -38,14 +38,14 @@
         .menu-toggle {
             background: none;
             border: none;
-            color: white;
+            color: #1a472a;
             font-size: 1.5rem;
             cursor: pointer;
         }
         .dropdown-menu {
             display: none;
             flex-direction: column;
-            background: #3d4f43;
+            background: #7ae099;
         }
         .dropdown-menu.show {
             display: flex;
@@ -53,14 +53,14 @@
         .dropdown-menu button {
             background: none;
             border: none;
-            color: white;
+            color: #1a472a;
             padding: 12px 20px;
             text-align: left;
             font-size: 1rem;
             cursor: pointer;
         }
         .dropdown-menu button:hover {
-            background: #576f61;
+            background: #8CFFAB;
         }
         .app-content {
             margin-top: 70px;
@@ -89,11 +89,11 @@
         }
         .sector-info {
             padding: 12px;
-            background: #c3b49d;
-            color: #ffffff;
+            background: #FFE68C;
+            color: #1a472a;
         }
         .sector-info h3 {
-            color: #ffffff;
+            color: #1a472a;
         }
         .tabs {
             display: flex;
@@ -113,7 +113,7 @@
             font-weight: 500;
         }
         .tab-btn.active {
-            background: #d2757d;
+            background: #FF8C90;
             color: white;
         }
         .tab-pane {
@@ -173,7 +173,7 @@
         .bloque-id {
             font-size: 1.3rem;
             font-weight: 600;
-            color: #576f61;
+            color: #8C98FF;
             padding: 10px 16px 5px;
         }
         .bloque-id-small {
@@ -182,13 +182,14 @@
             color: #5a8f6c;
         }
         .ficha-footer {
-            background: #c3b49d;
-            padding: 10px 16px;
+            background: #8CFFAB;
+            padding: 14px 16px;
             display: flex;
             justify-content: space-between;
-            font-weight: 700;
-            color: #ffffff;
-            font-size: 0.9rem;
+            font-family: 'Cocogoose', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a472a;
         }
         .ficha-vias {
             padding: 5px 16px 12px;
@@ -233,7 +234,7 @@
             margin-top: 2px;
         }
         .swiper-button-next, .swiper-button-prev {
-            color: #576f61 !important;
+            color: #8C98FF !important;
             background: rgba(255,255,255,0.7);
             border-radius: 50%;
             width: 32px;
@@ -243,7 +244,7 @@
             font-size: 14px;
         }
         .swiper-pagination-bullet-active {
-            background: #576f61 !important;
+            background: #8C98FF !important;
         }
         .loader {
             text-align: center;
@@ -258,12 +259,15 @@
             border-top: 1px solid #ddd;
             margin-top: 8px;
         }
+        h2, h3, h4 {
+            color: #8C98FF;
+        }
     </style>
 </head>
 <body>
     <div class="app-header">
         <div class="header-top">
-            <h1 style="font-family: 'Cocogoose', sans-serif; font-weight: 600; letter-spacing: 1px;">GUÍA DE ESCALADA</h1>
+            <h1 style="font-family: 'Cocogoose', sans-serif; font-weight: 600; letter-spacing: 1px; color: #1a472a;">GUÍA DE ESCALADA</h1>
             <button class="menu-toggle" id="menuToggle">☰</button>
         </div>
         <div class="dropdown-menu" id="dropdownMenu">
@@ -277,7 +281,7 @@
             <div style="text-align:center;padding:20px">
                 <h2>Bienvenido</h2>
                 <p>Guía de escalada del club.</p>
-                <div style="background:#576f61;color:white;padding:20px;border-radius:12px;margin-top:20px">⚠️ Lee las condiciones de uso.</div>
+                <div style="background:#8CFFAB;color:#1a472a;padding:20px;border-radius:12px;margin-top:20px">⚠️ Lee las condiciones de uso.</div>
             </div>
         </div>
         <div id="screen-condiciones" class="screen">
