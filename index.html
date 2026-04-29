@@ -331,7 +331,7 @@
 
         // ========== PALETA DE COLORES POR GRADO (ACTUALIZADA) ==========
         function getColorByGrado(grado) {
-            if (!grado) return '#87CEEB'; // Azul cielo para comodín / fallback
+            if (!grado) return '#00DFEB'; // Aguamarina para comodín / fallback
             
             const g = grado.toUpperCase();
             
@@ -340,17 +340,17 @@
             
             // Extraer número base para comparación
             let num = parseFloat(g);
-            if (isNaN(num)) return '#87CEEB';
+            if (isNaN(num)) return '#00DFEB';
             
             // Escalera de colores según la nueva paleta
             if (num >= 3 && num <= 5.5) return '#FFD700';     // Amarillo (3,4,5,5+)
             if (num >= 6 && num <= 6.2) return '#4CAF50';     // Verde (6A,6A+,6B)
-            if (num >= 6.2 && num <= 6.8) return '#1E88E5';   // Azul medio-oscuro (6B+,6C,6C+)
-            if (num >= 6.8 && num <= 7.2) return '#E91E63';   // Rosa (7A,7A+,7B)
-            if (num >= 7.2 && num <= 7.9) return '#F44336';   // Rojo (7B+,7C,7C+)
+            if (num >= 6.2 && num <= 6.8) return '#312EFF';   // Azul fuerte (6B+,6C,6C+)
+            if (num >= 6.8 && num <= 7.2) return '#FF48DA';   // Rosa vibrante (7A,7A+,7B)
+            if (num >= 7.2 && num <= 7.9) return '#FF1A1A';   // Rojo intenso (7B+,7C,7C+)
             if (num >= 8) return '#FF9800';                   // Naranja (8A...9A)
             
-            return '#87CEEB';
+            return '#00DFEB';
         }
 
         function getSalidaSymbol(salida) {
