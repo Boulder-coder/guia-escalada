@@ -40,8 +40,8 @@
               "grado": "Pr",
               "entrada": "Sit",
               "mano_izq": "",
-              "mano_der": "Canto al fondo",
-              "manos_juntas": "",
+              "mano_der": "",
+              "manos_juntas": "Canto al fondo",
               "definicion": "Entra al fondo de la cueva, sale recto",
               "salida": "Top-out",
               "expuesta": ""
@@ -154,8 +154,8 @@
               "grado": "*",
               "entrada": "De Pie",
               "mano_izq": "",
-              "mano_der": "Repisa",
-              "manos_juntas": "",
+              "mano_der": "",
+              "manos_juntas": "Repisa",
               "definicion": "¡Eliminatoria! Solo valen las presas en el plano de la repisa. Se hace top de pie sobre la repisa",
               "salida": "Top",
               "expuesta": "¡Cuidado con el árbol!"
@@ -274,8 +274,8 @@
               "grado": "Pr",
               "entrada": "De Pie",
               "mano_izq": "",
-              "mano_der": "Presa grande",
-              "manos_juntas": "",
+              "mano_der": "",
+              "manos_juntas": "Presa grande",
               "definicion": "Sale hacia la izquierda",
               "salida": "Top-out",
               "expuesta": "Caída en desnivel"
@@ -286,8 +286,8 @@
               "grado": "6B+",
               "entrada": "De Pie",
               "mano_izq": "",
-              "mano_der": "Presa grande",
-              "manos_juntas": "",
+              "mano_der": "",
+              "manos_juntas": "Presa grande",
               "definicion": "Misma entrada que A, sale recto",
               "salida": "Top-out",
               "expuesta": ""
@@ -298,8 +298,8 @@
               "grado": "6C",
               "entrada": "De Pie",
               "mano_izq": "",
-              "mano_der": "Presa grande",
-              "manos_juntas": "",
+              "mano_der": "",
+              "manos_juntas": "Presa grande",
               "definicion": "Misma entrada que A, sale hacia la derecha. No vale pisar la tierra",
               "salida": "Top-out",
               "expuesta": ""
@@ -503,7 +503,7 @@
               "expuesta": ""
             },
             {
-              "linea_id": "B",
+              "linea_id": "B.1",
               "nombre": "Dulce deleite",
               "grado": "6B+",
               "entrada": "Sit",
@@ -515,7 +515,7 @@
               "expuesta": ""
             },
             {
-              "linea_id": "B",
+              "linea_id": "B.2",
               "nombre": "Dulce deleite",
               "grado": "6C",
               "entrada": "Sit",
@@ -598,8 +598,8 @@
               "grado": "4",
               "entrada": "Semi-Sit",
               "mano_izq": "",
-              "mano_der": "Plano tumbado",
-              "manos_juntas": "",
+              "mano_der": "",
+              "manos_juntas": "Plano tumbado",
               "definicion": "",
               "salida": "Top-out",
               "expuesta": "Caída sin porteo"
