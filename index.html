@@ -6,8 +6,8 @@
     <title>Guía de Escalada</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
-        @import url('https://fonts.cdnfonts.com/css/cocogoose');
         * {
             margin: 0;
             padding: 0;
@@ -15,7 +15,7 @@
         }
         body {
             font-family: 'Roboto', sans-serif;
-            background: #f5f5f5;
+            background: #fff4d4;
             height: 100vh;
             overflow: hidden;
         }
@@ -24,8 +24,8 @@
             top: 0;
             left: 0;
             right: 0;
-            background: #1a472a;
-            color: white;
+            background: #576f61;
+            color: #ffffff;
             z-index: 1000;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
@@ -45,7 +45,7 @@
         .dropdown-menu {
             display: none;
             flex-direction: column;
-            background: #0d2818;
+            background: #3d4f43;
         }
         .dropdown-menu.show {
             display: flex;
@@ -60,7 +60,7 @@
             cursor: pointer;
         }
         .dropdown-menu button:hover {
-            background: #2a5a3a;
+            background: #576f61;
         }
         .app-content {
             margin-top: 70px;
@@ -89,9 +89,11 @@
         }
         .sector-info {
             padding: 12px;
+            background: #c3b49d;
+            color: #ffffff;
         }
         .sector-info h3 {
-            color: #1a472a;
+            color: #ffffff;
         }
         .tabs {
             display: flex;
@@ -111,7 +113,7 @@
             font-weight: 500;
         }
         .tab-btn.active {
-            background: #1a472a;
+            background: #d2757d;
             color: white;
         }
         .tab-pane {
@@ -171,13 +173,22 @@
         .bloque-id {
             font-size: 1.3rem;
             font-weight: 600;
-            color: #1a472a;
+            color: #576f61;
             padding: 10px 16px 5px;
         }
         .bloque-id-small {
             font-size: 0.85rem;
             font-weight: normal;
             color: #5a8f6c;
+        }
+        .ficha-footer {
+            background: #c3b49d;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 0.9rem;
         }
         .ficha-vias {
             padding: 5px 16px 12px;
@@ -222,7 +233,7 @@
             margin-top: 2px;
         }
         .swiper-button-next, .swiper-button-prev {
-            color: #1a472a !important;
+            color: #576f61 !important;
             background: rgba(255,255,255,0.7);
             border-radius: 50%;
             width: 32px;
@@ -232,7 +243,7 @@
             font-size: 14px;
         }
         .swiper-pagination-bullet-active {
-            background: #1a472a !important;
+            background: #576f61 !important;
         }
         .loader {
             text-align: center;
@@ -252,7 +263,7 @@
 <body>
     <div class="app-header">
         <div class="header-top">
-            <h1 style="font-family: 'Cocogoose', sans-serif; font-weight: bold; letter-spacing: 1px;">GUÍA DE ESCALADA</h1>
+            <h1 style="font-family: 'Cocogoose', sans-serif; font-weight: 600; letter-spacing: 1px;">GUÍA DE ESCALADA</h1>
             <button class="menu-toggle" id="menuToggle">☰</button>
         </div>
         <div class="dropdown-menu" id="dropdownMenu">
@@ -262,11 +273,31 @@
         </div>
     </div>
     <div class="app-content">
-        <div id="screen-portada" class="screen"><div style="text-align:center;padding:20px"><h2>Bienvenido</h2><p>Guía de escalada del club.</p><div style="background:#1a472a;color:white;padding:20px;border-radius:12px;margin-top:20px">⚠️ Lee las condiciones de uso.</div></div></div>
-        <div id="screen-condiciones" class="screen"><div class="condiciones-content"><h3>📋 Condiciones</h3><p>Uso exclusivo para miembros del club. La información es orientativa. Cada escalador es responsable de su seguridad.</p><p style="margin-top:15px">📅 Abril 2025</p></div></div>
-        <div id="screen-sectores" class="screen"><h2>🏔️ Sectores</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
-        <div id="screen-sector-detalle" class="screen"><div id="sector-detalle-content"></div></div>
-        <div id="screen-ficha-bloque" class="screen"><div id="ficha-bloque-content"></div><div class="back-hint">← Botón atrás del móvil para volver</div></div>
+        <div id="screen-portada" class="screen">
+            <div style="text-align:center;padding:20px">
+                <h2>Bienvenido</h2>
+                <p>Guía de escalada del club.</p>
+                <div style="background:#576f61;color:white;padding:20px;border-radius:12px;margin-top:20px">⚠️ Lee las condiciones de uso.</div>
+            </div>
+        </div>
+        <div id="screen-condiciones" class="screen">
+            <div class="condiciones-content">
+                <h3>📋 Condiciones</h3>
+                <p>Uso exclusivo para miembros del club. La información es orientativa. Cada escalador es responsable de su seguridad.</p>
+                <p style="margin-top:15px">📅 Abril 2025</p>
+            </div>
+        </div>
+        <div id="screen-sectores" class="screen">
+            <h2>🏔️ Sectores</h2>
+            <div id="sectores-list"><div class="loader">Cargando...</div></div>
+        </div>
+        <div id="screen-sector-detalle" class="screen">
+            <div id="sector-detalle-content"></div>
+        </div>
+        <div id="screen-ficha-bloque" class="screen">
+            <div id="ficha-bloque-content"></div>
+            <div class="back-hint">← Botón atrás del móvil para volver</div>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
@@ -471,7 +502,10 @@
                         <div class="media-container">
                             <img src="${b.foto_base}.jpg" class="foto-bloque" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
                         </div>
-                        <div class="bloque-id">Bloque ${b.id.split('.')[0]}<span class="bloque-id-small">${b.id.includes('.') ? '.'+b.id.split('.')[1] : ''}</span></div>
+                        <div class="ficha-footer">
+                            <span>Bloque ${b.id}</span>
+                            <span>${currentSector.nombre}</span>
+                        </div>
                         <div class="ficha-vias" id="vias-${idx}"></div>
                     </div>
                 `;
