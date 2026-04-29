@@ -63,7 +63,8 @@
             color: #ffffff;
             padding: 12px 20px;
             text-align: left;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            font-weight: 300;
             cursor: pointer;
             letter-spacing: 0.5px;
         }
@@ -200,7 +201,7 @@
             padding: 14px 16px;
             display: flex;
             justify-content: space-between;
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             font-weight: bold;
             color: #2c2c2c;
             letter-spacing: 0.5px;
@@ -278,7 +279,7 @@
             letter-spacing: 0.5px;
         }
         h1 {
-            font-weight: normal;
+            font-weight: 300 !important;
             letter-spacing: 1px;
         }
     </style>
@@ -286,32 +287,32 @@
 <body>
     <div class="app-header">
         <div class="header-top">
-            <h1 style="font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif; font-weight: normal; letter-spacing: 1px; color: #FFDE66; font-size: 1.2rem;">GUÍA DE BOULDER</h1>
+            <h1 style="font-family: 'Cocogoose', sans-serif; font-weight: 300; letter-spacing: 1px; color: #FFDE66;">GUÍA DE BOULDER</h1>
             <button class="menu-toggle" id="menuToggle">☰</button>
         </div>
         <div class="dropdown-menu" id="dropdownMenu">
-            <button data-screen="portada" style="font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;">🏠 Portada</button>
-            <button data-screen="condiciones" style="font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;">📋 Condiciones</button>
-            <button data-screen="sectores" style="font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;">⛰️ Sectores</button>
+            <button data-screen="portada" style="font-family: 'Cocogoose', sans-serif; font-weight: 300;">🏠 Portada</button>
+            <button data-screen="condiciones" style="font-family: 'Cocogoose', sans-serif; font-weight: 300;">📋 Condiciones</button>
+            <button data-screen="sectores" style="font-family: 'Cocogoose', sans-serif; font-weight: 300;">⛰️ Sectores</button>
         </div>
     </div>
     <div class="app-content">
         <div id="screen-portada" class="screen">
             <div style="text-align:center;padding:20px">
-                <h2 style="font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;">Bienvenido</h2>
+                <h2 style="font-family: 'Cocogoose', sans-serif;">Bienvenido</h2>
                 <p>Guía de boulder del club.</p>
                 <div style="background:#d4d4d4;color:#2c2c2c;padding:20px;border-radius:12px;margin-top:20px">⚠️ Lee las condiciones de uso.</div>
             </div>
         </div>
         <div id="screen-condiciones" class="screen">
             <div class="condiciones-content">
-                <h3 style="font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;">📋 Condiciones</h3>
+                <h3 style="font-family: 'Cocogoose', sans-serif;">📋 Condiciones</h3>
                 <p>Uso exclusivo para miembros del club. La información es orientativa. Cada escalador es responsable de su seguridad.</p>
                 <p style="margin-top:15px">📅 Abril 2025</p>
             </div>
         </div>
         <div id="screen-sectores" class="screen">
-            <h2 style="font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;">🏔️ Sectores</h2>
+            <h2 style="font-family: 'Cocogoose', sans-serif;">🏔️ Sectores</h2>
             <div id="sectores-list"><div class="loader">Cargando...</div></div>
         </div>
         <div id="screen-sector-detalle" class="screen">
@@ -470,7 +471,7 @@
             const container = document.getElementById('sector-detalle-content');
             const croquisUrl = currentSector.croquis ? `${currentSector.croquis}.jpg` : '';
             container.innerHTML = `
-                <h2 style="font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;">${currentSector.nombre}</h2>
+                <h2 style="font-family: 'Cocogoose', sans-serif;">${currentSector.nombre}</h2>
                 <div class="tabs">
                     <button class="tab-btn active" data-tab="info">ℹ️ Info</button>
                     <button class="tab-btn" data-tab="croquis">🗺️ Croquis</button>
@@ -494,7 +495,7 @@
             currentSector.bloques.forEach((bloque, idx) => {
                 const card = document.createElement('div');
                 card.className = 'subsector-card';
-                card.innerHTML = `<h4 style="font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;">📌 Bloque ${bloque.id}</h4><p>${bloque.vias.length} vías</p>`;
+                card.innerHTML = `<h4 style="font-family: 'Cocogoose', sans-serif;">📌 Bloque ${bloque.id}</h4><p>${bloque.vias.length} vías</p>`;
                 card.onclick = () => openFichaBloque(idx);
                 bloquesContainer.appendChild(card);
             });
@@ -525,7 +526,7 @@
                         <div class="media-container">
                             <img src="${b.foto_base}.jpg" class="foto-bloque" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
                         </div>
-                        <div class="ficha-footer" style="font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;">
+                        <div class="ficha-footer" style="font-family: 'Cocogoose', sans-serif;">
                             <span>Bloque ${b.id}</span>
                             <span>${currentSector.nombre}</span>
                         </div>
@@ -548,7 +549,7 @@
                     viaDiv.className = 'ficha-via-item';
                     viaDiv.innerHTML = `
                         <div class="via-header">
-                            <span class="via-nombre">${via.linea_id} ${via.nombre}</span>
+                            <span class="via-nombre">${via.linea_id} · ${via.nombre}</span>
                             ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
                             ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
                         </div>
