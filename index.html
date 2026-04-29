@@ -140,13 +140,16 @@
             border-radius: 12px;
             padding: 20px;
         }
-        /* ===== NUEVO ESTILO PARA EL LISTADO DE LÍNEAS ===== */
+        /* ===== ESTILO PARA EL LISTADO DE LÍNEAS ===== */
         .bloque-group {
             background: #ffffff;
             border-radius: 12px;
             margin-bottom: 20px;
             overflow: hidden;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .bloque-group:last-child {
+            margin-bottom: 20px; /* Espacio extra al final */
         }
         .bloque-group h3 {
             background: #d4d4d4;
@@ -166,7 +169,6 @@
         }
         .linea-item:last-child {
             border-bottom: none;
-            margin-bottom: 15px; /* Espacio extra al final */
         }
         .linea-item:active {
             background: #f0f0f0;
@@ -187,8 +189,8 @@
             white-space: nowrap;
             margin-left: 10px;
         }
-        /* ===== FIN DEL NUEVO ESTILO ===== */
-        /* ===== NUEVO ESTILO PARA LA GRÁFICA ===== */
+        /* ===== FIN DEL ESTILO DEL LISTADO ===== */
+        /* ===== ESTILO PARA LA GRÁFICA ===== */
         .grafica-container {
             background: #ffffff;
             border-radius: 12px;
@@ -199,17 +201,18 @@
         .grafica-titulo {
             text-align: center;
             margin-bottom: 15px;
-            font-weight: 500;
-            color: #2c2c2c;
+            font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
+            color: #6674FF;
+            font-size: 1.1rem;
         }
         canvas {
             width: 100%;
             max-width: 100%;
             height: auto;
-            background: #f9f9f9;
-            border-radius: 8px;
+            background: transparent;
+            display: block;
         }
-        /* ===== FIN NUEVO ESTILO ===== */
+        /* ===== FIN ESTILO GRÁFICA ===== */
         .croquis-container {
             position: relative;
             background: #ffffff;
@@ -396,7 +399,6 @@
 
         // ====================== NUEVA FUNCIÓN PARA GENERAR LA GRÁFICA ======================
         function dibujarGrafica(sector) {
-            // 1. Contar las apariciones de cada grado
             const conteo = {};
             sector.bloques.forEach(bloque => {
                 bloque.vias.forEach(via => {
@@ -407,7 +409,6 @@
                 });
             });
             
-            // Ordenar grados de manera lógica (por dificultad)
             const ordenGrados = [
                 "3", "4", "4+", "5", "5+", "6A", "6A+", "6B", "6B+", "6C", "6C+",
                 "7A", "7A+", "7B", "7B+", "7C", "7C+", "8A", "8A+", "8B", "8B+", "8C", "8C+", "9A", "Pr", "*"
@@ -416,12 +417,11 @@
             const valores = gradosFiltrados.map(g => conteo[g]);
             const maxValor = Math.max(...valores, 1);
             
-            // 2. Preparar el canvas
             const canvas = document.getElementById('grafica-sector');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             const width = canvas.clientWidth;
-            const height = 300;
+            const height = 200; // Altura más pequeña para que no sea tan alargada verticalmente
             canvas.width = width;
             canvas.height = height;
             
@@ -430,8 +430,9 @@
             const startY = height - 30;
             
             ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, width, height);
             
-            // Dibujar ejes
             ctx.beginPath();
             ctx.moveTo(30, 10);
             ctx.lineTo(30, startY);
@@ -439,13 +440,11 @@
             ctx.strokeStyle = '#aaa';
             ctx.stroke();
             
-            // Títulos de los ejes
             ctx.fillStyle = '#555';
             ctx.font = '10px Roboto';
             ctx.fillText('Nº vías', 10, 30);
             ctx.fillText('Grado', width/2 - 20, height - 5);
             
-            // Dibujar las barras
             gradosFiltrados.forEach((grado, i) => {
                 const valor = conteo[grado];
                 const barHeight = (valor / maxValor) * (startY - 30);
@@ -605,7 +604,7 @@
                 <div id="tab-info" class="tab-pane active">
                     <div class="grafica-container">
                         <div class="grafica-titulo">Distribución de grados</div>
-                        <canvas id="grafica-sector" style="width:100%; height:auto; max-height:300px;"></canvas>
+                        <canvas id="grafica-sector" style="width:100%; height:auto; max-height:200px;"></canvas>
                     </div>
                     <div class="info-sector">
                         <h4>Información del sector</h4>
