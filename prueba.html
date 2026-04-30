@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba SVG</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #e8e8e8; }
+        .test-container { position: relative; max-width: 600px; margin: 0 auto; border: 2px solid red; }
+        .test-container img { width: 100%; height: auto; display: block; }
+        .test-container svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        button { margin: 20px 0; padding: 10px 20px; background: #6674FF; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .info { background: white; padding: 15px; margin-top: 20px; border-radius: 8px; font-size: 12px; white-space: pre-wrap; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <h2>Prueba de SVG interactivo</h2>
+    <button id="btnAplicar">Aplicar colores</button>
+    <div class="test-container" id="testContainer">
+        <img id="testImg" src="https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B8_1.jpg" crossorigin="anonymous">
+        <svg id="testSvg" viewBox="0 0 692 768" style="background:transparent;"></svg>
+    </div>
+    <div class="info" id="info"></div>
+
+    <script>
+        const svgUrl = 'https://raw.githubusercontent.com/Boulder-coder/guia-escalada/main/fotos/MLC_ESTE_B8_1.svg';
+        const svgContainer = document.getElementById('testSvg');
+        const img = document.getElementById('testImg');
+        const infoDiv = document.getElementById('info');
+        
+        // Cargar el SVG
+        fetch(svgUrl)
+            .then(res => res.text())
+            .then(svgText => {
+                // Limpiar el SVG de posibles fondos blancos
+                let cleanedSvg = svgText.replace(/<rect[^>]*fill="white"[^>]*>/gi, '');
+                cleanedSvg = cleanedSvg.replace(/<rect[^>]*fill="#ffffff"[^>]*>/gi, '');
+                cleanedSvg = cleanedSvg.replace(/<rect[^>]*fill="#fff"[^>]*>/gi, '');
+                cleanedSvg = cleanedSvg.replace(/<rect[^>]*fill="#FFFFFF"[^>]*>/gi, '');
+                cleanedSvg = cleanedSvg.replace(/style="[^"]*background:white[^"]*"/gi, '');
+                cleanedSvg = cleanedSvg.replace(/style="[^"]*background:#fff[^"]*"/gi, '');
+                
+                // Insertar el SVG
+                svgContainer.innerHTML = cleanedSvg;
+                infoDiv.innerHTML += `✅ SVG cargado y limpiado\n`;
+                
+                // Listar los elementos encontrados
+                const elementos = svgContainer.querySelectorAll('[inkscape\\:label]');
+                infoDiv.innerHTML += `📋 Elementos con inkscape:label encontrados: ${elementos.length}\n`;
+                elementos.forEach(el => {
+                    infoDiv.innerHTML += `   - ${el.getAttribute('inkscape:label')}\n`;
+                });
+            })
+            .catch(err => {
+                infoDiv.innerHTML += `❌ Error cargando SVG: ${err}\n`;
+            });
+        
+        // Función para aplicar colores de prueba
+        document.getElementById('btnAplicar').onclick = () => {
+            const colores = {
+                'A': '#8CDB00',  // Verde para 5
+                'B': '#00ADD4',  // Azul para 6B
+                'C': '#212121',  // Negro para Pr
+                'D': '#00BD48',  // Verde para 6A
+                'E': '#00BD48'   // Verde para 6A
+            };
+            
+            const simbolos = {
+                'A': '▲',
+                'B': '▲',
+                'C': '▲',
+                'D': '▲',
+                'E': '▲'
+            };
+            
+            for (const [letra, color] of Object.entries(colores)) {
+                // Línea
+                const linea = svgContainer.querySelector(`[inkscape\\:label="${letra}_linea"]`);
+                if (linea) {
+                    linea.setAttribute('stroke', color);
+                    linea.setAttribute('stroke-width', '5');
+                    infoDiv.innerHTML += `✅ Línea ${letra}_linea coloreada a ${color}\n`;
+                } else {
+                    infoDiv.innerHTML += `❌ No se encontró ${letra}_linea\n`;
+                }
+                
+                // Círculo entrada
+                const circuloEntrada = svgContainer.querySelector(`[inkscape\\:label="${letra}_entrada"]`);
+                if (circuloEntrada) {
+                    circuloEntrada.setAttribute('fill', color);
+                    circuloEntrada.setAttribute('stroke', color);
+                    infoDiv.innerHTML += `✅ Círculo entrada ${letra}_entrada coloreado\n`;
+                } else {
+                    infoDiv.innerHTML += `❌ No se encontró ${letra}_entrada\n`;
+                }
+                
+                // Círculo salida
+                const circuloSalida = svgContainer.querySelector(`[inkscape\\:label="${letra}_salida"]`);
+                if (circuloSalida) {
+                    circuloSalida.setAttribute('fill', color);
+                    circuloSalida.setAttribute('stroke', color);
+                    infoDiv.innerHTML += `✅ Círculo salida ${letra}_salida coloreado\n`;
+                } else {
+                    infoDiv.innerHTML += `❌ No se encontró ${letra}_salida\n`;
+                }
+            }
+        };
+    </script>
+</body>
+</html>
