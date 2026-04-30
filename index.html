@@ -377,7 +377,6 @@
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, navigationStack = [], swiperBloques = null;
 
-        // ====================== PALETA ARCOÍRIS ======================
         function getColorByGrado(grado) {
             if (!grado) return '#FF93DB';
             const g = grado.toUpperCase().trim();
@@ -427,7 +426,7 @@
             return '●';
         }
 
-        // ====================== FUNCIÓN PARA APLICAR ESTILOS (TRABAJA SOBRE EL SVG CARGADO) ======================
+        // ====================== FUNCIÓN CORREGIDA CON BÚSQUEDA INSENSIBLE A MAYÚSCULAS ======================
         function aplicarEstilosSVG(svgRoot, vias) {
             if (!svgRoot) {
                 console.log("❌ svgRoot inválido");
@@ -435,6 +434,19 @@
             }
             
             console.log("🎨 Aplicando estilos a SVG");
+            
+            function findElementById(root, id) {
+                let elem = root.getElementById(id);
+                if (elem) return elem;
+                const allElements = root.querySelectorAll('[id]');
+                for (let el of allElements) {
+                    if (el.id && el.id.toLowerCase() === id.toLowerCase()) {
+                        console.log(`  → Encontrado ${el.id} (buscando ${id})`);
+                        return el;
+                    }
+                }
+                return null;
+            }
             
             vias.forEach(via => {
                 const letra = via.linea_id;
@@ -444,10 +456,9 @@
                 
                 console.log(`  Procesando: ${letraBase}, color ${color}, símbolo ${simbolo}`);
                 
-                // Buscar elementos dentro del SVG
-                const linea = svgRoot.getElementById(`${letraBase}_linea`);
-                const circuloEntrada = svgRoot.getElementById(`${letraBase}_entrada`);
-                const circuloSalida = svgRoot.getElementById(`${letraBase}_salida`);
+                const linea = findElementById(svgRoot, `${letraBase}_linea`);
+                const circuloEntrada = findElementById(svgRoot, `${letraBase}_entrada`);
+                const circuloSalida = findElementById(svgRoot, `${letraBase}_salida`);
                 
                 if (linea) {
                     linea.setAttribute('stroke', color);
@@ -461,7 +472,6 @@
                     circuloEntrada.setAttribute('fill', color);
                     circuloEntrada.setAttribute('stroke', color);
                     
-                    // Verificar si es entrada principal (sin punto o .1)
                     if (!letra.includes('.') || (letra.includes('.') && letra.split('.')[1] === '1')) {
                         let texto = circuloEntrada.querySelector('text');
                         if (!texto) {
@@ -512,7 +522,6 @@
             });
         }
 
-        // ====================== GRÁFICA ======================
         function dibujarGrafica(sector) {
             const conteo = {};
             sector.bloques.forEach(bloque => {
@@ -588,7 +597,6 @@
             return partes.length > 0 ? partes.join(" · ") : "";
         }
 
-        // ====================== NAVEGACIÓN Y CARGA ======================
         function navigateToScreen(screenId, stateData = null) {
             const currentVisible = document.querySelector('.screen:not([style*="display: none"])');
             if (currentVisible && currentVisible.id !== screenId) navigationStack.push({ screen: currentVisible.id, state: stateData });
@@ -747,7 +755,7 @@
             setTimeout(() => dibujarGrafica(currentSector), 100);
         }
 
-        // ====================== FICHA DE BLOQUE (CON SVG VÍA OBJECT TAG) ======================
+        // ====================== FICHA DE BLOQUE CON OBJECT TAG ======================
         function openFichaBloque(bloqueIndex) {
             if (!currentSector) return;
             const container = document.getElementById('ficha-bloque-content');
@@ -802,7 +810,6 @@
                 const svgUrl = `${b.foto_base}.svg`;
                 console.log(`📂 Cargando SVG: ${svgUrl}`);
                 
-                // Usar object tag para cargar el SVG y acceder a su contenido después de cargado
                 const objectTag = document.createElement('object');
                 objectTag.setAttribute('data', svgUrl);
                 objectTag.setAttribute('type', 'image/svg+xml');
