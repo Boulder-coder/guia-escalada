@@ -426,7 +426,7 @@
             return '●';
         }
 
-        // ====================== FUNCIÓN CORREGIDA CON BÚSQUEDA INSENSIBLE A MAYÚSCULAS ======================
+        // ====================== FUNCIÓN CORREGIDA PARA USAR inkscape:label ======================
         function aplicarEstilosSVG(svgRoot, vias) {
             if (!svgRoot) {
                 console.log("❌ svgRoot inválido");
@@ -435,15 +435,11 @@
             
             console.log("🎨 Aplicando estilos a SVG");
             
-            function findElementById(root, id) {
-                let elem = root.getElementById(id);
-                if (elem) return elem;
-                const allElements = root.querySelectorAll('[id]');
-                for (let el of allElements) {
-                    if (el.id && el.id.toLowerCase() === id.toLowerCase()) {
-                        console.log(`  → Encontrado ${el.id} (buscando ${id})`);
-                        return el;
-                    }
+            function findElementByLabel(root, label) {
+                const elementos = root.querySelectorAll(`[inkscape\\:label="${label}"]`);
+                if (elementos.length > 0) {
+                    console.log(`  → Encontrado por inkscape:label: ${label}`);
+                    return elementos[0];
                 }
                 return null;
             }
@@ -456,9 +452,9 @@
                 
                 console.log(`  Procesando: ${letraBase}, color ${color}, símbolo ${simbolo}`);
                 
-                const linea = findElementById(svgRoot, `${letraBase}_linea`);
-                const circuloEntrada = findElementById(svgRoot, `${letraBase}_entrada`);
-                const circuloSalida = findElementById(svgRoot, `${letraBase}_salida`);
+                const linea = findElementByLabel(svgRoot, `${letraBase}_linea`);
+                const circuloEntrada = findElementByLabel(svgRoot, `${letraBase}_entrada`);
+                const circuloSalida = findElementByLabel(svgRoot, `${letraBase}_salida`);
                 
                 if (linea) {
                     linea.setAttribute('stroke', color);
@@ -755,7 +751,7 @@
             setTimeout(() => dibujarGrafica(currentSector), 100);
         }
 
-        // ====================== FICHA DE BLOQUE CON OBJECT TAG ======================
+        // ====================== FICHA DE BLOQUE ======================
         function openFichaBloque(bloqueIndex) {
             if (!currentSector) return;
             const container = document.getElementById('ficha-bloque-content');
