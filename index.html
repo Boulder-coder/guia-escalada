@@ -8,68 +8,349 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         .cocogoose-font, h1, .dropdown-menu button, .ficha-footer, h2, h3, h4, .tab-btn {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
         }
-        body { font-family: 'Roboto', sans-serif; background: #e8e8e8; height: 100vh; overflow: hidden; }
-        .app-header { position: fixed; top: 0; left: 0; right: 0; background: #2c2c2c; color: #ffffff; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .header-top { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .menu-toggle { background: none; border: none; color: #FFDE66; font-size: 1.5rem; cursor: pointer; font-family: 'Roboto', sans-serif; }
-        .dropdown-menu { display: none; flex-direction: column; background: #3a3a3a; }
-        .dropdown-menu.show { display: flex; }
-        .dropdown-menu button { background: none; border: none; color: #ffffff; padding: 12px 20px; text-align: left; font-size: 0.9rem; font-weight: 300; cursor: pointer; letter-spacing: 0.5px; }
-        .dropdown-menu button:hover { background: #6674FF; color: #ffffff; }
-        .app-content { margin-top: 70px; height: calc(100vh - 70px); overflow-y: auto; padding: 15px; }
-        .screen { display: none; }
-        .screen.active { display: block; }
-        .sector-card { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
-        .sector-card img { width: 100%; height: 160px; object-fit: cover; }
-        .sector-info { padding: 12px; background: #d4d4d4; color: #2c2c2c; }
-        .sector-info h3 { color: #2c2c2c; font-size: 1.2rem; }
-        .tabs { display: flex; gap: 5px; background: #ffffff; border-radius: 12px; margin-bottom: 15px; padding: 5px; }
-        .tab-btn { flex: 1; padding: 10px; background: none; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: normal; color: #2c2c2c; transition: all 0.2s; }
-        .tab-btn.active { background: #FFDE66; color: #2c2c2c; }
-        .tab-pane { display: none; }
-        .tab-pane.active { display: block; }
-        .info-sector, .condiciones-content { background: #ffffff; border-radius: 12px; padding: 20px; }
-        .bloque-group { background: #ffffff; border-radius: 12px; margin-bottom: 20px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .bloque-group:last-child { margin-bottom: 60px; }
-        .bloque-group h3 { background: #d4d4d4; padding: 12px 16px; font-size: 1rem; color: #2c2c2c; margin: 0; }
-        .linea-item { padding: 12px 16px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; display: flex; justify-content: space-between; align-items: center; }
-        .linea-item:last-child { border-bottom: none; }
-        .linea-item:active { background: #f0f0f0; }
-        .linea-nombre { font-weight: 500; font-size: 0.9rem; flex: 1; text-align: left; }
-        .linea-grado-badge { display: inline-block; color: white; border-radius: 20px; padding: 2px 10px; font-size: 0.7rem; font-weight: 500; white-space: nowrap; margin-left: 10px; }
-        .grafica-container { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .grafica-titulo { text-align: left; margin-bottom: 15px; font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif; color: #6674FF; font-size: 1.1rem; }
-        canvas { width: 100%; max-width: 100%; height: auto; background: transparent; display: block; }
-        .croquis-container { position: relative; background: #ffffff; border-radius: 12px; overflow: hidden; }
-        .croquis-img { width: 100%; height: auto; display: block; pointer-events: none; }
-        .croquis-svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto; }
-        .ficha-bloque { background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 0; }
-        .media-container { position: relative; background: #d4d4d4; min-height: 200px; }
-        .media-container img, .media-container svg { width: 100%; height: auto; display: block; }
-        .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: auto; pointer-events: none; }
-        .bloque-id { font-size: 1.3rem; font-weight: 600; color: #6674FF; padding: 10px 16px 5px; font-family: 'Roboto', sans-serif; }
-        .bloque-id-small { font-size: 0.85rem; font-weight: normal; color: #888; }
-        .ficha-footer { background: #d4d4d4; padding: 14px 16px; display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #2c2c2c; letter-spacing: 0.5px; }
-        .ficha-vias { padding: 5px 16px 12px; }
-        .ficha-via-item { border-bottom: 1px solid #eee; padding: 8px 0; }
-        .ficha-via-item:last-child { border-bottom: none; }
-        .via-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; margin-bottom: 4px; }
-        .via-nombre { font-weight: 600; font-size: 0.95rem; }
-        .grado-badge { display: inline-block; color: white; border-radius: 20px; padding: 2px 10px; font-size: 0.7rem; font-weight: 500; }
-        .entrada-texto { font-size: 0.8rem; color: #444; }
-        .detalles-texto { font-size: 0.75rem; color: #555; margin-top: 3px; line-height: 1.3; }
-        .detalles-texto div { margin-top: 2px; }
-        .swiper-button-next, .swiper-button-prev { color: #6674FF !important; background: rgba(255,255,255,0.8); border-radius: 50%; width: 32px; height: 32px; }
-        .swiper-button-next:after, .swiper-button-prev:after { font-size: 14px; }
-        .swiper-pagination-bullet-active { background: #6674FF !important; }
-        .loader { text-align: center; padding: 40px; color: #666; }
-        .back-hint { text-align: center; padding: 8px; font-size: 0.65rem; color: #888; border-top: 1px solid #ddd; margin-top: 8px; }
-        h2, h3, h4 { color: #6674FF; letter-spacing: 0.5px; }
-        h1 { font-weight: 300 !important; letter-spacing: 1px; }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #e8e8e8;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .app-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #2c2c2c;
+            color: #ffffff;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .header-top {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: #FFDE66;
+            font-size: 1.5rem;
+            cursor: pointer;
+            font-family: 'Roboto', sans-serif;
+        }
+        .dropdown-menu {
+            display: none;
+            flex-direction: column;
+            background: #3a3a3a;
+        }
+        .dropdown-menu.show {
+            display: flex;
+        }
+        .dropdown-menu button {
+            background: none;
+            border: none;
+            color: #ffffff;
+            padding: 12px 20px;
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 300;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+        .dropdown-menu button:hover {
+            background: #6674FF;
+            color: #ffffff;
+        }
+        .app-content {
+            margin-top: 70px;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+            padding: 15px;
+        }
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+        }
+        .sector-card {
+            background: #ffffff;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        .sector-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+        .sector-info {
+            padding: 12px;
+            background: #d4d4d4;
+            color: #2c2c2c;
+        }
+        .sector-info h3 {
+            color: #2c2c2c;
+            font-size: 1.2rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 5px;
+            background: #ffffff;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            padding: 5px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: normal;
+            color: #2c2c2c;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: #FFDE66;
+            color: #2c2c2c;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        .info-sector, .condiciones-content {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .bloque-group {
+            background: #ffffff;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .bloque-group:last-child {
+            margin-bottom: 60px;
+        }
+        .bloque-group h3 {
+            background: #d4d4d4;
+            padding: 12px 16px;
+            font-size: 1rem;
+            color: #2c2c2c;
+            margin: 0;
+        }
+        .linea-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .linea-item:last-child {
+            border-bottom: none;
+        }
+        .linea-item:active {
+            background: #f0f0f0;
+        }
+        .linea-nombre {
+            font-weight: 500;
+            font-size: 0.9rem;
+            flex: 1;
+            text-align: left;
+        }
+        .linea-grado-badge {
+            display: inline-block;
+            color: white;
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+        .grafica-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .grafica-titulo {
+            text-align: left;
+            margin-bottom: 15px;
+            font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
+            color: #6674FF;
+            font-size: 1.1rem;
+        }
+        canvas {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            background: transparent;
+            display: block;
+        }
+        .croquis-container {
+            position: relative;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .croquis-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: none;
+        }
+        .croquis-svg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: auto;
+        }
+        .ficha-bloque {
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        .media-container {
+            position: relative;
+            background: #d4d4d4;
+            min-height: 200px;
+        }
+        .media-container img, .media-container svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .svg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            pointer-events: none;
+        }
+        .bloque-id {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #6674FF;
+            padding: 10px 16px 5px;
+            font-family: 'Roboto', sans-serif;
+        }
+        .bloque-id-small {
+            font-size: 0.85rem;
+            font-weight: normal;
+            color: #888;
+        }
+        .ficha-footer {
+            background: #d4d4d4;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2c2c2c;
+            letter-spacing: 0.5px;
+        }
+        .ficha-vias {
+            padding: 5px 16px 12px;
+        }
+        .ficha-via-item {
+            border-bottom: 1px solid #eee;
+            padding: 8px 0;
+        }
+        .ficha-via-item:last-child {
+            border-bottom: none;
+        }
+        .via-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        .via-nombre {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .grado-badge {
+            display: inline-block;
+            color: white;
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .entrada-texto {
+            font-size: 0.8rem;
+            color: #444;
+        }
+        .detalles-texto {
+            font-size: 0.75rem;
+            color: #555;
+            margin-top: 3px;
+            line-height: 1.3;
+        }
+        .detalles-texto div {
+            margin-top: 2px;
+        }
+        .swiper-button-next, .swiper-button-prev {
+            color: #6674FF !important;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+        }
+        .swiper-button-next:after, .swiper-button-prev:after {
+            font-size: 14px;
+        }
+        .swiper-pagination-bullet-active {
+            background: #6674FF !important;
+        }
+        .loader {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .back-hint {
+            text-align: center;
+            padding: 8px;
+            font-size: 0.65rem;
+            color: #888;
+            border-top: 1px solid #ddd;
+            margin-top: 8px;
+        }
+        h2, h3, h4 {
+            color: #6674FF;
+            letter-spacing: 0.5px;
+        }
+        h1 {
+            font-weight: 300 !important;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -146,7 +427,7 @@
             return '●';
         }
 
-        // ====================== FUNCIÓN PARA APLICAR ESTILOS (CON DEPURACIÓN) ======================
+        // ====================== FUNCIÓN PARA APLICAR ESTILOS ======================
         function aplicarEstilosSVG(svgDoc, vias) {
             if (!svgDoc || !svgDoc.documentElement) {
                 console.log("❌ svgDoc inválido");
@@ -167,6 +448,7 @@
                 const linea = svgDoc.getElementById(`${letraBase}_linea`);
                 if (linea) {
                     linea.setAttribute('stroke', color);
+                    if (!linea.getAttribute('stroke-width')) linea.setAttribute('stroke-width', '4');
                     console.log(`    ✅ Línea ${letraBase}_linea encontrada, color cambiado a ${color}`);
                 } else {
                     console.log(`    ❌ No se encontró la línea: ${letraBase}_linea`);
@@ -183,7 +465,6 @@
                         circuloEntrada.setAttribute('stroke', color);
                         console.log(`    ✅ Círculo entrada ${letraBase}_entrada encontrado, relleno cambiado a ${color}`);
                         
-                        // Añadir texto
                         let texto = circuloEntrada.querySelector('text');
                         if (!texto) {
                             const cx = circuloEntrada.getAttribute('cx');
@@ -497,117 +778,117 @@
         }
 
         // ====================== FICHA DE BLOQUE (CORREGIDA) ======================
-function openFichaBloque(bloqueIndex) {
-    if (!currentSector) return;
-    const container = document.getElementById('ficha-bloque-content');
-    container.innerHTML = `
-        <div class="bloque-swiper swiper" style="height: auto;">
-            <div class="swiper-wrapper" id="bloquesSwiperWrapper"></div>
-            <div class="swiper-pagination"></div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-        </div>
-    `;
-    const wrapper = document.getElementById('bloquesSwiperWrapper');
-    
-    currentSector.bloques.forEach((b, idx) => {
-        const slide = document.createElement('div');
-        slide.className = 'swiper-slide';
-        slide.innerHTML = `
-            <div class="ficha-bloque">
-                <div class="media-container" style="position: relative;">
-                    <img src="${b.foto_base}.jpg" class="foto-bloque" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
+        function openFichaBloque(bloqueIndex) {
+            if (!currentSector) return;
+            const container = document.getElementById('ficha-bloque-content');
+            container.innerHTML = `
+                <div class="bloque-swiper swiper" style="height: auto;">
+                    <div class="swiper-wrapper" id="bloquesSwiperWrapper"></div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
                 </div>
-                <div class="ficha-footer" style="font-family: 'Cocogoose', sans-serif;">
-                    <span>Bloque ${parseInt(b.id, 10)}</span>
-                    <span>${currentSector.nombre}</span>
-                </div>
-                <div class="ficha-vias" id="vias-${idx}"></div>
-            </div>
-        `;
-        wrapper.appendChild(slide);
-        
-        const viasContainer = document.getElementById(`vias-${idx}`);
-        b.vias.forEach(via => {
-            const textoManos = getTextoManos(via);
-            let detallesHtml = "";
-            if (textoManos) detallesHtml += `<div>${textoManos}</div>`;
-            if (via.definicion && via.definicion.trim() !== "") detallesHtml += `<div>${via.definicion}</div>`;
-            if (via.expuesta && via.expuesta.trim() !== "") detallesHtml += `<div>⚠️ ${via.expuesta}</div>`;
-            const gradoColor = getColorByGrado(via.grado);
-            const viaDiv = document.createElement('div');
-            viaDiv.className = 'ficha-via-item';
-            viaDiv.innerHTML = `
-                <div class="via-header">
-                    <span class="via-nombre">${via.linea_id} · ${via.nombre}</span>
-                    ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
-                    ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
-                </div>
-                ${detallesHtml ? `<div class="detalles-texto">${detallesHtml}</div>` : ''}
             `;
-            viasContainer.appendChild(viaDiv);
-        });
-        
-        // Cargar SVG y aplicar estilos
-        const svgUrl = `${b.foto_base}.svg`;
-        console.log(`📂 Cargando SVG: ${svgUrl}`);
-        fetch(svgUrl)
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return res.text();
-            })
-            .then(svgText => {
-                console.log(`✅ SVG cargado correctamente: ${svgUrl}`);
-                const parser = new DOMParser();
-                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                const svgElement = svgDoc.documentElement;
-                svgElement.classList.add('svg-overlay');
+            const wrapper = document.getElementById('bloquesSwiperWrapper');
+            
+            currentSector.bloques.forEach((b, idx) => {
+                const slide = document.createElement('div');
+                slide.className = 'swiper-slide';
+                slide.innerHTML = `
+                    <div class="ficha-bloque">
+                        <div class="media-container" style="position: relative;">
+                            <img src="${b.foto_base}.jpg" class="foto-bloque" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
+                        </div>
+                        <div class="ficha-footer" style="font-family: 'Cocogoose', sans-serif;">
+                            <span>Bloque ${parseInt(b.id, 10)}</span>
+                            <span>${currentSector.nombre}</span>
+                        </div>
+                        <div class="ficha-vias" id="vias-${idx}"></div>
+                    </div>
+                `;
+                wrapper.appendChild(slide);
                 
-                // Ajustar viewBox si es posible
-                const mediaContainer = slide.querySelector('.media-container');
-                const img = mediaContainer.querySelector('img');
-                if (img.complete && img.naturalWidth) {
-                    svgElement.setAttribute('viewBox', `0 0 ${img.naturalWidth} ${img.naturalHeight}`);
-                }
-                svgElement.setAttribute('preserveAspectRatio', 'none');
-                svgElement.style.width = '100%';
-                svgElement.style.height = 'auto';
-                mediaContainer.appendChild(svgElement);
+                const viasContainer = document.getElementById(`vias-${idx}`);
+                b.vias.forEach(via => {
+                    const textoManos = getTextoManos(via);
+                    let detallesHtml = "";
+                    if (textoManos) detallesHtml += `<div>${textoManos}</div>`;
+                    if (via.definicion && via.definicion.trim() !== "") detallesHtml += `<div>${via.definicion}</div>`;
+                    if (via.expuesta && via.expuesta.trim() !== "") detallesHtml += `<div>⚠️ ${via.expuesta}</div>`;
+                    const gradoColor = getColorByGrado(via.grado);
+                    const viaDiv = document.createElement('div');
+                    viaDiv.className = 'ficha-via-item';
+                    viaDiv.innerHTML = `
+                        <div class="via-header">
+                            <span class="via-nombre">${via.linea_id} · ${via.nombre}</span>
+                            ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
+                            ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
+                        </div>
+                        ${detallesHtml ? `<div class="detalles-texto">${detallesHtml}</div>` : ''}
+                    `;
+                    viasContainer.appendChild(viaDiv);
+                });
                 
-                // Verificar que el SVG se ha añadido correctamente
-                console.log(`🔍 Verificando elementos del SVG...`);
-                const testLinea = svgDoc.getElementById('A_linea');
-                console.log(`  ¿Existe A_linea? ${testLinea ? 'SÍ' : 'NO'}`);
-                const testEntrada = svgDoc.getElementById('A_entrada');
-                console.log(`  ¿Existe A_entrada? ${testEntrada ? 'SÍ' : 'NO'}`);
-                const testSalida = svgDoc.getElementById('A_salida');
-                console.log(`  ¿Existe A_salida? ${testSalida ? 'SÍ' : 'NO'}`);
-                
-                // Ahora aplicamos los estilos
-                console.log(`🎨 Aplicando estilos a SVG de ${b.id}`);
-                aplicarEstilosSVG(svgDoc, b.vias);
-                
-                // Forzar un redibujado del SVG (por si los cambios no se ven)
-                setTimeout(() => {
-                    svgElement.style.opacity = '0.99';
-                    setTimeout(() => { svgElement.style.opacity = '1'; }, 50);
-                }, 50);
-            })
-            .catch(err => console.log(`❌ Error cargando SVG ${svgUrl}:`, err));
-    });
-    
-    if (swiperBloques) swiperBloques.destroy();
-    swiperBloques = new Swiper('.bloque-swiper', {
-        initialSlide: bloqueIndex,
-        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-        pagination: { el: '.swiper-pagination', clickable: true },
-        spaceBetween: 20,
-        autoHeight: true
-    });
-    
-    navigateToScreen('screen-ficha-bloque');
-    history.pushState({ sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }, '');
-}
+                // Cargar SVG y aplicar estilos
+                const svgUrl = `${b.foto_base}.svg`;
+                console.log(`📂 Cargando SVG: ${svgUrl}`);
+                fetch(svgUrl)
+                    .then(res => {
+                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                        return res.text();
+                    })
+                    .then(svgText => {
+                        console.log(`✅ SVG cargado correctamente: ${svgUrl}`);
+                        const parser = new DOMParser();
+                        const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                        const svgElement = svgDoc.documentElement;
+                        svgElement.classList.add('svg-overlay');
+                        
+                        // Ajustar viewBox si es posible
+                        const mediaContainer = slide.querySelector('.media-container');
+                        const img = mediaContainer.querySelector('img');
+                        if (img.complete && img.naturalWidth) {
+                            svgElement.setAttribute('viewBox', `0 0 ${img.naturalWidth} ${img.naturalHeight}`);
+                        }
+                        svgElement.setAttribute('preserveAspectRatio', 'none');
+                        svgElement.style.width = '100%';
+                        svgElement.style.height = 'auto';
+                        mediaContainer.appendChild(svgElement);
+                        
+                        // Verificar que el SVG se ha añadido correctamente
+                        console.log(`🔍 Verificando elementos del SVG...`);
+                        const testLinea = svgDoc.getElementById('A_linea');
+                        console.log(`  ¿Existe A_linea? ${testLinea ? 'SÍ' : 'NO'}`);
+                        const testEntrada = svgDoc.getElementById('A_entrada');
+                        console.log(`  ¿Existe A_entrada? ${testEntrada ? 'SÍ' : 'NO'}`);
+                        const testSalida = svgDoc.getElementById('A_salida');
+                        console.log(`  ¿Existe A_salida? ${testSalida ? 'SÍ' : 'NO'}`);
+                        
+                        // Ahora aplicamos los estilos
+                        console.log(`🎨 Aplicando estilos a SVG de ${b.id}`);
+                        aplicarEstilosSVG(svgDoc, b.vias);
+                        
+                        // Forzar un redibujado del SVG
+                        setTimeout(() => {
+                            svgElement.style.opacity = '0.99';
+                            setTimeout(() => { svgElement.style.opacity = '1'; }, 50);
+                        }, 50);
+                    })
+                    .catch(err => console.log(`❌ Error cargando SVG ${svgUrl}:`, err));
+            });
+            
+            if (swiperBloques) swiperBloques.destroy();
+            swiperBloques = new Swiper('.bloque-swiper', {
+                initialSlide: bloqueIndex,
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                pagination: { el: '.swiper-pagination', clickable: true },
+                spaceBetween: 20,
+                autoHeight: true
+            });
+            
+            navigateToScreen('screen-ficha-bloque');
+            history.pushState({ sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }, '');
+        }
 
         function initMenu() {
             const toggle = document.getElementById('menuToggle');
