@@ -153,6 +153,7 @@
             return '●';
         }
 
+        // ====================== FUNCIÓN CORREGIDA ======================
         function aplicarEstilosSVG(svgDoc, vias) {
             if (!svgDoc || !svgDoc.documentElement) return;
             console.log("🎨 Aplicando estilos a SVG");
@@ -163,24 +164,26 @@
                 const color = getColorByGrado(via.grado);
                 const simbolo = getSimboloSalida(via.salida);
                 
-                console.log(`  Procesando: ${letraBase}`);
+                console.log(`  Procesando: ${letraBase}, color: ${color}`);
                 
-                // Buscar por inkscape:label en todo el documento
+                // Línea
                 const linea = svgDoc.querySelector(`[inkscape\\:label="${letraBase}_linea"]`);
-                const circuloEntrada = svgDoc.querySelector(`[inkscape\\:label="${letraBase}_entrada"]`);
-                const circuloSalida = svgDoc.querySelector(`[inkscape\\:label="${letraBase}_salida"]`);
-                
                 if (linea) {
                     linea.setAttribute('stroke', color);
-                    linea.setAttribute('stroke-width', '5');
+                    linea.setAttribute('fill', 'none');
+                    linea.removeAttribute('style');
                     console.log(`    ✅ Línea ${letraBase}_linea coloreada`);
                 }
                 
+                // Círculo entrada
+                const circuloEntrada = svgDoc.querySelector(`[inkscape\\:label="${letraBase}_entrada"]`);
                 if (circuloEntrada) {
                     circuloEntrada.setAttribute('fill', color);
                     circuloEntrada.setAttribute('stroke', color);
+                    circuloEntrada.removeAttribute('style');
+                    console.log(`    ✅ Círculo entrada ${letraBase}_entrada coloreado`);
                     
-                    // Añadir texto solo si es entrada principal
+                    // Añadir texto si es entrada principal
                     if (!letra.includes('.') || (letra.includes('.') && letra.split('.')[1] === '1')) {
                         let texto = circuloEntrada.querySelector('text');
                         if (!texto) {
@@ -197,15 +200,18 @@
                             texto.setAttribute('font-weight', 'bold');
                             texto.textContent = letraBase;
                             circuloEntrada.appendChild(texto);
-                            console.log(`    ✅ Texto "${letraBase}" añadido`);
+                            console.log(`      ✅ Texto "${letraBase}" añadido`);
                         }
                     }
-                    console.log(`    ✅ Círculo entrada ${letraBase}_entrada coloreado`);
                 }
                 
+                // Círculo salida
+                const circuloSalida = svgDoc.querySelector(`[inkscape\\:label="${letraBase}_salida"]`);
                 if (circuloSalida) {
                     circuloSalida.setAttribute('fill', color);
                     circuloSalida.setAttribute('stroke', color);
+                    circuloSalida.removeAttribute('style');
+                    console.log(`    ✅ Círculo salida ${letraBase}_salida coloreado`);
                     
                     let texto = circuloSalida.querySelector('text');
                     if (!texto) {
@@ -222,9 +228,8 @@
                         texto.setAttribute('font-weight', 'bold');
                         texto.textContent = simbolo;
                         circuloSalida.appendChild(texto);
-                        console.log(`    ✅ Símbolo "${simbolo}" añadido`);
+                        console.log(`      ✅ Símbolo "${simbolo}" añadido`);
                     }
-                    console.log(`    ✅ Círculo salida ${letraBase}_salida coloreado`);
                 }
             });
         }
@@ -454,7 +459,7 @@
             setTimeout(() => dibujarGrafica(currentSector), 100);
         }
 
-        // ====================== FICHA DE BLOQUE VERSIÓN ESTABLE ======================
+        // ====================== FICHA DE BLOQUE ======================
         function openFichaBloque(bloqueIndex) {
             if (!currentSector) return;
             const container = document.getElementById('ficha-bloque-content');
@@ -528,12 +533,6 @@
                         
                         console.log(`🎨 Aplicando estilos a SVG del bloque ${b.id}`);
                         aplicarEstilosSVG(svgDoc, b.vias);
-                        
-                        // Forzar un redibujado
-                        setTimeout(() => {
-                            svgElement.style.opacity = '0.99';
-                            setTimeout(() => { svgElement.style.opacity = '1'; }, 50);
-                        }, 50);
                     })
                     .catch(err => console.log(`❌ Error cargando SVG: ${err}`));
             });
