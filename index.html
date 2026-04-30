@@ -140,7 +140,6 @@
             border-radius: 12px;
             padding: 20px;
         }
-        /* ===== ESTILO PARA EL LISTADO DE LÍNEAS ===== */
         .bloque-group {
             background: #ffffff;
             border-radius: 12px;
@@ -189,8 +188,6 @@
             white-space: nowrap;
             margin-left: 10px;
         }
-        /* ===== FIN DEL ESTILO DEL LISTADO ===== */
-        /* ===== ESTILO PARA LA GRÁFICA Y CROQUIS ===== */
         .grafica-container {
             background: #ffffff;
             border-radius: 12px;
@@ -222,7 +219,7 @@
             width: 100%;
             height: auto;
             display: block;
-            pointer-events: none; /* La imagen no captura clics, solo la superposición SVG */
+            pointer-events: none;
         }
         .croquis-svg-overlay {
             position: absolute;
@@ -230,9 +227,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: auto; /* El SVG captura los clics */
+            pointer-events: auto;
         }
-        /* ===== FIN ESTILO GRÁFICA/CROQUIS ===== */
         .ficha-bloque {
             background: #ffffff;
             border-radius: 12px;
@@ -381,28 +377,63 @@
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, navigationStack = [], swiperBloques = null;
 
-        // ====================== COLORES DE GRADOS ======================
+        // ====================== NUEVA PALETA DE COLORES POR GRADO ======================
         function getColorByGrado(grado) {
-            if (!grado) return '#00DFEB';
+            if (!grado) return '#00DFEB'; // Comodín aguamarina
             const g = grado.toUpperCase().trim();
-            if (g === 'PR') return '#212121';
+            
+            // Caso especial para el comodín *
+            if (g === '*') return '#FAC601';
+            
+            // Extraer número y letra
             const match = g.match(/(\d+)([A-Z]?)(\+?)/);
             if (!match) return '#00DFEB';
+            
             const num = parseInt(match[1], 10);
             const letra = match[2] || '';
             const mas = match[3] || '';
             
-            if (num >= 3 && num <= 5) return '#FFD700';
-            if (num === 5 && mas === '+') return '#FFD700';
-            if (num === 6 && (letra === 'A' || letra === 'B') && mas !== '+') return '#4CAF50';
-            if (num === 6 && letra === 'A' && mas === '+') return '#4CAF50';
-            if (num === 6 && letra === 'B' && mas === '+') return '#312EFF';
-            if (num === 6 && letra === 'C') return '#312EFF';
-            if (num === 7 && (letra === 'A' || letra === 'B')) return '#FF48DA';
-            if (num === 7 && letra === 'A' && mas === '+') return '#FF48DA';
-            if (num === 7 && letra === 'B' && mas === '+') return '#FF1A1A';
-            if (num === 7 && letra === 'C') return '#FF1A1A';
-            if (num >= 8) return '#FF9800';
+            // Grados 3, 4, 5, 5+ (Verdes)
+            if (num === 3) return '#00F763';
+            if (num === 4) return '#00B347';
+            if (num === 5) {
+                if (mas === '+') return '#00732E';
+                return '#00732E';
+            }
+            
+            // Grados 6 (Azules)
+            if (num === 6) {
+                if (letra === 'A') return '#00ACFF';
+                if (letra === 'A' && mas === '+') return '#00ACFF';
+                if (letra === 'B') return '#0085C7';
+                if (letra === 'B' && mas === '+') return '#0085C7';
+                if (letra === 'C') return '#005A87';
+                if (letra === 'C' && mas === '+') return '#005A87';
+            }
+            
+            // Grados 7 (Rosas)
+            if (num === 7) {
+                if (letra === 'A') return '#F600FF';
+                if (letra === 'A' && mas === '+') return '#F600FF';
+                if (letra === 'B') return '#BB00C2';
+                if (letra === 'B' && mas === '+') return '#BB00C2';
+                if (letra === 'C') return '#7E0082';
+                if (letra === 'C' && mas === '+') return '#7E0082';
+            }
+            
+            // Grados 8 (Rojos) - eliminado 9A
+            if (num === 8) {
+                if (letra === 'A' && mas === '+') return '#FF0D00';
+                if (letra === 'A') return '#FF0D00';
+                if (letra === 'B') return '#C20A00';
+                if (letra === 'B' && mas === '+') return '#C20A00';
+                if (letra === 'C') return '#850700';
+                if (letra === 'C' && mas === '+') return '#850700';
+            }
+            
+            // Grados superiores a 8 (por si acaso, aunque no deberían existir)
+            if (num > 8) return '#FF9800';
+            
             return '#00DFEB';
         }
 
@@ -419,8 +450,8 @@
             });
             
             const ordenGrados = [
-                "3", "4", "4+", "5", "5+", "6A", "6A+", "6B", "6B+", "6C", "6C+",
-                "7A", "7A+", "7B", "7B+", "7C", "7C+", "8A", "8A+", "8B", "8B+", "8C", "8C+", "9A", "Pr", "*"
+                "3", "4", "5", "5+", "6A", "6A+", "6B", "6B+", "6C", "6C+",
+                "7A", "7A+", "7B", "7B+", "7C", "7C+", "8A", "8A+", "8B", "8B+", "8C", "8C+", "*"
             ];
             const gradosFiltrados = ordenGrados.filter(g => conteo[g] > 0);
             const valores = gradosFiltrados.map(g => conteo[g]);
@@ -652,14 +683,13 @@
                         containerCroquis.style.position = 'relative';
                         containerCroquis.appendChild(svgElement);
                         
-                        // Añadir evento de clic a los elementos del SVG
                         const elementos = svgElement.querySelectorAll('[id]');
                         elementos.forEach(el => {
-                            const bloqueId = el.id; // Ej: "B1", "B2"
+                            const bloqueId = el.id;
                             if (bloqueId) {
                                 el.style.cursor = 'pointer';
                                 el.addEventListener('click', () => {
-                                    const bloqueBase = bloqueId; // "B1", "B2"
+                                    const bloqueBase = bloqueId;
                                     const bloqueEncontrado = currentSector.bloques.find(b => b.id.startsWith(bloqueBase));
                                     if (bloqueEncontrado) {
                                         const indice = currentSector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
@@ -688,7 +718,6 @@
                 };
             });
             
-            // Generar listado agrupado por bloque
             const bloquesContainer = document.getElementById('bloques-list');
             bloquesContainer.innerHTML = '';
             const grupos = {};
@@ -814,7 +843,6 @@
             history.pushState({ sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }, '');
         }
 
-        // ====================== MENÚ ======================
         function initMenu() {
             const toggle = document.getElementById('menuToggle');
             const dropdown = document.getElementById('dropdownMenu');
