@@ -57,6 +57,7 @@
             width: 100%; 
             height: 100%; 
             pointer-events: none;
+            background: transparent;
         }
         .bloque-id { font-size: 1.3rem; font-weight: 600; color: #6674FF; padding: 10px 16px 5px; font-family: 'Roboto', sans-serif; }
         .bloque-id-small { font-size: 0.85rem; font-weight: normal; color: #888; }
@@ -152,36 +153,9 @@
             return '●';
         }
 
-        function aplicarEstilosSVG(svgElement, vias, imgWidth, imgHeight) {
-            if (!svgElement) return;
+        function aplicarEstilosSVG(svgDoc, vias) {
+            if (!svgDoc || !svgDoc.documentElement) return;
             console.log("🎨 Aplicando estilos a SVG");
-            
-            // Obtener el viewBox original del SVG
-            const originalViewBox = svgElement.getAttribute('viewBox');
-            let originalWidth = 692, originalHeight = 768;
-            if (originalViewBox) {
-                const parts = originalViewBox.split(' ');
-                if (parts.length === 4) {
-                    originalWidth = parseFloat(parts[2]);
-                    originalHeight = parseFloat(parts[3]);
-                }
-            }
-            
-            // Calcular escalas
-            const scaleX = imgWidth / originalWidth;
-            const scaleY = imgHeight / originalHeight;
-            
-            console.log(`  Escalado: original ${originalWidth}x${originalHeight} -> imagen ${imgWidth}x${imgHeight}, scale ${scaleX.toFixed(3)}, ${scaleY.toFixed(3)}`);
-            
-            function findElement(label) {
-                let elemento = svgElement.querySelector(`[inkscape\\:label="${label}"]`);
-                if (elemento) return elemento;
-                const todos = svgElement.querySelectorAll('*');
-                for (let el of todos) {
-                    if (el.getAttribute('inkscape:label') === label) return el;
-                }
-                return null;
-            }
             
             vias.forEach(via => {
                 const letra = via.linea_id;
@@ -191,69 +165,66 @@
                 
                 console.log(`  Procesando: ${letraBase}`);
                 
-                const linea = findElement(`${letraBase}_linea`);
-                const circuloEntrada = findElement(`${letraBase}_entrada`);
-                const circuloSalida = findElement(`${letraBase}_salida`);
+                // Buscar por inkscape:label en todo el documento
+                const linea = svgDoc.querySelector(`[inkscape\\:label="${letraBase}_linea"]`);
+                const circuloEntrada = svgDoc.querySelector(`[inkscape\\:label="${letraBase}_entrada"]`);
+                const circuloSalida = svgDoc.querySelector(`[inkscape\\:label="${letraBase}_salida"]`);
                 
                 if (linea) {
                     linea.setAttribute('stroke', color);
                     linea.setAttribute('stroke-width', '5');
-                    // Escalar el d attribute si es necesario (opcional, por ahora no)
+                    console.log(`    ✅ Línea ${letraBase}_linea coloreada`);
                 }
                 
                 if (circuloEntrada) {
                     circuloEntrada.setAttribute('fill', color);
                     circuloEntrada.setAttribute('stroke', color);
                     
-                    // Escalar coordenadas del círculo
-                    const cx = parseFloat(circuloEntrada.getAttribute('cx'));
-                    const cy = parseFloat(circuloEntrada.getAttribute('cy'));
-                    const r = parseFloat(circuloEntrada.getAttribute('r')) || 16;
-                    circuloEntrada.setAttribute('cx', cx * scaleX);
-                    circuloEntrada.setAttribute('cy', cy * scaleY);
-                    circuloEntrada.setAttribute('r', r * Math.min(scaleX, scaleY));
-                    
+                    // Añadir texto solo si es entrada principal
                     if (!letra.includes('.') || (letra.includes('.') && letra.split('.')[1] === '1')) {
                         let texto = circuloEntrada.querySelector('text');
                         if (!texto) {
+                            const cx = circuloEntrada.getAttribute('cx');
+                            const cy = circuloEntrada.getAttribute('cy');
+                            const r = parseFloat(circuloEntrada.getAttribute('r')) || 16;
                             texto = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                            texto.setAttribute('x', cx);
+                            texto.setAttribute('y', cy);
+                            texto.setAttribute('text-anchor', 'middle');
+                            texto.setAttribute('dominant-baseline', 'central');
+                            texto.setAttribute('fill', 'white');
+                            texto.setAttribute('font-size', `${r * 0.8}px`);
+                            texto.setAttribute('font-weight', 'bold');
+                            texto.textContent = letraBase;
                             circuloEntrada.appendChild(texto);
+                            console.log(`    ✅ Texto "${letraBase}" añadido`);
                         }
-                        texto.setAttribute('x', cx * scaleX);
-                        texto.setAttribute('y', cy * scaleY);
-                        texto.setAttribute('text-anchor', 'middle');
-                        texto.setAttribute('dominant-baseline', 'central');
-                        texto.setAttribute('fill', 'white');
-                        texto.setAttribute('font-size', `${r * Math.min(scaleX, scaleY) * 0.8}px`);
-                        texto.setAttribute('font-weight', 'bold');
-                        texto.textContent = letraBase;
                     }
+                    console.log(`    ✅ Círculo entrada ${letraBase}_entrada coloreado`);
                 }
                 
                 if (circuloSalida) {
                     circuloSalida.setAttribute('fill', color);
                     circuloSalida.setAttribute('stroke', color);
                     
-                    const cx = parseFloat(circuloSalida.getAttribute('cx'));
-                    const cy = parseFloat(circuloSalida.getAttribute('cy'));
-                    const r = parseFloat(circuloSalida.getAttribute('r')) || 12.5;
-                    circuloSalida.setAttribute('cx', cx * scaleX);
-                    circuloSalida.setAttribute('cy', cy * scaleY);
-                    circuloSalida.setAttribute('r', r * Math.min(scaleX, scaleY));
-                    
                     let texto = circuloSalida.querySelector('text');
                     if (!texto) {
+                        const cx = circuloSalida.getAttribute('cx');
+                        const cy = circuloSalida.getAttribute('cy');
+                        const r = parseFloat(circuloSalida.getAttribute('r')) || 12.5;
                         texto = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        texto.setAttribute('x', cx);
+                        texto.setAttribute('y', cy);
+                        texto.setAttribute('text-anchor', 'middle');
+                        texto.setAttribute('dominant-baseline', 'central');
+                        texto.setAttribute('fill', 'white');
+                        texto.setAttribute('font-size', `${r * 0.7}px`);
+                        texto.setAttribute('font-weight', 'bold');
+                        texto.textContent = simbolo;
                         circuloSalida.appendChild(texto);
+                        console.log(`    ✅ Símbolo "${simbolo}" añadido`);
                     }
-                    texto.setAttribute('x', cx * scaleX);
-                    texto.setAttribute('y', cy * scaleY);
-                    texto.setAttribute('text-anchor', 'middle');
-                    texto.setAttribute('dominant-baseline', 'central');
-                    texto.setAttribute('fill', 'white');
-                    texto.setAttribute('font-size', `${r * Math.min(scaleX, scaleY) * 0.7}px`);
-                    texto.setAttribute('font-weight', 'bold');
-                    texto.textContent = simbolo;
+                    console.log(`    ✅ Círculo salida ${letraBase}_salida coloreado`);
                 }
             });
         }
@@ -483,7 +454,7 @@
             setTimeout(() => dibujarGrafica(currentSector), 100);
         }
 
-        // ====================== FICHA DE BLOQUE CON ESCALADO ======================
+        // ====================== FICHA DE BLOQUE VERSIÓN ESTABLE ======================
         function openFichaBloque(bloqueIndex) {
             if (!currentSector) return;
             const container = document.getElementById('ficha-bloque-content');
@@ -502,9 +473,8 @@
                 slide.className = 'swiper-slide';
                 slide.innerHTML = `
                     <div class="ficha-bloque">
-                        <div class="media-container" id="mediaContainer-${idx}" style="position: relative;">
-                            <img id="fotoBloque-${idx}" src="${b.foto_base}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
-                            <div id="svgContainer-${idx}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+                        <div class="media-container" style="position: relative;">
+                            <img src="${b.foto_base}.jpg" class="foto-bloque" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
                         </div>
                         <div class="ficha-footer" style="font-family: 'Cocogoose', sans-serif;">
                             <span>Bloque ${parseInt(b.id, 10)}</span>
@@ -538,37 +508,34 @@
                 
                 const svgUrl = `${b.foto_base}.svg`;
                 console.log(`📂 Cargando SVG: ${svgUrl}`);
-                
-                // Esperar a que la imagen se cargue para obtener sus dimensiones reales
-                const img = document.getElementById(`fotoBloque-${idx}`);
-                img.onload = () => {
-                    const imgWidth = img.naturalWidth;
-                    const imgHeight = img.naturalHeight;
-                    console.log(`📷 Imagen cargada: ${imgWidth}x${imgHeight}`);
-                    
-                    fetch(svgUrl)
-                        .then(res => res.text())
-                        .then(svgText => {
-                            console.log(`✅ SVG cargado: ${svgUrl}`);
-                            const parser = new DOMParser();
-                            const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                            const svgElement = svgDoc.documentElement;
-                            
-                            svgElement.setAttribute('width', '100%');
-                            svgElement.setAttribute('height', '100%');
-                            svgElement.style.backgroundColor = 'transparent';
-                            
-                            const svgContainer = document.getElementById(`svgContainer-${idx}`);
-                            if (svgContainer) {
-                                svgContainer.innerHTML = '';
-                                svgContainer.appendChild(svgElement);
-                                console.log(`🎨 Aplicando estilos a SVG del bloque ${b.id} con escalado a ${imgWidth}x${imgHeight}`);
-                                aplicarEstilosSVG(svgElement, b.vias, imgWidth, imgHeight);
-                            }
-                        })
-                        .catch(err => console.log(`❌ Error cargando SVG: ${err}`));
-                };
-                if (img.complete) img.onload();
+                fetch(svgUrl)
+                    .then(res => res.text())
+                    .then(svgText => {
+                        console.log(`✅ SVG cargado: ${svgUrl}`);
+                        const parser = new DOMParser();
+                        const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                        const svgElement = svgDoc.documentElement;
+                        svgElement.classList.add('svg-overlay');
+                        const mediaContainer = slide.querySelector('.media-container');
+                        const img = mediaContainer.querySelector('img');
+                        if (img.complete && img.naturalWidth) {
+                            svgElement.setAttribute('viewBox', `0 0 ${img.naturalWidth} ${img.naturalHeight}`);
+                        }
+                        svgElement.setAttribute('preserveAspectRatio', 'none');
+                        svgElement.style.width = '100%';
+                        svgElement.style.height = 'auto';
+                        mediaContainer.appendChild(svgElement);
+                        
+                        console.log(`🎨 Aplicando estilos a SVG del bloque ${b.id}`);
+                        aplicarEstilosSVG(svgDoc, b.vias);
+                        
+                        // Forzar un redibujado
+                        setTimeout(() => {
+                            svgElement.style.opacity = '0.99';
+                            setTimeout(() => { svgElement.style.opacity = '1'; }, 50);
+                        }, 50);
+                    })
+                    .catch(err => console.log(`❌ Error cargando SVG: ${err}`));
             });
             
             if (swiperBloques) swiperBloques.destroy();
