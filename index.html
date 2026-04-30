@@ -149,7 +149,7 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .bloque-group:last-child {
-            margin-bottom: 60px; /* Margen extra grande para que se vea todo el bloque y fondo gris */
+            margin-bottom: 60px;
         }
         .bloque-group h3 {
             background: #d4d4d4;
@@ -190,7 +190,7 @@
             margin-left: 10px;
         }
         /* ===== FIN DEL ESTILO DEL LISTADO ===== */
-        /* ===== ESTILO PARA LA GRÁFICA ===== */
+        /* ===== ESTILO PARA LA GRÁFICA Y CROQUIS ===== */
         .grafica-container {
             background: #ffffff;
             border-radius: 12px;
@@ -199,7 +199,7 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .grafica-titulo {
-            text-align: center;
+            text-align: left;
             margin-bottom: 15px;
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
             color: #6674FF;
@@ -212,7 +212,6 @@
             background: transparent;
             display: block;
         }
-        /* ===== FIN ESTILO GRÁFICA ===== */
         .croquis-container {
             position: relative;
             background: #ffffff;
@@ -223,7 +222,17 @@
             width: 100%;
             height: auto;
             display: block;
+            pointer-events: none; /* La imagen no captura clics, solo la superposición SVG */
         }
+        .croquis-svg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: auto; /* El SVG captura los clics */
+        }
+        /* ===== FIN ESTILO GRÁFICA/CROQUIS ===== */
         .ficha-bloque {
             background: #ffffff;
             border-radius: 12px;
@@ -372,7 +381,7 @@
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, navigationStack = [], swiperBloques = null;
 
-        // ====================== COLORES DE GRADOS (también usada para la gráfica) ======================
+        // ====================== COLORES DE GRADOS ======================
         function getColorByGrado(grado) {
             if (!grado) return '#00DFEB';
             const g = grado.toUpperCase().trim();
@@ -397,7 +406,7 @@
             return '#00DFEB';
         }
 
-        // ====================== FUNCIÓN PARA GENERAR LA GRÁFICA ======================
+        // ====================== FUNCIÓN PARA LA GRÁFICA (ALTA CALIDAD) ======================
         function dibujarGrafica(sector) {
             const conteo = {};
             sector.bloques.forEach(bloque => {
@@ -420,10 +429,16 @@
             const canvas = document.getElementById('grafica-sector');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
-            const width = canvas.clientWidth;
-            const height = 200;
-            canvas.width = width;
-            canvas.height = height;
+            
+            const container = canvas.parentElement;
+            const width = container.clientWidth;
+            const height = 220;
+            const scale = window.devicePixelRatio || 2;
+            canvas.width = width * scale;
+            canvas.height = height * scale;
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
+            ctx.scale(scale, scale);
             
             const barWidth = (width - 60) / gradosFiltrados.length;
             const startX = 40;
@@ -441,7 +456,7 @@
             ctx.stroke();
             
             ctx.fillStyle = '#555';
-            ctx.font = '10px Roboto';
+            ctx.font = '11px Roboto';
             ctx.fillText('Nº vías', 10, 30);
             ctx.fillText('Grado', width/2 - 20, height - 5);
             
@@ -456,11 +471,11 @@
                 ctx.fillRect(x, y, barWidth - 10, barHeight);
                 
                 ctx.fillStyle = '#000';
-                ctx.font = '10px Roboto';
+                ctx.font = '11px Roboto';
                 ctx.fillText(grado, x + 2, startY + 12);
                 
                 ctx.fillStyle = '#333';
-                ctx.font = 'bold 10px Roboto';
+                ctx.font = 'bold 11px Roboto';
                 ctx.fillText(valor, x + barWidth/2 - 5, y - 5);
             });
         }
@@ -473,7 +488,6 @@
             return '●';
         }
 
-        // ====================== FUNCIÓN PARA MANOS ======================
         function getTextoManos(via) {
             if (via.manos_juntas && via.manos_juntas.trim() !== "") {
                 return `Manos juntas: ${via.manos_juntas}`;
@@ -488,7 +502,6 @@
             return partes.length > 0 ? partes.join(" · ") : "";
         }
 
-        // ====================== APLICAR ESTILOS AL SVG ======================
         function aplicarEstilosSVG(svgDoc, vias) {
             vias.forEach(via => {
                 const letra = via.linea_id;
@@ -594,6 +607,8 @@
             if (!currentSector) return;
             const container = document.getElementById('sector-detalle-content');
             const croquisUrl = currentSector.croquis ? `${currentSector.croquis}.jpg` : '';
+            const svgUrl = currentSector.croquis ? `${currentSector.croquis}.svg` : null;
+            
             container.innerHTML = `
                 <h2 style="font-family: 'Cocogoose', sans-serif;">${currentSector.nombre}</h2>
                 <div class="tabs">
@@ -604,16 +619,61 @@
                 <div id="tab-info" class="tab-pane active">
                     <div class="grafica-container">
                         <div class="grafica-titulo">Distribución de grados</div>
-                        <canvas id="grafica-sector" style="width:100%; height:auto; max-height:200px;"></canvas>
+                        <canvas id="grafica-sector" style="width:100%; height:auto;"></canvas>
                     </div>
                     <div class="info-sector">
                         <h4>Información del sector</h4>
                         <p>Próximamente: aproximación, material, etc.</p>
                     </div>
                 </div>
-                <div id="tab-croquis" class="tab-pane"><div class="croquis-container"><img src="${croquisUrl}" class="croquis-img" onerror="this.src='https://picsum.photos/id/20/800/600'"></div></div>
+                <div id="tab-croquis" class="tab-pane"></div>
                 <div id="tab-bloques" class="tab-pane"><div id="bloques-list"></div></div>
             `;
+            
+            // Cargar croquis interactivo si existe el SVG
+            const croquisPane = document.getElementById('tab-croquis');
+            if (croquisPane) {
+                croquisPane.innerHTML = `<div class="croquis-container" id="croquisContainer"></div>`;
+                const containerCroquis = document.getElementById('croquisContainer');
+                const img = document.createElement('img');
+                img.src = `${croquisUrl}`;
+                img.className = 'croquis-img';
+                img.onerror = () => { img.src = 'https://picsum.photos/id/20/800/600'; };
+                containerCroquis.appendChild(img);
+                
+                if (svgUrl) {
+                    fetch(svgUrl).then(res => res.text()).then(svgText => {
+                        const parser = new DOMParser();
+                        const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                        const svgElement = svgDoc.documentElement;
+                        svgElement.setAttribute('width', '100%');
+                        svgElement.setAttribute('height', '100%');
+                        svgElement.classList.add('croquis-svg-overlay');
+                        containerCroquis.style.position = 'relative';
+                        containerCroquis.appendChild(svgElement);
+                        
+                        // Añadir evento de clic a los elementos del SVG
+                        const elementos = svgElement.querySelectorAll('[id]');
+                        elementos.forEach(el => {
+                            const bloqueId = el.id; // Ej: "B1", "B2"
+                            if (bloqueId) {
+                                el.style.cursor = 'pointer';
+                                el.addEventListener('click', () => {
+                                    const bloqueBase = bloqueId; // "B1", "B2"
+                                    const bloqueEncontrado = currentSector.bloques.find(b => b.id.startsWith(bloqueBase));
+                                    if (bloqueEncontrado) {
+                                        const indice = currentSector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
+                                        if (indice !== -1) openFichaBloque(indice);
+                                    } else {
+                                        console.warn(`No se encontró un bloque para el ID: ${bloqueId}`);
+                                    }
+                                });
+                            }
+                        });
+                    }).catch(err => console.log('Error cargando SVG interactivo:', err));
+                }
+            }
+            
             container.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.onclick = () => {
                     container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
