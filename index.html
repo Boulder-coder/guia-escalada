@@ -497,104 +497,117 @@
         }
 
         // ====================== FICHA DE BLOQUE (CORREGIDA) ======================
-        function openFichaBloque(bloqueIndex) {
-            if (!currentSector) return;
-            const container = document.getElementById('ficha-bloque-content');
-            container.innerHTML = `
-                <div class="bloque-swiper swiper" style="height: auto;">
-                    <div class="swiper-wrapper" id="bloquesSwiperWrapper"></div>
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
+function openFichaBloque(bloqueIndex) {
+    if (!currentSector) return;
+    const container = document.getElementById('ficha-bloque-content');
+    container.innerHTML = `
+        <div class="bloque-swiper swiper" style="height: auto;">
+            <div class="swiper-wrapper" id="bloquesSwiperWrapper"></div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+    `;
+    const wrapper = document.getElementById('bloquesSwiperWrapper');
+    
+    currentSector.bloques.forEach((b, idx) => {
+        const slide = document.createElement('div');
+        slide.className = 'swiper-slide';
+        slide.innerHTML = `
+            <div class="ficha-bloque">
+                <div class="media-container" style="position: relative;">
+                    <img src="${b.foto_base}.jpg" class="foto-bloque" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
                 </div>
+                <div class="ficha-footer" style="font-family: 'Cocogoose', sans-serif;">
+                    <span>Bloque ${parseInt(b.id, 10)}</span>
+                    <span>${currentSector.nombre}</span>
+                </div>
+                <div class="ficha-vias" id="vias-${idx}"></div>
+            </div>
+        `;
+        wrapper.appendChild(slide);
+        
+        const viasContainer = document.getElementById(`vias-${idx}`);
+        b.vias.forEach(via => {
+            const textoManos = getTextoManos(via);
+            let detallesHtml = "";
+            if (textoManos) detallesHtml += `<div>${textoManos}</div>`;
+            if (via.definicion && via.definicion.trim() !== "") detallesHtml += `<div>${via.definicion}</div>`;
+            if (via.expuesta && via.expuesta.trim() !== "") detallesHtml += `<div>⚠️ ${via.expuesta}</div>`;
+            const gradoColor = getColorByGrado(via.grado);
+            const viaDiv = document.createElement('div');
+            viaDiv.className = 'ficha-via-item';
+            viaDiv.innerHTML = `
+                <div class="via-header">
+                    <span class="via-nombre">${via.linea_id} · ${via.nombre}</span>
+                    ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
+                    ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
+                </div>
+                ${detallesHtml ? `<div class="detalles-texto">${detallesHtml}</div>` : ''}
             `;
-            const wrapper = document.getElementById('bloquesSwiperWrapper');
-            
-            currentSector.bloques.forEach((b, idx) => {
-                const slide = document.createElement('div');
-                slide.className = 'swiper-slide';
-                slide.innerHTML = `
-                    <div class="ficha-bloque">
-                        <div class="media-container">
-                            <img src="${b.foto_base}.jpg" class="foto-bloque" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
-                        </div>
-                        <div class="ficha-footer" style="font-family: 'Cocogoose', sans-serif;">
-                            <span>Bloque ${parseInt(b.id, 10)}</span>
-                            <span>${currentSector.nombre}</span>
-                        </div>
-                        <div class="ficha-vias" id="vias-${idx}"></div>
-                    </div>
-                `;
-                wrapper.appendChild(slide);
+            viasContainer.appendChild(viaDiv);
+        });
+        
+        // Cargar SVG y aplicar estilos
+        const svgUrl = `${b.foto_base}.svg`;
+        console.log(`📂 Cargando SVG: ${svgUrl}`);
+        fetch(svgUrl)
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.text();
+            })
+            .then(svgText => {
+                console.log(`✅ SVG cargado correctamente: ${svgUrl}`);
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                const svgElement = svgDoc.documentElement;
+                svgElement.classList.add('svg-overlay');
                 
-                const viasContainer = document.getElementById(`vias-${idx}`);
-                b.vias.forEach(via => {
-                    const textoManos = getTextoManos(via);
-                    let detallesHtml = "";
-                    if (textoManos) detallesHtml += `<div>${textoManos}</div>`;
-                    if (via.definicion && via.definicion.trim() !== "") detallesHtml += `<div>${via.definicion}</div>`;
-                    if (via.expuesta && via.expuesta.trim() !== "") detallesHtml += `<div>⚠️ ${via.expuesta}</div>`;
-                    const gradoColor = getColorByGrado(via.grado);
-                    const viaDiv = document.createElement('div');
-                    viaDiv.className = 'ficha-via-item';
-                    viaDiv.innerHTML = `
-                        <div class="via-header">
-                            <span class="via-nombre">${via.linea_id} · ${via.nombre}</span>
-                            ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
-                            ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
-                        </div>
-                        ${detallesHtml ? `<div class="detalles-texto">${detallesHtml}</div>` : ''}
-                    `;
-                    viasContainer.appendChild(viaDiv);
-                });
+                // Ajustar viewBox si es posible
+                const mediaContainer = slide.querySelector('.media-container');
+                const img = mediaContainer.querySelector('img');
+                if (img.complete && img.naturalWidth) {
+                    svgElement.setAttribute('viewBox', `0 0 ${img.naturalWidth} ${img.naturalHeight}`);
+                }
+                svgElement.setAttribute('preserveAspectRatio', 'none');
+                svgElement.style.width = '100%';
+                svgElement.style.height = 'auto';
+                mediaContainer.appendChild(svgElement);
                 
-                // Cargar SVG y aplicar estilos con un pequeño retraso para asegurar que el DOM está listo
-                const svgUrl = `${b.foto_base}.svg`;
-                console.log(`📂 Cargando SVG: ${svgUrl}`);
-                fetch(svgUrl)
-                    .then(res => {
-                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                        return res.text();
-                    })
-                    .then(svgText => {
-                        console.log(`✅ SVG cargado correctamente: ${svgUrl}`);
-                        const parser = new DOMParser();
-                        const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                        const svgElement = svgDoc.documentElement;
-                        svgElement.classList.add('svg-overlay');
-                        
-                        // Primero añadimos el SVG al DOM
-                        const mediaContainer = slide.querySelector('.media-container');
-                        const img = mediaContainer.querySelector('img');
-                        if (img.complete && img.naturalWidth) {
-                            svgElement.setAttribute('viewBox', `0 0 ${img.naturalWidth} ${img.naturalHeight}`);
-                        }
-                        svgElement.setAttribute('preserveAspectRatio', 'none');
-                        svgElement.style.width = '100%';
-                        svgElement.style.height = 'auto';
-                        mediaContainer.appendChild(svgElement);
-                        
-                        // Aplicamos estilos después de un breve retraso para asegurar que el SVG está en el DOM
-                        setTimeout(() => {
-                            console.log(`🎨 Aplicando estilos a SVG de ${b.id}`);
-                            aplicarEstilosSVG(svgDoc, b.vias);
-                        }, 100);
-                    })
-                    .catch(err => console.log(`❌ Error cargando SVG ${svgUrl}:`, err));
-            });
-            
-            if (swiperBloques) swiperBloques.destroy();
-            swiperBloques = new Swiper('.bloque-swiper', {
-                initialSlide: bloqueIndex,
-                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-                pagination: { el: '.swiper-pagination', clickable: true },
-                spaceBetween: 20,
-                autoHeight: true
-            });
-            
-            navigateToScreen('screen-ficha-bloque');
-            history.pushState({ sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }, '');
-        }
+                // Verificar que el SVG se ha añadido correctamente
+                console.log(`🔍 Verificando elementos del SVG...`);
+                const testLinea = svgDoc.getElementById('A_linea');
+                console.log(`  ¿Existe A_linea? ${testLinea ? 'SÍ' : 'NO'}`);
+                const testEntrada = svgDoc.getElementById('A_entrada');
+                console.log(`  ¿Existe A_entrada? ${testEntrada ? 'SÍ' : 'NO'}`);
+                const testSalida = svgDoc.getElementById('A_salida');
+                console.log(`  ¿Existe A_salida? ${testSalida ? 'SÍ' : 'NO'}`);
+                
+                // Ahora aplicamos los estilos
+                console.log(`🎨 Aplicando estilos a SVG de ${b.id}`);
+                aplicarEstilosSVG(svgDoc, b.vias);
+                
+                // Forzar un redibujado del SVG (por si los cambios no se ven)
+                setTimeout(() => {
+                    svgElement.style.opacity = '0.99';
+                    setTimeout(() => { svgElement.style.opacity = '1'; }, 50);
+                }, 50);
+            })
+            .catch(err => console.log(`❌ Error cargando SVG ${svgUrl}:`, err));
+    });
+    
+    if (swiperBloques) swiperBloques.destroy();
+    swiperBloques = new Swiper('.bloque-swiper', {
+        initialSlide: bloqueIndex,
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        spaceBetween: 20,
+        autoHeight: true
+    });
+    
+    navigateToScreen('screen-ficha-bloque');
+    history.pushState({ sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }, '');
+}
 
         function initMenu() {
             const toggle = document.getElementById('menuToggle');
