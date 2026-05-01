@@ -391,8 +391,8 @@
               "nombre": "Sin nombre",
               "grado": "3",
               "entrada": "Sit",
-              "mano_izq": "No me acordo",
-              "mano_der": "No me acordo",
+              "mano_izq": "No me acuerdo",
+              "mano_der": "No me acuerdo",
               "manos_juntas": "",
               "definicion": "Sale recto",
               "salida": "Top-out",
@@ -497,7 +497,7 @@
               "mano_der": "Presa lateral alta",
               "manos_juntas": "",
               "definicion": "Recorre la arista",
-              "salida": "Top-out",
+              "salida": "Top",
               "expuesta": ""
             },
             {
@@ -533,7 +533,7 @@
               "mano_der": "Presa lateral alta",
               "manos_juntas": "",
               "definicion": "Misma entrada que A, travesía hacia la derecha",
-              "salida": "Top-out",
+              "salida": "Top-out derecha",
               "expuesta": ""
             },
             {
@@ -569,7 +569,7 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "",
-              "salida": "Top-out derecha",
+              "salida": "Top-out",
               "expuesta": ""
             },
             {
