@@ -44,9 +44,9 @@
         .grafica-container { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .grafica-titulo { text-align: left; margin-bottom: 15px; font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif; color: #6674FF; font-size: 1.1rem; }
         canvas { width: 100%; max-width: 100%; height: auto; background: transparent; display: block; }
-        .croquis-container { position: relative; background: #ffffff; border-radius: 12px; overflow: hidden; }
-        .croquis-img { width: 100%; height: auto; display: block; pointer-events: none; }
-        .croquis-svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto; }
+        .croquis-container { position: relative; background: #ffffff; border-radius: 12px; overflow: hidden; cursor: pointer; }
+        .croquis-container img, .croquis-container svg { width: 100%; height: auto; display: block; }
+        .croquis-svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto; background: transparent; }
         .ficha-bloque { background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 0; }
         .media-container { position: relative; background: #d4d4d4; min-height: 200px; }
         .media-container img { width: 100%; height: auto; display: block; }
@@ -59,6 +59,14 @@
             pointer-events: none;
             background: transparent;
         }
+        .croquis-thumbnail { margin-bottom: 15px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+        .croquis-thumbnail:active { transform: scale(0.98); }
+        .croquis-thumbnail img { width: 100%; height: auto; display: block; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: all 0.3s; }
+        .modal.active { visibility: visible; opacity: 1; }
+        .modal-content { position: relative; max-width: 95%; max-height: 95%; background: transparent; }
+        .modal-content img, .modal-content .croquis-container { max-width: 100%; max-height: 90vh; border-radius: 8px; }
+        .modal-close { position: absolute; top: -40px; right: 0; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
         .bloque-id { font-size: 1.3rem; font-weight: 600; color: #6674FF; padding: 10px 16px 5px; font-family: 'Roboto', sans-serif; }
         .bloque-id-small { font-size: 0.85rem; font-weight: normal; color: #888; }
         .ficha-footer { background: #d4d4d4; padding: 14px 16px; display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #2c2c2c; letter-spacing: 0.5px; }
@@ -99,6 +107,15 @@
         <div id="screen-sector-detalle" class="screen"><div id="sector-detalle-content"></div></div>
         <div id="screen-ficha-bloque" class="screen"><div id="ficha-bloque-content"></div><div class="back-hint">← Botón atrás del móvil para volver</div></div>
     </div>
+
+    <!-- Modal para croquis a pantalla completa -->
+    <div id="modalCroquis" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div id="modalCroquisContent"></div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         const DATA_URL = 'datos/datos.json';
@@ -153,6 +170,7 @@
             return '●';
         }
 
+        // ====================== GEOMETRÍAS DE CADA BLOQUE ======================
         const geometriasBloques = {
             "8.1": {
                 viewBox: "0 0 692 768",
@@ -201,13 +219,11 @@
             const geometria = geometriasBloques[bloqueId];
             
             if (!geometria) {
-                console.warn(`No hay geometría definida para el bloque ${bloqueId}`);
                 return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 692 768" style="background:transparent;"></svg>`;
             }
             
             let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${geometria.viewBox}" style="background:transparent;">`;
             
-            // PRIMERO: todas las líneas
             vias.forEach(via => {
                 const letraCompleta = via.linea_id;
                 const letraBase = letraCompleta.split('.')[0];
@@ -220,7 +236,6 @@
                 }
             });
             
-            // SEGUNDO: círculos y textos
             vias.forEach(via => {
                 const letraCompleta = via.linea_id;
                 const letraBase = letraCompleta.split('.')[0];
@@ -231,14 +246,10 @@
                 if (!datosElemento) return;
                 
                 if (esPrimeraVariante) {
-                    // Círculo de entrada
                     svgContent += `<circle cx="${datosElemento.entrada.cx}" cy="${datosElemento.entrada.cy}" r="${datosElemento.entrada.r}" fill="${color}" stroke="${color}"/>`;
                     svgContent += `<text x="${datosElemento.entrada.cx}" y="${datosElemento.entrada.cy}" text-anchor="middle" dominant-baseline="central" fill="white" font-size="${datosElemento.entrada.r * 1.8}px" font-weight="bold">${letraBase}</text>`;
                     
-                    // Círculo de salida
                     svgContent += `<circle cx="${datosElemento.salida.cx}" cy="${datosElemento.salida.cy}" r="${datosElemento.salida.r}" fill="${color}" stroke="${color}"/>`;
-                    
-                    // Ajustar tamaño según el símbolo
                     let fontSizeMultiplier = 1.8;
                     let dyOffset = -2;
                     if (simbolo === '▶' || simbolo === '◀') {
@@ -249,7 +260,6 @@
                         fontSizeMultiplier = 1.6;
                         dyOffset = -2;
                     }
-                    
                     svgContent += `<text x="${datosElemento.salida.cx}" y="${datosElemento.salida.cy}" dy="${dyOffset}" text-anchor="middle" dominant-baseline="central" fill="white" font-size="${datosElemento.salida.r * fontSizeMultiplier}px" font-weight="bold">${simbolo}</text>`;
                 }
                 
@@ -330,6 +340,125 @@
             return partes.length > 0 ? partes.join(" · ") : "";
         }
 
+        // ====================== CARGAR MAPA SVG INTERACTIVO ======================
+        function cargarMapaInteractivo(sector) {
+            const mapaUrl = sector.croquis ? `${sector.croquis}.jpg` : '';
+            const svgMapaUrl = sector.croquis ? `${sector.croquis}.svg` : null;
+            
+            let mapaHtml = `<div class="croquis-container" id="mapaContainer" style="cursor: pointer;">`;
+            mapaHtml += `<img src="${mapaUrl}" class="croquis-img" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
+            mapaHtml += `</div>`;
+            
+            if (svgMapaUrl && sector.info && sector.info.parking) {
+                fetch(svgMapaUrl).then(res => res.text()).then(svgText => {
+                    const parser = new DOMParser();
+                    const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                    const svgElement = svgDoc.documentElement;
+                    svgElement.classList.add('croquis-svg-overlay');
+                    
+                    // Añadir eventos a los elementos con IDs P1, P2, P3...
+                    const parkings = sector.info.parking;
+                    for (let i = 0; i < parkings.length; i++) {
+                        const parkingId = `P${i+1}`;
+                        const elemento = svgElement.querySelector(`#${parkingId}`);
+                        if (elemento && parkings[i]) {
+                            elemento.style.cursor = 'pointer';
+                            elemento.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                window.open(parkings[i], '_blank');
+                            });
+                        }
+                    }
+                    
+                    const container = document.getElementById('mapaContainer');
+                    if (container) {
+                        container.style.position = 'relative';
+                        container.appendChild(svgElement);
+                    }
+                }).catch(err => console.log('Error cargando SVG mapa:', err));
+            }
+            
+            return mapaHtml;
+        }
+
+        // ====================== CARGAR LISTA DE CROQUIS ======================
+        function cargarListaCroquis(sector) {
+            if (!sector.croquis_list || sector.croquis_list.length === 0) {
+                return '<div class="info-sector"><p>No hay croquis disponibles</p></div>';
+            }
+            
+            let html = '<div class="croquis-list">';
+            sector.croquis_list.forEach((croq, idx) => {
+                html += `
+                    <div class="croquis-thumbnail" data-croquis-idx="${idx}">
+                        <img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'">
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            // Añadir eventos después de insertar el HTML
+            setTimeout(() => {
+                sector.croquis_list.forEach((croq, idx) => {
+                    const thumb = document.querySelector(`.croquis-thumbnail[data-croquis-idx="${idx}"]`);
+                    if (thumb) {
+                        thumb.onclick = () => abrirCroquisModal(croq);
+                    }
+                });
+            }, 100);
+            
+            return html;
+        }
+
+        function abrirCroquisModal(croquis) {
+            const modal = document.getElementById('modalCroquis');
+            const modalContent = document.getElementById('modalCroquisContent');
+            
+            modalContent.innerHTML = `
+                <div class="croquis-container" id="modalCroquisContainer" style="position: relative;">
+                    <img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
+                </div>
+            `;
+            
+            // Cargar SVG interactivo si existe
+            const svgUrl = `${croquis.svg}.svg`;
+            fetch(svgUrl).then(res => res.text()).then(svgText => {
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                const svgElement = svgDoc.documentElement;
+                svgElement.classList.add('croquis-svg-overlay');
+                
+                // Añadir eventos para los bloques (B1, B2, etc.)
+                const elementos = svgElement.querySelectorAll('[id]');
+                elementos.forEach(el => {
+                    const bloqueId = el.id;
+                    if (bloqueId && currentSector) {
+                        el.style.cursor = 'pointer';
+                        el.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            // Buscar el bloque correspondiente en el sector
+                            const bloqueEncontrado = currentSector.bloques.find(b => b.id === `${bloqueId}.0` || b.id === `${bloqueId}.1`);
+                            if (bloqueEncontrado) {
+                                const indice = currentSector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
+                                if (indice !== -1) {
+                                    modal.classList.remove('active');
+                                    openFichaBloque(indice);
+                                }
+                            }
+                        });
+                    }
+                });
+                
+                const container = document.getElementById('modalCroquisContainer');
+                if (container) {
+                    container.style.position = 'relative';
+                    container.appendChild(svgElement);
+                }
+            }).catch(err => console.log('Error cargando SVG croquis:', err));
+            
+            modal.classList.add('active');
+        }
+
         function navigateToScreen(screenId, stateData = null) {
             const currentVisible = document.querySelector('.screen:not([style*="display: none"])');
             if (currentVisible && currentVisible.id !== screenId) navigationStack.push({ screen: currentVisible.id, state: stateData });
@@ -384,9 +513,15 @@
         function openSector(sectorNombre) {
             currentSector = datosApp.sectores.find(s => s.nombre === sectorNombre);
             if (!currentSector) return;
+            
             const container = document.getElementById('sector-detalle-content');
-            const croquisUrl = currentSector.croquis ? `${currentSector.croquis}.jpg` : '';
-            const svgUrl = currentSector.croquis ? `${currentSector.croquis}.svg` : null;
+            
+            // Preparar contenido de pestaña Info
+            const mapaHtml = cargarMapaInteractivo(currentSector);
+            
+            // Preparar contenido de pestaña Croquis
+            const croquisHtml = cargarListaCroquis(currentSector);
+            
             container.innerHTML = `
                 <h2 style="font-family: 'Cocogoose', sans-serif;">${currentSector.nombre}</h2>
                 <div class="tabs">
@@ -399,48 +534,18 @@
                         <div class="grafica-titulo">Distribución de grados</div>
                         <canvas id="grafica-sector" style="width:100%; height:auto;"></canvas>
                     </div>
-                    <div class="info-sector"><h4>Información del sector</h4><p>Próximamente: aproximación, material, etc.</p></div>
+                    <div class="info-sector">
+                        <h4>📍 Cómo llegar</h4>
+                        <div id="mapaInfo">${mapaHtml}</div>
+                        <p style="margin-top: 15px; font-size: 0.8rem; color: #666;">💡 Toca los puntos P1, P2... en el mapa para abrir Google Maps</p>
+                    </div>
                 </div>
-                <div id="tab-croquis" class="tab-pane"></div>
+                <div id="tab-croquis" class="tab-pane">
+                    ${croquisHtml}
+                </div>
                 <div id="tab-bloques" class="tab-pane"><div id="bloques-list"></div></div>
             `;
-            const croquisPane = document.getElementById('tab-croquis');
-            if (croquisPane) {
-                croquisPane.innerHTML = `<div class="croquis-container" id="croquisContainer"></div>`;
-                const containerCroquis = document.getElementById('croquisContainer');
-                const img = document.createElement('img');
-                img.src = `${croquisUrl}`;
-                img.className = 'croquis-img';
-                img.onerror = () => { img.src = 'https://picsum.photos/id/20/800/600'; };
-                containerCroquis.appendChild(img);
-                if (svgUrl) {
-                    fetch(svgUrl).then(res => res.text()).then(svgText => {
-                        const parser = new DOMParser();
-                        const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                        const svgElement = svgDoc.documentElement;
-                        svgElement.setAttribute('width', '100%');
-                        svgElement.setAttribute('height', '100%');
-                        svgElement.classList.add('croquis-svg-overlay');
-                        containerCroquis.style.position = 'relative';
-                        containerCroquis.appendChild(svgElement);
-                        const elementos = svgElement.querySelectorAll('[id]');
-                        elementos.forEach(el => {
-                            const bloqueId = el.id;
-                            if (bloqueId) {
-                                el.style.cursor = 'pointer';
-                                el.addEventListener('click', () => {
-                                    const bloqueBase = bloqueId;
-                                    const bloqueEncontrado = currentSector.bloques.find(b => b.id.startsWith(bloqueBase));
-                                    if (bloqueEncontrado) {
-                                        const indice = currentSector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
-                                        if (indice !== -1) openFichaBloque(indice);
-                                    }
-                                });
-                            }
-                        });
-                    }).catch(err => console.log('Error cargando SVG interactivo:', err));
-                }
-            }
+            
             container.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.onclick = () => {
                     container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -452,6 +557,8 @@
                     if (btn.dataset.tab === 'info') setTimeout(() => dibujarGrafica(currentSector), 100);
                 };
             });
+            
+            // Mostrar lista de bloques
             const bloquesContainer = document.getElementById('bloques-list');
             bloquesContainer.innerHTML = '';
             const grupos = {};
@@ -483,11 +590,13 @@
                 grupoDiv.appendChild(listaDiv);
                 bloquesContainer.appendChild(grupoDiv);
             });
+            
             navigateToScreen('screen-sector-detalle');
             history.pushState({ sectorNombre: sectorNombre }, '');
             setTimeout(() => dibujarGrafica(currentSector), 100);
         }
 
+        // ====================== FICHA DE BLOQUE ======================
         function openFichaBloque(bloqueIndex) {
             if (!currentSector) return;
             const container = document.getElementById('ficha-bloque-content');
@@ -544,7 +653,6 @@
                 const svgContainer = document.getElementById(`svgContainer-${idx}`);
                 if (svgContainer) {
                     svgContainer.innerHTML = svgString;
-                    console.log(`✅ SVG generado para bloque ${b.id}`);
                 }
             });
             
@@ -581,6 +689,16 @@
                 };
             });
         }
+        
+        // Cerrar modal
+        document.getElementById('modalClose').onclick = () => {
+            document.getElementById('modalCroquis').classList.remove('active');
+        };
+        document.getElementById('modalCroquis').onclick = (e) => {
+            if (e.target === document.getElementById('modalCroquis')) {
+                document.getElementById('modalCroquis').classList.remove('active');
+            }
+        };
         
         function init() {
             initMenu();
