@@ -42,7 +42,6 @@
         .croquis-thumb.active { border: 3px solid #6674FF; }
         .croquis-viewer { position: relative; background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 60px; }
         .croquis-viewer img { width: 100%; height: auto; display: block; }
-        .croquis-viewer object { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto; }
         .bloque-group { background: #ffffff; border-radius: 12px; margin-bottom: 20px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .bloque-group:last-child { margin-bottom: 60px; }
         .bloque-group h3 { background: #d4d4d4; padding: 12px 16px; font-size: 1rem; color: #2c2c2c; margin: 0; }
@@ -103,7 +102,6 @@
     <script>
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, navigationStack = [], swiperBloques = null;
-        let currentCroquisIndex = 0;
 
         function getColorByGrado(grado) {
             if (!grado) return '#FF93DB';
@@ -256,7 +254,7 @@
             return partes.length > 0 ? partes.join(" · ") : "";
         }
 
-        // ====================== CARGAR MAPA (transparente y clickable) ======================
+        // ====================== CARGAR MAPA (versión robusta) ======================
         function cargarMapaInteractivo(sector) {
             if (!sector.mapa) return '<div class="info-sector"><p>No hay mapa disponible</p></div>';
             const mapaUrl = `${sector.mapa}.jpg`;
@@ -265,31 +263,43 @@
             let html = `<div id="${containerId}" class="croquis-viewer" style="position: relative; margin-bottom: 0;">`;
             html += `<img src="${mapaUrl}" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `</div>`;
-            setTimeout(() => {
-                const container = document.getElementById(containerId);
-                if (!container) return;
-                fetch(svgMapaUrl).then(res => res.text()).then(svgText => {
+            
+            fetch(svgMapaUrl)
+                .then(res => {
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    return res.text();
+                })
+                .then(svgText => {
                     const parser = new DOMParser();
                     const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
                     const svgElement = svgDoc.documentElement;
+                    if (!svgElement) return;
+                    
                     svgElement.style.position = 'absolute';
                     svgElement.style.top = '0';
                     svgElement.style.left = '0';
                     svgElement.style.width = '100%';
                     svgElement.style.height = '100%';
                     svgElement.style.pointerEvents = 'auto';
-                    const allEl = svgElement.querySelectorAll('*');
-                    allEl.forEach(el => {
-                        el.setAttribute('fill', 'transparent');
-                        el.setAttribute('stroke', 'transparent');
-                        el.setAttribute('fill-opacity', '0');
-                        el.setAttribute('stroke-opacity', '0');
-                        el.style.opacity = '0';
+                    
+                    // Hacer todos los elementos transparentes (de forma segura)
+                    const allElements = svgElement.querySelectorAll('*');
+                    allElements.forEach(el => {
+                        try {
+                            el.setAttribute('fill', 'transparent');
+                            el.setAttribute('stroke', 'transparent');
+                            el.setAttribute('fill-opacity', '0');
+                            el.setAttribute('stroke-opacity', '0');
+                            if (el.style) el.style.opacity = '0';
+                        } catch(e) { /* ignorar errores */ }
                     });
+                    
+                    // Configurar parkings clickables
                     if (sector.info && sector.info.parking) {
                         const parkings = sector.info.parking;
                         for (let i = 0; i < parkings.length; i++) {
-                            const el = svgElement.querySelector(`#parking_${i+1}`);
+                            const parkingId = `parking_${i+1}`;
+                            const el = svgElement.querySelector(`#${parkingId}`);
                             if (el && parkings[i]) {
                                 el.style.cursor = 'pointer';
                                 el.addEventListener('click', (e) => {
@@ -297,14 +307,21 @@
                                     e.preventDefault();
                                     window.open(parkings[i], '_blank');
                                 });
-                                console.log(`✅ Evento asignado a parking_${i+1}`);
+                                console.log(`✅ Mapa: evento asignado a ${parkingId}`);
+                            } else {
+                                console.log(`⚠️ Mapa: no se encontró ${parkingId} en el SVG`);
                             }
                         }
                     }
-                    container.style.position = 'relative';
-                    container.appendChild(svgElement);
-                }).catch(err => console.log('Error cargando SVG mapa:', err));
-            }, 100);
+                    
+                    const container = document.getElementById(containerId);
+                    if (container) {
+                        container.style.position = 'relative';
+                        container.appendChild(svgElement);
+                    }
+                })
+                .catch(err => console.log('Error cargando SVG mapa:', err));
+            
             return html;
         }
 
@@ -316,28 +333,39 @@
             let html = `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `</div>`;
-            setTimeout(() => {
-                const container = document.getElementById(containerId);
-                if (!container) return;
-                const svgUrl = `${croquis.svg}.svg`;
-                fetch(svgUrl).then(res => res.text()).then(svgText => {
+            
+            const svgUrl = `${croquis.svg}.svg`;
+            fetch(svgUrl)
+                .then(res => {
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    return res.text();
+                })
+                .then(svgText => {
                     const parser = new DOMParser();
                     const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
                     const svgElement = svgDoc.documentElement;
+                    if (!svgElement) return;
+                    
                     svgElement.style.position = 'absolute';
                     svgElement.style.top = '0';
                     svgElement.style.left = '0';
                     svgElement.style.width = '100%';
                     svgElement.style.height = '100%';
                     svgElement.style.pointerEvents = 'auto';
-                    const allEl = svgElement.querySelectorAll('*');
-                    allEl.forEach(el => {
-                        el.setAttribute('fill', 'transparent');
-                        el.setAttribute('stroke', 'transparent');
-                        el.setAttribute('fill-opacity', '0');
-                        el.setAttribute('stroke-opacity', '0');
-                        el.style.opacity = '0';
+                    
+                    // Hacer todos los elementos transparentes
+                    const allElements = svgElement.querySelectorAll('*');
+                    allElements.forEach(el => {
+                        try {
+                            el.setAttribute('fill', 'transparent');
+                            el.setAttribute('stroke', 'transparent');
+                            el.setAttribute('fill-opacity', '0');
+                            el.setAttribute('stroke-opacity', '0');
+                            if (el.style) el.style.opacity = '0';
+                        } catch(e) { /* ignorar errores */ }
                     });
+                    
+                    // Configurar zonas clickables (IDs como "1", "2", etc.)
                     const elementos = svgElement.querySelectorAll('[id]');
                     elementos.forEach(el => {
                         const bloqueBase = el.id;
@@ -347,27 +375,32 @@
                                 e.stopPropagation();
                                 e.preventDefault();
                                 const bloqueEncontrado = sector.bloques.find(b => {
-                                    if (b.id.startsWith(`${bloqueBase}_`)) return true;
                                     if (b.id === bloqueBase) return true;
+                                    if (b.id.startsWith(`${bloqueBase}_`)) return true;
                                     return false;
                                 });
                                 if (bloqueEncontrado) {
                                     const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
                                     if (indice !== -1) {
-                                        console.log(`Navegando al bloque: ${bloqueEncontrado.id}`);
+                                        console.log(`✅ Croquis: navegando a bloque ${bloqueEncontrado.id}`);
                                         openFichaBloque(indice);
                                     }
                                 } else {
-                                    console.log(`Bloque no encontrado para ID: ${bloqueBase}`);
+                                    console.log(`⚠️ Croquis: bloque no encontrado para ID: ${bloqueBase}`);
                                 }
                             });
-                            console.log(`✅ Evento asignado a elemento con id: ${bloqueBase}`);
+                            console.log(`✅ Croquis: evento asignado a ID: ${bloqueBase}`);
                         }
                     });
-                    container.style.position = 'relative';
-                    container.appendChild(svgElement);
-                }).catch(err => console.log('Error cargando SVG croquis:', err));
-            }, 100);
+                    
+                    const container = document.getElementById(containerId);
+                    if (container) {
+                        container.style.position = 'relative';
+                        container.appendChild(svgElement);
+                    }
+                })
+                .catch(err => console.log('Error cargando SVG croquis:', err));
+            
             return html;
         }
 
@@ -468,7 +501,7 @@
                     }
                 };
             });
-            // Eventos de miniaturas
+            
             setTimeout(() => {
                 document.querySelectorAll('.croquis-thumb').forEach(thumb => {
                     thumb.onclick = () => {
@@ -479,7 +512,7 @@
                     };
                 });
             }, 100);
-            // Lista de bloques
+            
             const bloquesContainer = document.getElementById('bloques-list');
             bloquesContainer.innerHTML = '';
             const grupos = {};
