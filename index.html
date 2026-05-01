@@ -172,7 +172,7 @@
 
         // ====================== GEOMETRÍAS DE CADA BLOQUE ======================
         const geometriasBloques = {
-            "8.1": {
+            "8_1": {
                 viewBox: "0 0 692 768",
                 elementos: {
                     "A": {
@@ -353,18 +353,16 @@
             mapaHtml += `<img src="${mapaUrl}" class="croquis-img" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             mapaHtml += `</div>`;
             
-            // Intentar cargar SVG interactivo
             fetch(svgMapaUrl).then(res => res.text()).then(svgText => {
                 const parser = new DOMParser();
                 const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
                 const svgElement = svgDoc.documentElement;
                 svgElement.classList.add('croquis-svg-overlay');
                 
-                // Añadir eventos a los elementos con IDs P1, P2, P3...
                 if (sector.info && sector.info.parking) {
                     const parkings = sector.info.parking;
                     for (let i = 0; i < parkings.length; i++) {
-                        const parkingId = `P${i+1}`;
+                        const parkingId = `parking_${i+1}`;
                         const elemento = svgElement.querySelector(`#${parkingId}`);
                         if (elemento && parkings[i]) {
                             elemento.style.cursor = 'pointer';
@@ -433,12 +431,16 @@
                 
                 const elementos = svgElement.querySelectorAll('[id]');
                 elementos.forEach(el => {
-                    const bloqueId = el.id;
-                    if (bloqueId && currentSector) {
+                    const bloqueBase = el.id;
+                    if (bloqueBase && currentSector) {
                         el.style.cursor = 'pointer';
                         el.addEventListener('click', (e) => {
                             e.stopPropagation();
-                            const bloqueEncontrado = currentSector.bloques.find(b => b.id === `${bloqueId}.0` || b.id === `${bloqueId}.1`);
+                            const bloqueEncontrado = currentSector.bloques.find(b => {
+                                if (b.id.startsWith(`${bloqueBase}_`)) return true;
+                                if (b.id === bloqueBase) return true;
+                                return false;
+                            });
                             if (bloqueEncontrado) {
                                 const indice = currentSector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
                                 if (indice !== -1) {
@@ -687,7 +689,6 @@
             });
         }
         
-        // Cerrar modal
         document.getElementById('modalClose').onclick = () => {
             document.getElementById('modalCroquis').classList.remove('active');
         };
