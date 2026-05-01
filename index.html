@@ -254,7 +254,22 @@
             return partes.length > 0 ? partes.join(" · ") : "";
         }
 
-        // ====================== CARGAR MAPA (versión robusta) ======================
+        // ====================== FUNCIONES CON inkscape:label ======================
+        function findElementByLabel(svgElement, label) {
+            if (!svgElement) return null;
+            // Buscar por inkscape:label
+            let found = svgElement.querySelector(`[inkscape\\:label="${label}"]`);
+            if (found) return found;
+            // Buscar en todos los elementos hijos
+            const allElements = svgElement.querySelectorAll('*');
+            for (let el of allElements) {
+                if (el.getAttribute('inkscape:label') === label) return el;
+                if (el.getAttribute('id') === label) return el;
+            }
+            return null;
+        }
+
+        // ====================== CARGAR MAPA ======================
         function cargarMapaInteractivo(sector) {
             if (!sector.mapa) return '<div class="info-sector"><p>No hay mapa disponible</p></div>';
             const mapaUrl = `${sector.mapa}.jpg`;
@@ -282,24 +297,26 @@
                     svgElement.style.height = '100%';
                     svgElement.style.pointerEvents = 'auto';
                     
-                    // Hacer todos los elementos transparentes (de forma segura)
+                    // Hacer transparentes todos los elementos
                     const allElements = svgElement.querySelectorAll('*');
                     allElements.forEach(el => {
                         try {
-                            el.setAttribute('fill', 'transparent');
-                            el.setAttribute('stroke', 'transparent');
-                            el.setAttribute('fill-opacity', '0');
-                            el.setAttribute('stroke-opacity', '0');
-                            if (el.style) el.style.opacity = '0';
-                        } catch(e) { /* ignorar errores */ }
+                            if (el.tagName !== 'svg') {
+                                el.setAttribute('fill', 'transparent');
+                                el.setAttribute('stroke', 'transparent');
+                                el.setAttribute('fill-opacity', '0');
+                                el.setAttribute('stroke-opacity', '0');
+                                if (el.style) el.style.opacity = '0';
+                            }
+                        } catch(e) { /* ignorar */ }
                     });
                     
-                    // Configurar parkings clickables
+                    // Configurar parkings
                     if (sector.info && sector.info.parking) {
                         const parkings = sector.info.parking;
                         for (let i = 0; i < parkings.length; i++) {
-                            const parkingId = `parking_${i+1}`;
-                            const el = svgElement.querySelector(`#${parkingId}`);
+                            const parkingLabel = `parking_${i+1}`;
+                            const el = findElementByLabel(svgElement, parkingLabel);
                             if (el && parkings[i]) {
                                 el.style.cursor = 'pointer';
                                 el.addEventListener('click', (e) => {
@@ -307,9 +324,9 @@
                                     e.preventDefault();
                                     window.open(parkings[i], '_blank');
                                 });
-                                console.log(`✅ Mapa: evento asignado a ${parkingId}`);
+                                console.log(`✅ Mapa: encontrado y asignado ${parkingLabel}`);
                             } else {
-                                console.log(`⚠️ Mapa: no se encontró ${parkingId} en el SVG`);
+                                console.log(`⚠️ Mapa: no se encontró elemento con inkscape:label="${parkingLabel}"`);
                             }
                         }
                     }
@@ -325,7 +342,7 @@
             return html;
         }
 
-        // ====================== CARGAR CROQUIS INTERACTIVO ======================
+        // ====================== CARGAR CROQUIS ======================
         function cargarCroquisInteractivo(sector, croquisIndex) {
             const croquis = sector.croquis_list[croquisIndex];
             if (!croquis) return '<div class="info-sector"><p>Croquis no disponible</p></div>';
@@ -353,23 +370,26 @@
                     svgElement.style.height = '100%';
                     svgElement.style.pointerEvents = 'auto';
                     
-                    // Hacer todos los elementos transparentes
+                    // Hacer transparentes todos los elementos
                     const allElements = svgElement.querySelectorAll('*');
                     allElements.forEach(el => {
                         try {
-                            el.setAttribute('fill', 'transparent');
-                            el.setAttribute('stroke', 'transparent');
-                            el.setAttribute('fill-opacity', '0');
-                            el.setAttribute('stroke-opacity', '0');
-                            if (el.style) el.style.opacity = '0';
-                        } catch(e) { /* ignorar errores */ }
+                            if (el.tagName !== 'svg') {
+                                el.setAttribute('fill', 'transparent');
+                                el.setAttribute('stroke', 'transparent');
+                                el.setAttribute('fill-opacity', '0');
+                                el.setAttribute('stroke-opacity', '0');
+                                if (el.style) el.style.opacity = '0';
+                            }
+                        } catch(e) { /* ignorar */ }
                     });
                     
-                    // Configurar zonas clickables (IDs como "1", "2", etc.)
-                    const elementos = svgElement.querySelectorAll('[id]');
-                    elementos.forEach(el => {
-                        const bloqueBase = el.id;
-                        if (bloqueBase) {
+                    // Configurar bloques clickables por inkscape:label
+                    // Buscar todos los elementos que tengan inkscape:label
+                    const elementosConLabel = svgElement.querySelectorAll('[inkscape\\:label]');
+                    elementosConLabel.forEach(el => {
+                        const bloqueBase = el.getAttribute('inkscape:label');
+                        if (bloqueBase && !isNaN(parseInt(bloqueBase))) {  // Solo números
                             el.style.cursor = 'pointer';
                             el.addEventListener('click', (e) => {
                                 e.stopPropagation();
@@ -386,10 +406,10 @@
                                         openFichaBloque(indice);
                                     }
                                 } else {
-                                    console.log(`⚠️ Croquis: bloque no encontrado para ID: ${bloqueBase}`);
+                                    console.log(`⚠️ Croquis: bloque no encontrado para label: ${bloqueBase}`);
                                 }
                             });
-                            console.log(`✅ Croquis: evento asignado a ID: ${bloqueBase}`);
+                            console.log(`✅ Croquis: asignado evento a inkscape:label="${bloqueBase}"`);
                         }
                     });
                     
