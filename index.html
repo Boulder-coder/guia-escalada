@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
-        /* ... (estilos se mantienen igual, no los repito por espacio) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .cocogoose-font, h1, .dropdown-menu button, .ficha-footer, h2, h3, h4, .tab-btn {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
@@ -58,7 +57,6 @@
         .ficha-bloque { background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 0; }
         .media-container { position: relative; background: #d4d4d4; min-height: 200px; }
         .media-container img { width: 100%; height: auto; display: block; }
-        .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: transparent; }
         .bloque-id { font-size: 1.3rem; font-weight: 600; color: #6674FF; padding: 10px 16px 5px; font-family: 'Roboto', sans-serif; }
         .bloque-id-small { font-size: 0.85rem; font-weight: normal; color: #888; }
         .ficha-footer { background: #d4d4d4; padding: 14px 16px; display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #2c2c2c; letter-spacing: 0.5px; }
@@ -154,7 +152,28 @@
             return '●';
         }
 
-        // ====================== FUNCIONES PARA MAPA Y CROQUIS (carga dinámica desde GitHub) ======================
+        // ====================== FUNCIÓN PARA ENCONTRAR ELEMENTOS POR inkscape:label ======================
+        function encontrarElementosPorLabel(svgDoc, label) {
+            const resultados = [];
+            const todos = svgDoc.querySelectorAll('*');
+            for (let el of todos) {
+                let labelValue = el.getAttribute('inkscape:label');
+                if (!labelValue && el.attributes) {
+                    for (let attr of el.attributes) {
+                        if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) {
+                            labelValue = attr.value;
+                            break;
+                        }
+                    }
+                }
+                if (labelValue === label) {
+                    resultados.push(el);
+                }
+            }
+            return resultados;
+        }
+
+        // ====================== CARGAR MAPA ======================
         function cargarMapaInteractivo(sector) {
             if (!sector.mapa) return '<div class="info-sector"><p>No hay mapa disponible</p></div>';
             const mapaUrl = `${sector.mapa}.jpg`;
@@ -163,11 +182,49 @@
             
             let html = `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${mapaUrl}" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
-            html += `<object id="mapaObject_${containerId}" data="${svgMapaUrl}?v=${Date.now()}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object>`;
+            html += `<object id="mapaObject_${containerId}" data="${svgMapaUrl}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object>`;
             html += `</div>`;
+            
+            setTimeout(() => {
+                const objectTag = document.getElementById(`mapaObject_${containerId}`);
+                if (objectTag && objectTag.contentDocument) {
+                    const svgDoc = objectTag.contentDocument;
+                    const svgElement = svgDoc.documentElement;
+                    if (svgElement) {
+                        const allEl = svgElement.querySelectorAll('*');
+                        allEl.forEach(el => {
+                            if (el.tagName !== 'svg') {
+                                el.setAttribute('fill', 'transparent');
+                                el.setAttribute('stroke', 'transparent');
+                                el.setAttribute('fill-opacity', '0');
+                                el.setAttribute('stroke-opacity', '0');
+                                if (el.style) el.style.opacity = '0';
+                            }
+                        });
+                        
+                        if (sector.info && sector.info.parking) {
+                            const parkings = sector.info.parking;
+                            for (let i = 0; i < parkings.length; i++) {
+                                const parkingLabel = `parking_${i+1}`;
+                                const elementos = encontrarElementosPorLabel(svgDoc, parkingLabel);
+                                elementos.forEach(el => {
+                                    el.style.cursor = 'pointer';
+                                    el.addEventListener('click', (e) => {
+                                        e.stopPropagation();
+                                        window.open(parkings[i], '_blank');
+                                    });
+                                    console.log(`✅ Mapa: asignado evento a ${parkingLabel}`);
+                                });
+                            }
+                        }
+                    }
+                }
+            }, 500);
+            
             return html;
         }
 
+        // ====================== CARGAR CROQUIS ======================
         function cargarCroquisInteractivo(sector, croquisIndex) {
             const croquis = sector.croquis_list[croquisIndex];
             if (!croquis) return '<div class="info-sector"><p>Croquis no disponible</p></div>';
@@ -175,8 +232,65 @@
             
             let html = `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
-            html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg?v=${Date.now()}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object>`;
+            html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object>`;
             html += `</div>`;
+            
+            setTimeout(() => {
+                const objectTag = document.getElementById(`croquisObject_${containerId}`);
+                if (objectTag && objectTag.contentDocument) {
+                    const svgDoc = objectTag.contentDocument;
+                    const svgElement = svgDoc.documentElement;
+                    if (svgElement) {
+                        const allEl = svgElement.querySelectorAll('*');
+                        allEl.forEach(el => {
+                            if (el.tagName !== 'svg') {
+                                el.setAttribute('fill', 'transparent');
+                                el.setAttribute('stroke', 'transparent');
+                                el.setAttribute('fill-opacity', '0');
+                                el.setAttribute('stroke-opacity', '0');
+                                if (el.style) el.style.opacity = '0';
+                            }
+                        });
+                        
+                        const elementosConLabel = svgDoc.querySelectorAll('*');
+                        elementosConLabel.forEach(el => {
+                            let label = null;
+                            label = el.getAttribute('inkscape:label');
+                            if (!label && el.attributes) {
+                                for (let attr of el.attributes) {
+                                    if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) {
+                                        label = attr.value;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (label && !isNaN(parseInt(label))) {
+                                el.style.cursor = 'pointer';
+                                el.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    const bloqueBase = label;
+                                    const bloqueEncontrado = sector.bloques.find(b => {
+                                        if (b.id === bloqueBase) return true;
+                                        if (b.id.startsWith(`${bloqueBase}_`)) return true;
+                                        return false;
+                                    });
+                                    if (bloqueEncontrado) {
+                                        const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
+                                        if (indice !== -1) {
+                                            console.log(`✅ Croquis: navegando a bloque ${bloqueEncontrado.id}`);
+                                            openFichaBloque(indice);
+                                        }
+                                    } else {
+                                        console.log(`⚠️ Croquis: bloque no encontrado para label "${label}"`);
+                                    }
+                                });
+                                console.log(`✅ Croquis: asignado evento a inkscape:label="${label}"`);
+                            }
+                        });
+                    }
+                }
+            }, 500);
+            
             return html;
         }
 
@@ -396,25 +510,27 @@
             return partes.length > 0 ? partes.join(" · ") : "";
         }
 
+        // ====================== FICHA DE BLOQUE (SIN SVG, SOLO FOTO Y TEXTOS) ======================
         function openFichaBloque(bloqueIndex) {
             if (!currentSector) return;
             const container = document.getElementById('ficha-bloque-content');
             container.innerHTML = `<div class="bloque-swiper swiper"><div class="swiper-wrapper" id="bloquesSwiperWrapper"></div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>`;
             const wrapper = document.getElementById('bloquesSwiperWrapper');
+            
             currentSector.bloques.forEach((b, idx) => {
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
                 slide.innerHTML = `
                     <div class="ficha-bloque">
-                        <div class="media-container" id="mediaContainer-${idx}" style="position: relative;">
+                        <div class="media-container" style="position: relative;">
                             <img src="${b.foto_base}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
-                            <div id="svgContainer-${idx}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
                         </div>
                         <div class="ficha-footer"><span>Bloque ${parseInt(b.id, 10)}</span><span>${currentSector.nombre}</span></div>
                         <div class="ficha-vias" id="vias-${idx}"></div>
                     </div>
                 `;
                 wrapper.appendChild(slide);
+                
                 const viasDiv = document.getElementById(`vias-${idx}`);
                 b.vias.forEach(via => {
                     const textoManos = getTextoManos(via);
@@ -435,24 +551,8 @@
                     `;
                     viasDiv.appendChild(viaDiv);
                 });
-                // Cargar SVG superpuesto desde GitHub
-                const svgUrl = `${b.foto_base}.svg?v=${Date.now()}`;
-                fetch(svgUrl).then(res => res.text()).then(svgText => {
-                    const parser = new DOMParser();
-                    const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                    const svgElement = svgDoc.documentElement;
-                    svgElement.classList.add('svg-overlay');
-                    const mediaContainer = document.getElementById(`mediaContainer-${idx}`);
-                    const img = mediaContainer.querySelector('img');
-                    if (img && img.complete && img.naturalWidth) {
-                        svgElement.setAttribute('viewBox', `0 0 ${img.naturalWidth} ${img.naturalHeight}`);
-                    }
-                    svgElement.setAttribute('preserveAspectRatio', 'none');
-                    svgElement.style.width = '100%';
-                    svgElement.style.height = 'auto';
-                    mediaContainer.appendChild(svgElement);
-                }).catch(err => console.log('Error cargando SVG:', err));
             });
+            
             if (swiperBloques) swiperBloques.destroy();
             swiperBloques = new Swiper('.bloque-swiper', { initialSlide: bloqueIndex, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, pagination: { el: '.swiper-pagination', clickable: true }, spaceBetween: 20, autoHeight: true });
             navigateToScreen('screen-ficha-bloque');
