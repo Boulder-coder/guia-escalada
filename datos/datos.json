@@ -391,8 +391,8 @@
               "nombre": "Sin nombre",
               "grado": "3",
               "entrada": "Sit",
-              "mano_izq": "No me acuerdo",
-              "mano_der": "No me acuerdo",
+              "mano_izq": "No me acordo",
+              "mano_der": "No me acordo",
               "manos_juntas": "",
               "definicion": "Sale recto",
               "salida": "Top-out",
@@ -569,7 +569,7 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "",
-              "salida": "Top-out",
+              "salida": "Top-out derecha",
               "expuesta": ""
             },
             {
