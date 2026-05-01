@@ -2,6 +2,8 @@
   "sectores": [
     {
       "nombre": "Monte La Cruz",
+      "portada": "fotos/MLC_PORTADA",
+      "mapa": "fotos/MLC_MAPA",
       "info": {
         "parking": [
           "https://maps.app.goo.gl/e1SB96eGaXCvjFn47",
