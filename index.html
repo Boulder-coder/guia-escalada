@@ -32,7 +32,9 @@
         .tab-btn.active { background: #FFDE66; color: #2c2c2c; }
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
-        .info-sector, .condiciones-content { background: #ffffff; border-radius: 12px; padding: 20px; }
+        .tab-pane:last-child { margin-bottom: 60px; }
+        .info-sector, .condiciones-content { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 60px; }
+        .croquis-list { margin-bottom: 60px; }
         .bloque-group { background: #ffffff; border-radius: 12px; margin-bottom: 20px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .bloque-group:last-child { margin-bottom: 60px; }
         .bloque-group h3 { background: #d4d4d4; padding: 12px 16px; font-size: 1rem; color: #2c2c2c; margin: 0; }
@@ -44,9 +46,8 @@
         .grafica-container { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .grafica-titulo { text-align: left; margin-bottom: 15px; font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif; color: #6674FF; font-size: 1.1rem; }
         canvas { width: 100%; max-width: 100%; height: auto; background: transparent; display: block; }
-        .croquis-container { position: relative; background: #ffffff; border-radius: 12px; overflow: hidden; cursor: pointer; }
-        .croquis-container img, .croquis-container svg { width: 100%; height: auto; display: block; }
-        .croquis-svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto; background: transparent; }
+        .croquis-container { position: relative; background: #ffffff; border-radius: 12px; overflow: hidden; }
+        .croquis-container img { width: 100%; height: auto; display: block; }
         .ficha-bloque { background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 0; }
         .media-container { position: relative; background: #d4d4d4; min-height: 200px; }
         .media-container img { width: 100%; height: auto; display: block; }
@@ -61,11 +62,11 @@
         }
         .croquis-thumbnail { margin-bottom: 15px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
         .croquis-thumbnail:active { transform: scale(0.98); }
-        .croquis-thumbnail img { width: 100%; height: auto; display: block; }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: all 0.3s; }
+        .croquis-thumbnail img { width: 100%; height: auto; display: block; pointer-events: none; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: all 0.3s; cursor: pointer; }
         .modal.active { visibility: visible; opacity: 1; }
-        .modal-content { position: relative; max-width: 95%; max-height: 95%; background: transparent; }
-        .modal-content img, .modal-content .croquis-container { max-width: 100%; max-height: 90vh; border-radius: 8px; }
+        .modal-content { position: relative; max-width: 95%; max-height: 95%; background: transparent; cursor: default; }
+        .modal-content .croquis-container { max-width: 100%; max-height: 90vh; border-radius: 8px; }
         .modal-close { position: absolute; top: -40px; right: 0; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
         .bloque-id { font-size: 1.3rem; font-weight: 600; color: #6674FF; padding: 10px 16px 5px; font-family: 'Roboto', sans-serif; }
         .bloque-id-small { font-size: 0.85rem; font-weight: normal; color: #888; }
@@ -340,7 +341,7 @@
             return partes.length > 0 ? partes.join(" · ") : "";
         }
 
-        // ====================== CARGAR MAPA INTERACTIVO (CON COLORES VISIBLES) ======================
+        // ====================== CARGAR MAPA INTERACTIVO (CON OBJECT TAG PARA EVITAR ERRORES) ======================
         function cargarMapaInteractivo(sector) {
             if (!sector.mapa) {
                 return '<div class="info-sector"><p>No hay mapa disponible</p></div>';
@@ -349,41 +350,46 @@
             const mapaUrl = `${sector.mapa}.jpg`;
             const svgMapaUrl = `${sector.mapa}.svg`;
             
-            let mapaHtml = `<div class="croquis-container" id="mapaContainer" style="cursor: pointer; position: relative;">`;
+            let mapaHtml = `<div class="croquis-container" id="mapaContainer" style="position: relative;">`;
             mapaHtml += `<img src="${mapaUrl}" class="croquis-img" onerror="this.src='https://picsum.photos/id/20/800/600'" style="width:100%; height:auto; display:block;">`;
             mapaHtml += `</div>`;
             
-            fetch(svgMapaUrl)
-                .then(res => res.text())
-                .then(svgText => {
-                    const parser = new DOMParser();
-                    const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                    const svgElement = svgDoc.documentElement;
-                    svgElement.classList.add('croquis-svg-overlay');
-                    
-                    // Añadir eventos a los parkings
-                    if (sector.info && sector.info.parking) {
-                        const parkings = sector.info.parking;
-                        for (let i = 0; i < parkings.length; i++) {
-                            const parkingId = `parking_${i+1}`;
-                            const elemento = svgElement.querySelector(`#${parkingId}`);
-                            if (elemento && parkings[i]) {
-                                elemento.style.cursor = 'pointer';
-                                elemento.addEventListener('click', (e) => {
-                                    e.stopPropagation();
-                                    window.open(parkings[i], '_blank');
-                                });
-                            }
+            // Usar object tag para cargar el SVG y evitar errores de parsing
+            const objectTag = document.createElement('object');
+            objectTag.setAttribute('data', svgMapaUrl);
+            objectTag.setAttribute('type', 'image/svg+xml');
+            objectTag.style.position = 'absolute';
+            objectTag.style.top = '0';
+            objectTag.style.left = '0';
+            objectTag.style.width = '100%';
+            objectTag.style.height = '100%';
+            objectTag.style.pointerEvents = 'auto';
+            
+            objectTag.onload = function() {
+                const svgDoc = objectTag.contentDocument;
+                if (svgDoc && sector.info && sector.info.parking) {
+                    const parkings = sector.info.parking;
+                    for (let i = 0; i < parkings.length; i++) {
+                        const parkingId = `parking_${i+1}`;
+                        const elemento = svgDoc.getElementById(parkingId);
+                        if (elemento && parkings[i]) {
+                            elemento.style.cursor = 'pointer';
+                            elemento.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                window.open(parkings[i], '_blank');
+                            });
                         }
                     }
-                    
-                    const container = document.getElementById('mapaContainer');
-                    if (container) {
-                        container.style.position = 'relative';
-                        container.appendChild(svgElement);
-                    }
-                })
-                .catch(err => console.log('Error cargando SVG mapa:', err));
+                }
+            };
+            
+            setTimeout(() => {
+                const container = document.getElementById('mapaContainer');
+                if (container && !container.querySelector('object')) {
+                    container.style.position = 'relative';
+                    container.appendChild(objectTag);
+                }
+            }, 100);
             
             return mapaHtml;
         }
@@ -427,18 +433,21 @@
             `;
             
             const svgUrl = `${croquis.svg}.svg`;
-            fetch(svgUrl)
-                .then(res => res.text())
-                .then(svgText => {
-                    const parser = new DOMParser();
-                    const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                    const svgElement = svgDoc.documentElement;
-                    
-                    // Hacer que el SVG sea transparente (solo interactivo, sin colores visibles)
-                    svgElement.classList.add('croquis-svg-overlay');
-                    
-                    // Forzar que todos los elementos del SVG sean transparentes
-                    const allElements = svgElement.querySelectorAll('*');
+            const objectTag = document.createElement('object');
+            objectTag.setAttribute('data', svgUrl);
+            objectTag.setAttribute('type', 'image/svg+xml');
+            objectTag.style.position = 'absolute';
+            objectTag.style.top = '0';
+            objectTag.style.left = '0';
+            objectTag.style.width = '100%';
+            objectTag.style.height = '100%';
+            objectTag.style.pointerEvents = 'auto';
+            
+            objectTag.onload = function() {
+                const svgDoc = objectTag.contentDocument;
+                if (svgDoc && currentSector) {
+                    // Hacer que todos los elementos del SVG sean transparentes
+                    const allElements = svgDoc.querySelectorAll('*');
                     allElements.forEach(el => {
                         el.setAttribute('fill', 'transparent');
                         el.setAttribute('stroke', 'transparent');
@@ -447,11 +456,10 @@
                         el.style.opacity = '0';
                     });
                     
-                    // Añadir eventos a los elementos con ID (zonas clickables)
-                    const elementos = svgElement.querySelectorAll('[id]');
+                    const elementos = svgDoc.querySelectorAll('[id]');
                     elementos.forEach(el => {
                         const bloqueBase = el.id;
-                        if (bloqueBase && currentSector) {
+                        if (bloqueBase) {
                             el.style.cursor = 'pointer';
                             el.addEventListener('click', (e) => {
                                 e.stopPropagation();
@@ -470,14 +478,14 @@
                             });
                         }
                     });
-                    
-                    const container = document.getElementById('modalCroquisContainer');
-                    if (container) {
-                        container.style.position = 'relative';
-                        container.appendChild(svgElement);
-                    }
-                })
-                .catch(err => console.log('Error cargando SVG croquis:', err));
+                }
+            };
+            
+            const container = document.getElementById('modalCroquisContainer');
+            if (container) {
+                container.style.position = 'relative';
+                container.appendChild(objectTag);
+            }
             
             modal.classList.add('active');
         }
