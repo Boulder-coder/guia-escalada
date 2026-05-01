@@ -104,7 +104,6 @@
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, navigationStack = [], swiperBloques = null;
 
-        // ====================== PALETA DE COLORES ======================
         function getColorByGrado(grado) {
             if (!grado) return '#FF93DB';
             const g = grado.toUpperCase().trim();
@@ -154,9 +153,61 @@
             return '●';
         }
 
-        // ====================== GENERAR SVG MANUALMENTE (CORREGIDO) ======================
+        // ====================== GEOMETRÍAS DE CADA BLOQUE ======================
+        const geometriasBloques = {
+            "8.1": {
+                viewBox: "0 0 692 768",
+                elementos: {
+                    "A": {
+                        path: "M 43.977704,470.42816 C 58.867572,376.1141 54.896702,273.08794 85.290092,181.90777 100.83977,135.25875 131.88969,92.217659 151.25665,48.642006",
+                        entrada: { cx: 44.153152, cy: 466.93884, r: 17.5 },
+                        salida: { cx: 149.76373, cy: 54.145576, r: 12.5 },
+                        variantes: {}
+                    },
+                    "B": {
+                        path: "M 81.292119,467.76285 C 80.295673,369.3398 280.64801,356.30058 316.5062,302.5133 c 27.01032,-40.51548 5.99696,-169.32625 5.99696,-221.221181",
+                        entrada: { cx: 80.153, cy: 466.93884, r: 17.5 },
+                        salida: { cx: 324.34189, cy: 87.462013, r: 12.5 },
+                        variantes: {
+                            "B.2": { cx: 79.850845, cy: 492.92056, r: 7.5 }
+                        }
+                    },
+                    "C": {
+                        path: "M 114.60856,467.76285 C 131.24746,418.8428 216.97783,386.86146 269.19685,364.48188 359.0425,325.9766 447.26282,264.53255 546.38965,264.53255",
+                        entrada: { cx: 115.81966, cy: 466.93884, r: 17.5 },
+                        salida: { cx: 547.56207, cy: 265.37183, r: 12.5 },
+                        variantes: {}
+                    },
+                    "D": {
+                        path: "m 483.08841,377.80845 c -2.16631,-13.03142 -8.44764,-49.16095 -10.66126,-71.29718 -3.26387,-32.63876 -2.3346,-105.69948 -23.32151,-131.93311 -6.32943,-7.91179 -23.29715,-12.43408 -32.65011,-13.99291 -7.90553,-1.31759 -57.76735,-14.91904 -60.63593,-20.65619 -6.67687,-13.35375 -6.66329,-26.65966 -6.66329,-41.312391",
+                        entrada: { cx: 482.93054, cy: 378.31711, r: 17.5 },
+                        salida: { cx: 350.32874, cy: 99.622528, r: 12.5 },
+                        variantes: {
+                            "D.2": { cx: 483.1662, cy: 404.3414, r: 7.5 },
+                            "D.3": { cx: 483.1662, cy: 420.25, r: 7.5 }
+                        }
+                    },
+                    "E": {
+                        path: "M 598.38037,441.01104 C 587.31583,417.12936 587.27284,390.05145 581.41841,364.68221 575.76437,340.18139 564.87931,319.55307 556.44663,296.36319 541.29154,254.6867 540.98606,193.23065 498.49325,167.73497 474.15382,153.13131 388.93106,144.94039 378.81718,131.45521 c -5.29006,-7.05341 -3.35367,-20.12201 -4.71166,-28.26993",
+                        entrada: { cx: 592.73688, cy: 439.84799, r: 17.5 },
+                        salida: { cx: 377.13071, cy: 109.51461, r: 12.5 },
+                        variantes: {}
+                    }
+                }
+            }
+            // Puedes añadir aquí más bloques en el futuro
+        };
+
         function generarSVG(bloque, vias) {
-            let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 692 768" style="background:transparent;">`;
+            const bloqueId = bloque.id;
+            const geometria = geometriasBloques[bloqueId];
+            
+            if (!geometria) {
+                console.warn(`No hay geometría definida para el bloque ${bloqueId}`);
+                return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 692 768" style="background:transparent;"></svg>`;
+            }
+            
+            let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${geometria.viewBox}" style="background:transparent;">`;
             
             vias.forEach(via => {
                 const letraCompleta = via.linea_id;
@@ -165,70 +216,21 @@
                 const simbolo = getSimboloSalida(via.salida);
                 
                 const esPrimeraVariante = !letraCompleta.includes('.') || (letraCompleta.includes('.') && letraCompleta.split('.')[1] === '1');
+                const datosElemento = geometria.elementos[letraBase];
                 
-                if (letraBase === 'A') {
-                    if (esPrimeraVariante) {
-                        svgContent += `
-                            <path d="M 43.977704,470.42816 C 58.867572,376.1141 54.896702,273.08794 85.290092,181.90777 100.83977,135.25875 131.88969,92.217659 151.25665,48.642006" stroke="${color}" stroke-width="5" fill="none"/>
-                            <circle cx="44.153152" cy="466.93884" r="17.5" fill="${color}" stroke="${color}"/>
-                            <circle cx="149.76373" cy="54.145576" r="12.5" fill="${color}" stroke="${color}"/>
-                            <text x="44.153152" y="466.93884" text-anchor="middle" dominant-baseline="central" fill="white" font-size="14px" font-weight="bold">${letraBase}</text>
-                            <text x="149.76373" y="54.145576" text-anchor="middle" dominant-baseline="central" fill="white" font-size="10px" font-weight="bold">${simbolo}</text>
-                        `;
-                    }
+                if (!datosElemento) return;
+                
+                if (esPrimeraVariante) {
+                    svgContent += `<path d="${datosElemento.path}" stroke="${color}" stroke-width="5" fill="none"/>`;
+                    svgContent += `<circle cx="${datosElemento.entrada.cx}" cy="${datosElemento.entrada.cy}" r="${datosElemento.entrada.r}" fill="${color}" stroke="${color}"/>`;
+                    svgContent += `<circle cx="${datosElemento.salida.cx}" cy="${datosElemento.salida.cy}" r="${datosElemento.salida.r}" fill="${color}" stroke="${color}"/>`;
+                    svgContent += `<text x="${datosElemento.entrada.cx}" y="${datosElemento.entrada.cy}" text-anchor="middle" dominant-baseline="central" fill="white" font-size="${datosElemento.entrada.r * 0.8}px" font-weight="bold">${letraBase}</text>`;
+                    svgContent += `<text x="${datosElemento.salida.cx}" y="${datosElemento.salida.cy}" text-anchor="middle" dominant-baseline="central" fill="white" font-size="${datosElemento.salida.r * 0.7}px" font-weight="bold">${simbolo}</text>`;
                 }
-                else if (letraBase === 'B') {
-                    if (esPrimeraVariante) {
-                        svgContent += `
-                            <path d="M 81.292119,467.76285 C 80.295673,369.3398 280.64801,356.30058 316.5062,302.5133 c 27.01032,-40.51548 5.99696,-169.32625 5.99696,-221.221181" stroke="${color}" stroke-width="5" fill="none"/>
-                            <circle cx="80.153" cy="466.93884" r="17.5" fill="${color}" stroke="${color}"/>
-                            <circle cx="324.34189" cy="87.462013" r="12.5" fill="${color}" stroke="${color}"/>
-                            <text x="80.153" y="466.93884" text-anchor="middle" dominant-baseline="central" fill="white" font-size="14px" font-weight="bold">${letraBase}</text>
-                            <text x="324.34189" y="87.462013" text-anchor="middle" dominant-baseline="central" fill="white" font-size="10px" font-weight="bold">${simbolo}</text>
-                        `;
-                    }
-                    if (letraCompleta === 'B.2') {
-                        svgContent += `<circle cx="79.850845" cy="492.92056" r="7.5" fill="${color}" stroke="${color}"/>`;
-                    }
-                }
-                else if (letraBase === 'C') {
-                    if (esPrimeraVariante) {
-                        svgContent += `
-                            <path d="M 114.60856,467.76285 C 131.24746,418.8428 216.97783,386.86146 269.19685,364.48188 359.0425,325.9766 447.26282,264.53255 546.38965,264.53255" stroke="${color}" stroke-width="5" fill="none"/>
-                            <circle cx="115.81966" cy="466.93884" r="17.5" fill="${color}" stroke="${color}"/>
-                            <circle cx="547.56207" cy="265.37183" r="12.5" fill="${color}" stroke="${color}"/>
-                            <text x="115.81966" y="466.93884" text-anchor="middle" dominant-baseline="central" fill="white" font-size="14px" font-weight="bold">${letraBase}</text>
-                            <text x="547.56207" y="265.37183" text-anchor="middle" dominant-baseline="central" fill="white" font-size="10px" font-weight="bold">${simbolo}</text>
-                        `;
-                    }
-                }
-                else if (letraBase === 'D') {
-                    if (esPrimeraVariante) {
-                        svgContent += `
-                            <path d="m 483.08841,377.80845 c -2.16631,-13.03142 -8.44764,-49.16095 -10.66126,-71.29718 -3.26387,-32.63876 -2.3346,-105.69948 -23.32151,-131.93311 -6.32943,-7.91179 -23.29715,-12.43408 -32.65011,-13.99291 -7.90553,-1.31759 -57.76735,-14.91904 -60.63593,-20.65619 -6.67687,-13.35375 -6.66329,-26.65966 -6.66329,-41.312391" stroke="${color}" stroke-width="5" fill="none"/>
-                            <circle cx="482.93054" cy="378.31711" r="17.5" fill="${color}" stroke="${color}"/>
-                            <circle cx="350.32874" cy="99.622528" r="12.5" fill="${color}" stroke="${color}"/>
-                            <text x="482.93054" y="378.31711" text-anchor="middle" dominant-baseline="central" fill="white" font-size="14px" font-weight="bold">${letraBase}</text>
-                            <text x="350.32874" y="99.622528" text-anchor="middle" dominant-baseline="central" fill="white" font-size="10px" font-weight="bold">${simbolo}</text>
-                        `;
-                    }
-                    if (letraCompleta === 'D.2') {
-                        svgContent += `<circle cx="483.1662" cy="404.3414" r="7.5" fill="${color}" stroke="${color}"/>`;
-                    }
-                    if (letraCompleta === 'D.3') {
-                        svgContent += `<circle cx="483.1662" cy="420.25" r="7.5" fill="${color}" stroke="${color}"/>`;
-                    }
-                }
-                else if (letraBase === 'E') {
-                    if (esPrimeraVariante) {
-                        svgContent += `
-                            <path d="M 598.38037,441.01104 C 587.31583,417.12936 587.27284,390.05145 581.41841,364.68221 575.76437,340.18139 564.87931,319.55307 556.44663,296.36319 541.29154,254.6867 540.98606,193.23065 498.49325,167.73497 474.15382,153.13131 388.93106,144.94039 378.81718,131.45521 c -5.29006,-7.05341 -3.35367,-20.12201 -4.71166,-28.26993" stroke="${color}" stroke-width="5" fill="none"/>
-                            <circle cx="592.73688" cy="439.84799" r="17.5" fill="${color}" stroke="${color}"/>
-                            <circle cx="377.13071" cy="109.51461" r="12.5" fill="${color}" stroke="${color}"/>
-                            <text x="592.73688" y="439.84799" text-anchor="middle" dominant-baseline="central" fill="white" font-size="14px" font-weight="bold">${letraBase}</text>
-                            <text x="377.13071" y="109.51461" text-anchor="middle" dominant-baseline="central" fill="white" font-size="10px" font-weight="bold">${simbolo}</text>
-                        `;
-                    }
+                
+                const variante = datosElemento.variantes[letraCompleta];
+                if (variante) {
+                    svgContent += `<circle cx="${variante.cx}" cy="${variante.cy}" r="${variante.r}" fill="${color}" stroke="${color}"/>`;
                 }
             });
             
@@ -236,6 +238,7 @@
             return svgContent;
         }
 
+        // ====================== RESTO DE FUNCIONES (dibujarGrafica, getTextoManos, navegación, etc.) ======================
         function dibujarGrafica(sector) {
             const conteo = {};
             sector.bloques.forEach(bloque => {
@@ -514,7 +517,7 @@
                     viasContainer.appendChild(viaDiv);
                 });
                 
-                // Generar SVG directamente
+                // Generar SVG usando la geometría específica del bloque
                 const svgString = generarSVG(b, b.vias);
                 const svgContainer = document.getElementById(`svgContainer-${idx}`);
                 if (svgContainer) {
