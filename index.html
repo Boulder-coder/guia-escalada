@@ -183,7 +183,7 @@
             return null;
         }
 
-        // ====================== APLICAR COLORES AL SVG DEL BLOQUE ======================
+        // ====================== APLICAR COLORES AL SVG DEL BLOQUE (VERSIÓN FORZADA) ======================
         function aplicarColoresSVG(svgDoc, bloque, vias) {
             if (!svgDoc) return;
             
@@ -195,17 +195,20 @@
                 const color = getColorByGrado(via.grado);
                 const simbolo = getSimboloSalida(via.salida);
                 
-                // 1. Línea
+                // 1. Línea - forzar stroke y eliminar fill
                 const linea = encontrarElementoPorLabel(svgDoc, `${letraBase}_linea`);
                 if (linea) {
+                    linea.removeAttribute('style');
                     linea.setAttribute('stroke', color);
                     linea.setAttribute('fill', 'none');
+                    linea.setAttribute('stroke-width', '5');
                     console.log(`  ✅ Línea ${letraBase}_linea coloreada a ${color}`);
                 }
                 
                 // 2. Círculo de entrada
                 const circuloEntrada = encontrarElementoPorLabel(svgDoc, `${letraBase}_entrada`);
                 if (circuloEntrada) {
+                    circuloEntrada.removeAttribute('style');
                     circuloEntrada.setAttribute('fill', color);
                     circuloEntrada.setAttribute('stroke', color);
                     console.log(`  ✅ Círculo entrada ${letraBase}_entrada coloreado`);
@@ -222,7 +225,7 @@
                         texto.setAttribute('text-anchor', 'middle');
                         texto.setAttribute('dominant-baseline', 'central');
                         texto.setAttribute('fill', 'white');
-                        texto.setAttribute('font-size', `${r * 0.9}px`);
+                        texto.setAttribute('font-size', `${r * 1.2}px`);
                         texto.setAttribute('font-weight', 'bold');
                         circuloEntrada.appendChild(texto);
                     }
@@ -232,6 +235,7 @@
                 // 3. Círculo de salida
                 const circuloSalida = encontrarElementoPorLabel(svgDoc, `${letraBase}_salida`);
                 if (circuloSalida) {
+                    circuloSalida.removeAttribute('style');
                     circuloSalida.setAttribute('fill', color);
                     circuloSalida.setAttribute('stroke', color);
                     console.log(`  ✅ Círculo salida ${letraBase}_salida coloreado`);
@@ -247,7 +251,7 @@
                         texto.setAttribute('text-anchor', 'middle');
                         texto.setAttribute('dominant-baseline', 'central');
                         texto.setAttribute('fill', 'white');
-                        texto.setAttribute('font-size', `${r * 0.9}px`);
+                        texto.setAttribute('font-size', `${r * 1.2}px`);
                         texto.setAttribute('font-weight', 'bold');
                         circuloSalida.appendChild(texto);
                     }
@@ -257,6 +261,7 @@
                 // 4. Variantes (círculos pequeños para B.2, D.2, etc.)
                 const variante = encontrarElementoPorLabel(svgDoc, `${letra}_entrada`);
                 if (variante && letra.includes('.') && letra.split('.')[1] !== '1') {
+                    variante.removeAttribute('style');
                     variante.setAttribute('fill', color);
                     variante.setAttribute('stroke', color);
                     console.log(`  ✅ Variante ${letra}_entrada coloreada`);
@@ -264,7 +269,7 @@
             });
         }
 
-        // ====================== FUNCIÓN PARA ENCONTRAR ELEMENTOS POR inkscape:label ======================
+        // ====================== FUNCIÓN PARA ENCONTRAR ELEMENTOS POR inkscape:label (para mapa y croquis) ======================
         function encontrarElementosPorLabel(svgDoc, label) {
             const resultados = [];
             const todos = svgDoc.querySelectorAll('*');
