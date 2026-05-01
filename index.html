@@ -32,9 +32,17 @@
         .tab-btn.active { background: #FFDE66; color: #2c2c2c; }
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
-        .tab-pane:last-child { margin-bottom: 60px; }
         .info-sector, .condiciones-content { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 60px; }
-        .croquis-list { margin-bottom: 60px; }
+        .croquis-list { margin-bottom: 20px; }
+        .croquis-list-title { margin: 15px 0 10px; font-weight: 600; color: #6674FF; }
+        .croquis-thumbnails { display: flex; flex-wrap: wrap; gap: 12px; }
+        .croquis-thumb { flex: 1; min-width: 100px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+        .croquis-thumb:active { transform: scale(0.98); }
+        .croquis-thumb img { width: 100%; height: auto; display: block; }
+        .croquis-thumb.active { border: 3px solid #6674FF; }
+        .croquis-viewer { position: relative; background: #ffffff; border-radius: 12px; overflow: hidden; margin-top: 15px; }
+        .croquis-viewer img { width: 100%; height: auto; display: block; }
+        .croquis-viewer object { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto; }
         .bloque-group { background: #ffffff; border-radius: 12px; margin-bottom: 20px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .bloque-group:last-child { margin-bottom: 60px; }
         .bloque-group h3 { background: #d4d4d4; padding: 12px 16px; font-size: 1rem; color: #2c2c2c; margin: 0; }
@@ -46,28 +54,10 @@
         .grafica-container { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .grafica-titulo { text-align: left; margin-bottom: 15px; font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif; color: #6674FF; font-size: 1.1rem; }
         canvas { width: 100%; max-width: 100%; height: auto; background: transparent; display: block; }
-        .croquis-container { position: relative; background: #ffffff; border-radius: 12px; overflow: hidden; }
-        .croquis-container img { width: 100%; height: auto; display: block; }
         .ficha-bloque { background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 0; }
         .media-container { position: relative; background: #d4d4d4; min-height: 200px; }
         .media-container img { width: 100%; height: auto; display: block; }
-        .svg-overlay { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            pointer-events: none;
-            background: transparent;
-        }
-        .croquis-thumbnail { margin-bottom: 15px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
-        .croquis-thumbnail:active { transform: scale(0.98); }
-        .croquis-thumbnail img { width: 100%; height: auto; display: block; pointer-events: none; }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: all 0.3s; cursor: pointer; }
-        .modal.active { visibility: visible; opacity: 1; }
-        .modal-content { position: relative; max-width: 95%; max-height: 95%; background: transparent; cursor: default; }
-        .modal-content .croquis-container { max-width: 100%; max-height: 90vh; border-radius: 8px; }
-        .modal-close { position: absolute; top: -40px; right: 0; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
+        .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: transparent; }
         .bloque-id { font-size: 1.3rem; font-weight: 600; color: #6674FF; padding: 10px 16px 5px; font-family: 'Roboto', sans-serif; }
         .bloque-id-small { font-size: 0.85rem; font-weight: normal; color: #888; }
         .ficha-footer { background: #d4d4d4; padding: 14px 16px; display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #2c2c2c; letter-spacing: 0.5px; }
@@ -109,18 +99,11 @@
         <div id="screen-ficha-bloque" class="screen"><div id="ficha-bloque-content"></div><div class="back-hint">← Botón atrás del móvil para volver</div></div>
     </div>
 
-    <!-- Modal para croquis a pantalla completa -->
-    <div id="modalCroquis" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" id="modalClose">&times;</button>
-            <div id="modalCroquisContent"></div>
-        </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, navigationStack = [], swiperBloques = null;
+        let currentCroquisIndex = 0;
 
         function getColorByGrado(grado) {
             if (!grado) return '#FF93DB';
@@ -171,107 +154,40 @@
             return '●';
         }
 
-        // ====================== GEOMETRÍAS DE CADA BLOQUE ======================
-        const geometriasBloques = {
-            "8_1": {
-                viewBox: "0 0 692 768",
-                elementos: {
-                    "A": {
-                        path: "M 43.977704,470.42816 C 58.867572,376.1141 54.896702,273.08794 85.290092,181.90777 100.83977,135.25875 131.88969,92.217659 151.25665,48.642006",
-                        entrada: { cx: 44.153152, cy: 466.93884, r: 17.5 },
-                        salida: { cx: 149.76373, cy: 54.145576, r: 12.5 },
-                        variantes: {}
-                    },
-                    "B": {
-                        path: "M 81.292119,467.76285 C 80.295673,369.3398 280.64801,356.30058 316.5062,302.5133 c 27.01032,-40.51548 5.99696,-169.32625 5.99696,-221.221181",
-                        entrada: { cx: 80.153, cy: 466.93884, r: 17.5 },
-                        salida: { cx: 324.34189, cy: 87.462013, r: 12.5 },
-                        variantes: {
-                            "B.2": { cx: 79.850845, cy: 492.92056, r: 7.5 }
-                        }
-                    },
-                    "C": {
-                        path: "M 114.60856,467.76285 C 131.24746,418.8428 216.97783,386.86146 269.19685,364.48188 359.0425,325.9766 447.26282,264.53255 546.38965,264.53255",
-                        entrada: { cx: 115.81966, cy: 466.93884, r: 17.5 },
-                        salida: { cx: 547.56207, cy: 265.37183, r: 12.5 },
-                        variantes: {}
-                    },
-                    "D": {
-                        path: "m 483.08841,377.80845 c -2.16631,-13.03142 -8.44764,-49.16095 -10.66126,-71.29718 -3.26387,-32.63876 -2.3346,-105.69948 -23.32151,-131.93311 -6.32943,-7.91179 -23.29715,-12.43408 -32.65011,-13.99291 -7.90553,-1.31759 -57.76735,-14.91904 -60.63593,-20.65619 -6.67687,-13.35375 -6.66329,-26.65966 -6.66329,-41.312391",
-                        entrada: { cx: 482.93054, cy: 378.31711, r: 17.5 },
-                        salida: { cx: 350.32874, cy: 99.622528, r: 12.5 },
-                        variantes: {
-                            "D.2": { cx: 483.1662, cy: 404.3414, r: 7.5 },
-                            "D.3": { cx: 483.1662, cy: 420.25, r: 7.5 }
-                        }
-                    },
-                    "E": {
-                        path: "M 598.38037,441.01104 C 587.31583,417.12936 587.27284,390.05145 581.41841,364.68221 575.76437,340.18139 564.87931,319.55307 556.44663,296.36319 541.29154,254.6867 540.98606,193.23065 498.49325,167.73497 474.15382,153.13131 388.93106,144.94039 378.81718,131.45521 c -5.29006,-7.05341 -3.35367,-20.12201 -4.71166,-28.26993",
-                        entrada: { cx: 592.73688, cy: 439.84799, r: 17.5 },
-                        salida: { cx: 377.13071, cy: 109.51461, r: 12.5 },
-                        variantes: {}
-                    }
-                }
-            }
-        };
+        const geometriasBloques = { "8_1": { viewBox: "0 0 692 768", elementos: {
+            "A": { path: "M 43.977704,470.42816 C 58.867572,376.1141 54.896702,273.08794 85.290092,181.90777 100.83977,135.25875 131.88969,92.217659 151.25665,48.642006", entrada: { cx: 44.153152, cy: 466.93884, r: 17.5 }, salida: { cx: 149.76373, cy: 54.145576, r: 12.5 }, variantes: {} },
+            "B": { path: "M 81.292119,467.76285 C 80.295673,369.3398 280.64801,356.30058 316.5062,302.5133 c 27.01032,-40.51548 5.99696,-169.32625 5.99696,-221.221181", entrada: { cx: 80.153, cy: 466.93884, r: 17.5 }, salida: { cx: 324.34189, cy: 87.462013, r: 12.5 }, variantes: { "B.2": { cx: 79.850845, cy: 492.92056, r: 7.5 } } },
+            "C": { path: "M 114.60856,467.76285 C 131.24746,418.8428 216.97783,386.86146 269.19685,364.48188 359.0425,325.9766 447.26282,264.53255 546.38965,264.53255", entrada: { cx: 115.81966, cy: 466.93884, r: 17.5 }, salida: { cx: 547.56207, cy: 265.37183, r: 12.5 }, variantes: {} },
+            "D": { path: "m 483.08841,377.80845 c -2.16631,-13.03142 -8.44764,-49.16095 -10.66126,-71.29718 -3.26387,-32.63876 -2.3346,-105.69948 -23.32151,-131.93311 -6.32943,-7.91179 -23.29715,-12.43408 -32.65011,-13.99291 -7.90553,-1.31759 -57.76735,-14.91904 -60.63593,-20.65619 -6.67687,-13.35375 -6.66329,-26.65966 -6.66329,-41.312391", entrada: { cx: 482.93054, cy: 378.31711, r: 17.5 }, salida: { cx: 350.32874, cy: 99.622528, r: 12.5 }, variantes: { "D.2": { cx: 483.1662, cy: 404.3414, r: 7.5 }, "D.3": { cx: 483.1662, cy: 420.25, r: 7.5 } } },
+            "E": { path: "M 598.38037,441.01104 C 587.31583,417.12936 587.27284,390.05145 581.41841,364.68221 575.76437,340.18139 564.87931,319.55307 556.44663,296.36319 541.29154,254.6867 540.98606,193.23065 498.49325,167.73497 474.15382,153.13131 388.93106,144.94039 378.81718,131.45521 c -5.29006,-7.05341 -3.35367,-20.12201 -4.71166,-28.26993", entrada: { cx: 592.73688, cy: 439.84799, r: 17.5 }, salida: { cx: 377.13071, cy: 109.51461, r: 12.5 }, variantes: {} }
+        } } };
 
         function generarSVG(bloque, vias) {
-            const bloqueId = bloque.id;
-            const geometria = geometriasBloques[bloqueId];
-            
-            if (!geometria) {
-                return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 692 768" style="background:transparent;"></svg>`;
-            }
-            
-            let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${geometria.viewBox}" style="background:transparent;">`;
-            
+            const geometria = geometriasBloques[bloque.id];
+            if (!geometria) return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 692 768"></svg>`;
+            let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${geometria.viewBox}">`;
             vias.forEach(via => {
-                const letraCompleta = via.linea_id;
-                const letraBase = letraCompleta.split('.')[0];
-                const color = getColorByGrado(via.grado);
-                const esPrimeraVariante = !letraCompleta.includes('.') || (letraCompleta.includes('.') && letraCompleta.split('.')[1] === '1');
-                const datosElemento = geometria.elementos[letraBase];
-                if (!datosElemento) return;
-                if (esPrimeraVariante) {
-                    svgContent += `<path d="${datosElemento.path}" stroke="${color}" stroke-width="5" fill="none"/>`;
-                }
-            });
-            
-            vias.forEach(via => {
-                const letraCompleta = via.linea_id;
-                const letraBase = letraCompleta.split('.')[0];
+                const base = via.linea_id.split('.')[0];
                 const color = getColorByGrado(via.grado);
                 const simbolo = getSimboloSalida(via.salida);
-                const esPrimeraVariante = !letraCompleta.includes('.') || (letraCompleta.includes('.') && letraCompleta.split('.')[1] === '1');
-                const datosElemento = geometria.elementos[letraBase];
-                if (!datosElemento) return;
-                
-                if (esPrimeraVariante) {
-                    svgContent += `<circle cx="${datosElemento.entrada.cx}" cy="${datosElemento.entrada.cy}" r="${datosElemento.entrada.r}" fill="${color}" stroke="${color}"/>`;
-                    svgContent += `<text x="${datosElemento.entrada.cx}" y="${datosElemento.entrada.cy}" text-anchor="middle" dominant-baseline="central" fill="white" font-size="${datosElemento.entrada.r * 1.8}px" font-weight="bold">${letraBase}</text>`;
-                    
-                    svgContent += `<circle cx="${datosElemento.salida.cx}" cy="${datosElemento.salida.cy}" r="${datosElemento.salida.r}" fill="${color}" stroke="${color}"/>`;
-                    let fontSizeMultiplier = 1.8;
-                    let dyOffset = -2;
-                    if (simbolo === '▶' || simbolo === '◀') {
-                        fontSizeMultiplier = 1.2;
-                        dyOffset = -1;
-                    }
-                    if (simbolo === '■') {
-                        fontSizeMultiplier = 1.6;
-                        dyOffset = -2;
-                    }
-                    svgContent += `<text x="${datosElemento.salida.cx}" y="${datosElemento.salida.cy}" dy="${dyOffset}" text-anchor="middle" dominant-baseline="central" fill="white" font-size="${datosElemento.salida.r * fontSizeMultiplier}px" font-weight="bold">${simbolo}</text>`;
+                const elem = geometria.elementos[base];
+                if (!elem) return;
+                const esPrincipal = !via.linea_id.includes('.') || via.linea_id.split('.')[1] === '1';
+                if (esPrincipal) {
+                    svg += `<path d="${elem.path}" stroke="${color}" stroke-width="5" fill="none"/>`;
+                    svg += `<circle cx="${elem.entrada.cx}" cy="${elem.entrada.cy}" r="${elem.entrada.r}" fill="${color}" stroke="${color}"/>`;
+                    svg += `<text x="${elem.entrada.cx}" y="${elem.entrada.cy}" text-anchor="middle" dominant-baseline="central" fill="white" font-size="${elem.entrada.r * 1.8}px" font-weight="bold">${base}</text>`;
+                    svg += `<circle cx="${elem.salida.cx}" cy="${elem.salida.cy}" r="${elem.salida.r}" fill="${color}" stroke="${color}"/>`;
+                    let size = 1.8, dy = -2;
+                    if (simbolo === '▶' || simbolo === '◀') { size = 1.2; dy = -1; }
+                    if (simbolo === '■') { size = 1.6; dy = -2; }
+                    svg += `<text x="${elem.salida.cx}" y="${elem.salida.cy}" dy="${dy}" text-anchor="middle" dominant-baseline="central" fill="white" font-size="${elem.salida.r * size}px" font-weight="bold">${simbolo}</text>`;
                 }
-                
-                const variante = datosElemento.variantes[letraCompleta];
-                if (variante) {
-                    svgContent += `<circle cx="${variante.cx}" cy="${variante.cy}" r="${variante.r}" fill="${color}" stroke="${color}"/>`;
-                }
+                const variante = elem.variantes[via.linea_id];
+                if (variante) svg += `<circle cx="${variante.cx}" cy="${variante.cy}" r="${variante.r}" fill="${color}" stroke="${color}"/>`;
             });
-            
-            svgContent += `</svg>`;
-            return svgContent;
+            svg += `</svg>`;
+            return svg;
         }
 
         function dibujarGrafica(sector) {
@@ -321,8 +237,7 @@
                 const barHeight = (valor / maxValor) * (startY - 30);
                 const x = startX + i * barWidth + 5;
                 const y = startY - barHeight;
-                const color = getColorByGrado(grado);
-                ctx.fillStyle = color;
+                ctx.fillStyle = getColorByGrado(grado);
                 ctx.fillRect(x, y, barWidth - 10, barHeight);
                 ctx.fillStyle = '#000';
                 ctx.font = '11px Roboto';
@@ -341,153 +256,111 @@
             return partes.length > 0 ? partes.join(" · ") : "";
         }
 
-        // ====================== CARGAR MAPA INTERACTIVO (CON OBJECT TAG PARA EVITAR ERRORES) ======================
+        // ====================== CARGAR MAPA (transparente y clickable) ======================
         function cargarMapaInteractivo(sector) {
-            if (!sector.mapa) {
-                return '<div class="info-sector"><p>No hay mapa disponible</p></div>';
-            }
-            
+            if (!sector.mapa) return '<div class="info-sector"><p>No hay mapa disponible</p></div>';
             const mapaUrl = `${sector.mapa}.jpg`;
             const svgMapaUrl = `${sector.mapa}.svg`;
-            
-            let mapaHtml = `<div class="croquis-container" id="mapaContainer" style="position: relative;">`;
-            mapaHtml += `<img src="${mapaUrl}" class="croquis-img" onerror="this.src='https://picsum.photos/id/20/800/600'" style="width:100%; height:auto; display:block;">`;
-            mapaHtml += `</div>`;
-            
-            // Usar object tag para cargar el SVG y evitar errores de parsing
-            const objectTag = document.createElement('object');
-            objectTag.setAttribute('data', svgMapaUrl);
-            objectTag.setAttribute('type', 'image/svg+xml');
-            objectTag.style.position = 'absolute';
-            objectTag.style.top = '0';
-            objectTag.style.left = '0';
-            objectTag.style.width = '100%';
-            objectTag.style.height = '100%';
-            objectTag.style.pointerEvents = 'auto';
-            
-            objectTag.onload = function() {
-                const svgDoc = objectTag.contentDocument;
-                if (svgDoc && sector.info && sector.info.parking) {
-                    const parkings = sector.info.parking;
-                    for (let i = 0; i < parkings.length; i++) {
-                        const parkingId = `parking_${i+1}`;
-                        const elemento = svgDoc.getElementById(parkingId);
-                        if (elemento && parkings[i]) {
-                            elemento.style.cursor = 'pointer';
-                            elemento.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                                window.open(parkings[i], '_blank');
-                            });
-                        }
-                    }
-                }
-            };
-            
+            const containerId = `mapaContainer_${Date.now()}`;
+            let html = `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
+            html += `<img src="${mapaUrl}" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
+            html += `</div>`;
             setTimeout(() => {
-                const container = document.getElementById('mapaContainer');
-                if (container && !container.querySelector('object')) {
-                    container.style.position = 'relative';
-                    container.appendChild(objectTag);
-                }
-            }, 100);
-            
-            return mapaHtml;
-        }
-
-        // ====================== CARGAR LISTA DE CROQUIS ======================
-        function cargarListaCroquis(sector) {
-            if (!sector.croquis_list || sector.croquis_list.length === 0) {
-                return '<div class="info-sector"><p>No hay croquis disponibles</p></div>';
-            }
-            
-            let html = '<div class="croquis-list">';
-            sector.croquis_list.forEach((croq, idx) => {
-                html += `
-                    <div class="croquis-thumbnail" data-croquis-idx="${idx}">
-                        <img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'">
-                    </div>
-                `;
-            });
-            html += '</div>';
-            
-            setTimeout(() => {
-                sector.croquis_list.forEach((croq, idx) => {
-                    const thumb = document.querySelector(`.croquis-thumbnail[data-croquis-idx="${idx}"]`);
-                    if (thumb) {
-                        thumb.onclick = () => abrirCroquisModal(croq);
-                    }
-                });
-            }, 100);
-            
-            return html;
-        }
-
-        function abrirCroquisModal(croquis) {
-            const modal = document.getElementById('modalCroquis');
-            const modalContent = document.getElementById('modalCroquisContent');
-            
-            modalContent.innerHTML = `
-                <div class="croquis-container" id="modalCroquisContainer" style="position: relative;">
-                    <img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
-                </div>
-            `;
-            
-            const svgUrl = `${croquis.svg}.svg`;
-            const objectTag = document.createElement('object');
-            objectTag.setAttribute('data', svgUrl);
-            objectTag.setAttribute('type', 'image/svg+xml');
-            objectTag.style.position = 'absolute';
-            objectTag.style.top = '0';
-            objectTag.style.left = '0';
-            objectTag.style.width = '100%';
-            objectTag.style.height = '100%';
-            objectTag.style.pointerEvents = 'auto';
-            
-            objectTag.onload = function() {
-                const svgDoc = objectTag.contentDocument;
-                if (svgDoc && currentSector) {
-                    // Hacer que todos los elementos del SVG sean transparentes
-                    const allElements = svgDoc.querySelectorAll('*');
-                    allElements.forEach(el => {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                fetch(svgMapaUrl).then(res => res.text()).then(svgText => {
+                    const parser = new DOMParser();
+                    const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                    const svgElement = svgDoc.documentElement;
+                    svgElement.style.position = 'absolute';
+                    svgElement.style.top = '0';
+                    svgElement.style.left = '0';
+                    svgElement.style.width = '100%';
+                    svgElement.style.height = '100%';
+                    svgElement.style.pointerEvents = 'auto';
+                    // Hacer transparentes todos los elementos
+                    const allEl = svgElement.querySelectorAll('*');
+                    allEl.forEach(el => {
                         el.setAttribute('fill', 'transparent');
                         el.setAttribute('stroke', 'transparent');
                         el.setAttribute('fill-opacity', '0');
                         el.setAttribute('stroke-opacity', '0');
                         el.style.opacity = '0';
                     });
-                    
-                    const elementos = svgDoc.querySelectorAll('[id]');
+                    if (sector.info && sector.info.parking) {
+                        const parkings = sector.info.parking;
+                        for (let i = 0; i < parkings.length; i++) {
+                            const el = svgElement.querySelector(`#parking_${i+1}`);
+                            if (el && parkings[i]) {
+                                el.style.cursor = 'pointer';
+                                el.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    window.open(parkings[i], '_blank');
+                                });
+                            }
+                        }
+                    }
+                    container.style.position = 'relative';
+                    container.appendChild(svgElement);
+                }).catch(err => console.log('Error cargando SVG mapa:', err));
+            }, 100);
+            return html;
+        }
+
+        // ====================== CARGAR CROQUIS INTERACTIVO (transparente y clickable) ======================
+        function cargarCroquisInteractivo(sector, croquisIndex) {
+            const croquis = sector.croquis_list[croquisIndex];
+            if (!croquis) return '<div class="info-sector"><p>Croquis no disponible</p></div>';
+            const containerId = `croquisViewer_${Date.now()}`;
+            let html = `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
+            html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
+            html += `</div>`;
+            setTimeout(() => {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                const svgUrl = `${croquis.svg}.svg`;
+                fetch(svgUrl).then(res => res.text()).then(svgText => {
+                    const parser = new DOMParser();
+                    const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                    const svgElement = svgDoc.documentElement;
+                    svgElement.style.position = 'absolute';
+                    svgElement.style.top = '0';
+                    svgElement.style.left = '0';
+                    svgElement.style.width = '100%';
+                    svgElement.style.height = '100%';
+                    svgElement.style.pointerEvents = 'auto';
+                    const allEl = svgElement.querySelectorAll('*');
+                    allEl.forEach(el => {
+                        el.setAttribute('fill', 'transparent');
+                        el.setAttribute('stroke', 'transparent');
+                        el.setAttribute('fill-opacity', '0');
+                        el.setAttribute('stroke-opacity', '0');
+                        el.style.opacity = '0';
+                    });
+                    const elementos = svgElement.querySelectorAll('[id]');
                     elementos.forEach(el => {
                         const bloqueBase = el.id;
                         if (bloqueBase) {
                             el.style.cursor = 'pointer';
                             el.addEventListener('click', (e) => {
                                 e.stopPropagation();
-                                const bloqueEncontrado = currentSector.bloques.find(b => {
+                                const bloqueEncontrado = sector.bloques.find(b => {
                                     if (b.id.startsWith(`${bloqueBase}_`)) return true;
                                     if (b.id === bloqueBase) return true;
                                     return false;
                                 });
                                 if (bloqueEncontrado) {
-                                    const indice = currentSector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
-                                    if (indice !== -1) {
-                                        modal.classList.remove('active');
-                                        openFichaBloque(indice);
-                                    }
+                                    const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
+                                    if (indice !== -1) openFichaBloque(indice);
                                 }
                             });
                         }
                     });
-                }
-            };
-            
-            const container = document.getElementById('modalCroquisContainer');
-            if (container) {
-                container.style.position = 'relative';
-                container.appendChild(objectTag);
-            }
-            
-            modal.classList.add('active');
+                    container.style.position = 'relative';
+                    container.appendChild(svgElement);
+                }).catch(err => console.log('Error cargando SVG croquis:', err));
+            }, 100);
+            return html;
         }
 
         function navigateToScreen(screenId, stateData = null) {
@@ -523,7 +396,7 @@
                 datosApp = await res.json();
                 renderSectoresList();
             } catch (error) {
-                container.innerHTML = `<div class="loader" style="color:red;">Error: ${error.message}<br>Verifica que el JSON esté en datos/datos.json</div>`;
+                container.innerHTML = `<div class="loader" style="color:red;">Error: ${error.message}</div>`;
             }
         }
 
@@ -544,12 +417,22 @@
         function openSector(sectorNombre) {
             currentSector = datosApp.sectores.find(s => s.nombre === sectorNombre);
             if (!currentSector) return;
-            
             const container = document.getElementById('sector-detalle-content');
-            
             const mapaHtml = cargarMapaInteractivo(currentSector);
-            const croquisHtml = cargarListaCroquis(currentSector);
-            
+            // Generar lista de croquis
+            let croquisListHtml = '';
+            if (currentSector.croquis_list && currentSector.croquis_list.length > 0) {
+                croquisListHtml = '<div class="croquis-list">';
+                croquisListHtml += '<div class="croquis-list-title">Selecciona un croquis:</div>';
+                croquisListHtml += '<div class="croquis-thumbnails">';
+                currentSector.croquis_list.forEach((croq, idx) => {
+                    croquisListHtml += `<div class="croquis-thumb" data-croquis-idx="${idx}"><img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'"></div>`;
+                });
+                croquisListHtml += '</div></div>';
+                croquisListHtml += '<div id="croquisViewerArea"></div>';
+            } else {
+                croquisListHtml = '<div class="info-sector"><p>No hay croquis disponibles</p></div>';
+            }
             container.innerHTML = `
                 <h2 style="font-family: 'Cocogoose', sans-serif;">${currentSector.nombre}</h2>
                 <div class="tabs">
@@ -558,22 +441,12 @@
                     <button class="tab-btn" data-tab="bloques">🧗 Bloques</button>
                 </div>
                 <div id="tab-info" class="tab-pane active">
-                    <div class="grafica-container">
-                        <div class="grafica-titulo">Distribución de grados</div>
-                        <canvas id="grafica-sector" style="width:100%; height:auto;"></canvas>
-                    </div>
-                    <div class="info-sector">
-                        <h4>📍 Mapa de accesos</h4>
-                        <div id="mapaInfo">${mapaHtml}</div>
-                        <p style="margin-top: 15px; font-size: 0.8rem; color: #666;">💡 Toca los puntos en el mapa para abrir Google Maps</p>
-                    </div>
+                    <div class="grafica-container"><div class="grafica-titulo">Distribución de grados</div><canvas id="grafica-sector"></canvas></div>
+                    <div class="info-sector"><h4>📍 Mapa de accesos</h4><div id="mapaInfo">${mapaHtml}</div></div>
                 </div>
-                <div id="tab-croquis" class="tab-pane">
-                    ${croquisHtml}
-                </div>
+                <div id="tab-croquis" class="tab-pane">${croquisListHtml}</div>
                 <div id="tab-bloques" class="tab-pane"><div id="bloques-list"></div></div>
             `;
-            
             container.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.onclick = () => {
                     container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -583,85 +456,89 @@
                     document.getElementById('tab-bloques').classList.remove('active');
                     document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
                     if (btn.dataset.tab === 'info') setTimeout(() => dibujarGrafica(currentSector), 100);
+                    if (btn.dataset.tab === 'croquis' && currentSector.croquis_list?.length > 0) {
+                        // Cargar el primer croquis al entrar a la pestaña
+                        setTimeout(() => cargarCroquisEnArea(0), 100);
+                    }
                 };
             });
-            
+            // Eventos de miniaturas
+            document.querySelectorAll('.croquis-thumb').forEach(thumb => {
+                thumb.onclick = () => {
+                    const idx = parseInt(thumb.dataset.croquisIdx);
+                    cargarCroquisEnArea(idx);
+                    document.querySelectorAll('.croquis-thumb').forEach(t => t.classList.remove('active'));
+                    thumb.classList.add('active');
+                };
+            });
+            // Lista de bloques
             const bloquesContainer = document.getElementById('bloques-list');
             bloquesContainer.innerHTML = '';
             const grupos = {};
             currentSector.bloques.forEach((bloque, idx) => {
-                const numeroBase = parseInt(bloque.id, 10);
-                if (!grupos[numeroBase]) grupos[numeroBase] = { numeroBase: numeroBase, bloques: [] };
-                grupos[numeroBase].bloques.push({ ...bloque, idx });
+                const numBase = parseInt(bloque.id, 10);
+                if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] };
+                grupos[numBase].bloques.push({ ...bloque, idx });
             });
-            const gruposOrdenados = Object.values(grupos).sort((a, b) => a.numeroBase - b.numeroBase);
-            gruposOrdenados.forEach(grupo => {
+            Object.values(grupos).sort((a, b) => a.numBase - b.numBase).forEach(grupo => {
                 const grupoDiv = document.createElement('div');
                 grupoDiv.className = 'bloque-group';
-                grupoDiv.innerHTML = `<h3>Bloque ${grupo.numeroBase}</h3>`;
-                const listaDiv = document.createElement('div');
+                grupoDiv.innerHTML = `<h3>Bloque ${grupo.numBase}</h3><div></div>`;
+                const listaDiv = grupoDiv.querySelector('div');
                 grupo.bloques.forEach(bloqueInfo => {
-                    const bloque = bloqueInfo;
-                    bloque.vias.forEach(via => {
+                    bloqueInfo.vias.forEach(via => {
                         const lineaDiv = document.createElement('div');
                         lineaDiv.className = 'linea-item';
                         const gradoColor = getColorByGrado(via.grado);
                         lineaDiv.innerHTML = `<span class="linea-nombre">${via.linea_id} · ${via.nombre}</span>${via.grado ? `<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}`;
                         lineaDiv.onclick = () => {
-                            const bloqueRealIdx = currentSector.bloques.findIndex(b => b.id === bloque.id);
-                            if (bloqueRealIdx !== -1) openFichaBloque(bloqueRealIdx);
+                            const realIdx = currentSector.bloques.findIndex(b => b.id === bloqueInfo.id);
+                            if (realIdx !== -1) openFichaBloque(realIdx);
                         };
                         listaDiv.appendChild(lineaDiv);
                     });
                 });
-                grupoDiv.appendChild(listaDiv);
                 bloquesContainer.appendChild(grupoDiv);
             });
-            
             navigateToScreen('screen-sector-detalle');
             history.pushState({ sectorNombre: sectorNombre }, '');
             setTimeout(() => dibujarGrafica(currentSector), 100);
         }
 
-        // ====================== FICHA DE BLOQUE ======================
+        function cargarCroquisEnArea(idx) {
+            if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return;
+            const area = document.getElementById('croquisViewerArea');
+            if (area) {
+                area.innerHTML = cargarCroquisInteractivo(currentSector, idx);
+            }
+        }
+
         function openFichaBloque(bloqueIndex) {
             if (!currentSector) return;
             const container = document.getElementById('ficha-bloque-content');
-            container.innerHTML = `
-                <div class="bloque-swiper swiper" style="height: auto;">
-                    <div class="swiper-wrapper" id="bloquesSwiperWrapper"></div>
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
-                </div>
-            `;
+            container.innerHTML = `<div class="bloque-swiper swiper"><div class="swiper-wrapper" id="bloquesSwiperWrapper"></div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>`;
             const wrapper = document.getElementById('bloquesSwiperWrapper');
-            
             currentSector.bloques.forEach((b, idx) => {
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
                 slide.innerHTML = `
                     <div class="ficha-bloque">
                         <div class="media-container" id="mediaContainer-${idx}" style="position: relative;">
-                            <img src="${b.foto_base}.jpg" class="foto-bloque" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
+                            <img src="${b.foto_base}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
                             <div id="svgContainer-${idx}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
                         </div>
-                        <div class="ficha-footer" style="font-family: 'Cocogoose', sans-serif;">
-                            <span>Bloque ${parseInt(b.id, 10)}</span>
-                            <span>${currentSector.nombre}</span>
-                        </div>
+                        <div class="ficha-footer"><span>Bloque ${parseInt(b.id, 10)}</span><span>${currentSector.nombre}</span></div>
                         <div class="ficha-vias" id="vias-${idx}"></div>
                     </div>
                 `;
                 wrapper.appendChild(slide);
-                
-                const viasContainer = document.getElementById(`vias-${idx}`);
+                const viasDiv = document.getElementById(`vias-${idx}`);
                 b.vias.forEach(via => {
                     const textoManos = getTextoManos(via);
-                    let detallesHtml = "";
-                    if (textoManos) detallesHtml += `<div>${textoManos}</div>`;
-                    if (via.definicion && via.definicion.trim() !== "") detallesHtml += `<div>${via.definicion}</div>`;
-                    if (via.expuesta && via.expuesta.trim() !== "") detallesHtml += `<div>⚠️ ${via.expuesta}</div>`;
+                    let detalles = "";
+                    if (textoManos) detalles += `<div>${textoManos}</div>`;
+                    if (via.definicion) detalles += `<div>${via.definicion}</div>`;
+                    if (via.expuesta) detalles += `<div>⚠️ ${via.expuesta}</div>`;
                     const gradoColor = getColorByGrado(via.grado);
                     const viaDiv = document.createElement('div');
                     viaDiv.className = 'ficha-via-item';
@@ -671,27 +548,15 @@
                             ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
                             ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
                         </div>
-                        ${detallesHtml ? `<div class="detalles-texto">${detallesHtml}</div>` : ''}
+                        ${detalles ? `<div class="detalles-texto">${detalles}</div>` : ''}
                     `;
-                    viasContainer.appendChild(viaDiv);
+                    viasDiv.appendChild(viaDiv);
                 });
-                
                 const svgString = generarSVG(b, b.vias);
-                const svgContainer = document.getElementById(`svgContainer-${idx}`);
-                if (svgContainer) {
-                    svgContainer.innerHTML = svgString;
-                }
+                document.getElementById(`svgContainer-${idx}`).innerHTML = svgString;
             });
-            
             if (swiperBloques) swiperBloques.destroy();
-            swiperBloques = new Swiper('.bloque-swiper', {
-                initialSlide: bloqueIndex,
-                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-                pagination: { el: '.swiper-pagination', clickable: true },
-                spaceBetween: 20,
-                autoHeight: true
-            });
-            
+            swiperBloques = new Swiper('.bloque-swiper', { initialSlide: bloqueIndex, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, pagination: { el: '.swiper-pagination', clickable: true }, spaceBetween: 20, autoHeight: true });
             navigateToScreen('screen-ficha-bloque');
             history.pushState({ sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }, '');
         }
@@ -716,15 +581,6 @@
                 };
             });
         }
-        
-        document.getElementById('modalClose').onclick = () => {
-            document.getElementById('modalCroquis').classList.remove('active');
-        };
-        document.getElementById('modalCroquis').onclick = (e) => {
-            if (e.target === document.getElementById('modalCroquis')) {
-                document.getElementById('modalCroquis').classList.remove('active');
-            }
-        };
         
         function init() {
             initMenu();
