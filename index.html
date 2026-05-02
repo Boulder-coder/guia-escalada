@@ -150,23 +150,36 @@
             return '#FF93DB';
         }
 
+        // ====================== NUEVA FUNCIÓN PARA SÍMBOLOS DE SALIDA ======================
         function getSimboloSalida(salida) {
             if (!salida) return '●';
             const s = salida.toLowerCase();
             if (s.includes('top-out') && s.includes('derecha')) return '▶';
             if (s.includes('top-out') && s.includes('izquierda')) return '◀';
             if (s.includes('top-out')) return '▲';
-            if (s.includes('top')) return '■';
+            if (s.includes('top')) return '⏺︎';
             return '●';
+        }
+
+        // ====================== FUNCIÓN PARA OBTENER TEXTO DEL CÍRCULO DE ENTRADA ======================
+        function getTextoEntrada(lineaId) {
+            // Si tiene punto y la parte después del punto es "1" (ej: "A.1") → mostrar solo la letra base
+            if (lineaId.includes('.') && lineaId.split('.')[1] === '1') {
+                return lineaId.split('.')[0];
+            }
+            // Si no tiene punto (ej: "A", "B", "C") → mostrar la letra
+            if (!lineaId.includes('.')) {
+                return lineaId;
+            }
+            // Para A.2, B.3, etc. → no mostrar nada
+            return '';
         }
 
         // ====================== FUNCIÓN PARA ENCONTRAR ELEMENTOS POR inkscape:label ======================
         function encontrarElementoPorLabel(svgDoc, label) {
             if (!svgDoc) return null;
-            // Buscar por inkscape:label
             let elemento = svgDoc.querySelector(`[inkscape\\:label="${label}"]`);
             if (elemento) return elemento;
-            // Buscar por atributo (sin namespace)
             const todos = svgDoc.querySelectorAll('*');
             for (let el of todos) {
                 let labelValue = el.getAttribute('inkscape:label');
@@ -183,20 +196,21 @@
             return null;
         }
 
-        // ====================== APLICAR COLORES AL SVG DEL BLOQUE (con linea_id completo) ======================
-        function aplicarColoresSVG(svgDoc, bloque, vias) {
+        // ====================== APLICAR COLORES, TEXTOS Y SÍMBOLOS ======================
+        function aplicarEstilosSVG(svgDoc, bloque, vias) {
             if (!svgDoc) return;
             
-            console.log(`🎨 Aplicando colores a SVG del bloque ${bloque.id}`);
+            console.log(`🎨 Aplicando estilos a SVG del bloque ${bloque.id}`);
             
             vias.forEach(via => {
-                const lineaId = via.linea_id;  // "A", "B.1", "B.2", "C", "D.1", "D.2", "D.3", "E"
+                const lineaId = via.linea_id;
                 const color = getColorByGrado(via.grado);
                 const simbolo = getSimboloSalida(via.salida);
+                const textoEntrada = getTextoEntrada(lineaId);
                 
-                console.log(`  Procesando: ${lineaId}, color: ${color}`);
+                console.log(`  Procesando: ${lineaId}, texto: "${textoEntrada}", símbolo: "${simbolo}"`);
                 
-                // 1. Línea (buscar por inkscape:label = lineaId)
+                // 1. Línea
                 const linea = encontrarElementoPorLabel(svgDoc, `${lineaId}_linea`);
                 if (linea) {
                     linea.removeAttribute('style');
@@ -208,22 +222,24 @@
                     console.log(`    ⚠️ No se encontró línea para ${lineaId}_linea`);
                 }
                 
-                // 2. Círculo de entrada (buscar por inkscape:label = lineaId)
+                // 2. Círculo de entrada
                 const circuloEntrada = encontrarElementoPorLabel(svgDoc, `${lineaId}_entrada`);
                 if (circuloEntrada) {
                     circuloEntrada.removeAttribute('style');
                     circuloEntrada.setAttribute('fill', color);
                     circuloEntrada.setAttribute('stroke', color);
-                    console.log(`    ✅ Círculo entrada ${lineaId}_entrada coloreado`);
                     
-                    // Añadir o actualizar texto dentro del círculo (solo la letra base, sin el .1 .2)
-                    let texto = circuloEntrada.querySelector('text');
-                    const letraBase = lineaId.split('.')[0];
-                    if (!texto) {
-                        const cx = circuloEntrada.getAttribute('cx');
-                        const cy = circuloEntrada.getAttribute('cy');
-                        const r = parseFloat(circuloEntrada.getAttribute('r')) || 16;
-                        texto = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    const cx = circuloEntrada.getAttribute('cx');
+                    const cy = circuloEntrada.getAttribute('cy');
+                    const r = parseFloat(circuloEntrada.getAttribute('r')) || 16;
+                    
+                    // Eliminar texto anterior si existe
+                    const oldText = circuloEntrada.querySelector('text');
+                    if (oldText) oldText.remove();
+                    
+                    // Añadir texto solo si hay que mostrarlo
+                    if (textoEntrada) {
+                        const texto = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                         texto.setAttribute('x', cx);
                         texto.setAttribute('y', cy);
                         texto.setAttribute('text-anchor', 'middle');
@@ -231,9 +247,10 @@
                         texto.setAttribute('fill', 'white');
                         texto.setAttribute('font-size', `${r * 1.2}px`);
                         texto.setAttribute('font-weight', 'bold');
+                        texto.textContent = textoEntrada;
                         circuloEntrada.appendChild(texto);
                     }
-                    texto.textContent = letraBase;
+                    console.log(`    ✅ Círculo entrada ${lineaId}_entrada coloreado (texto: "${textoEntrada}")`);
                 } else {
                     console.log(`    ⚠️ No se encontró círculo entrada para ${lineaId}_entrada`);
                 }
@@ -244,24 +261,28 @@
                     circuloSalida.removeAttribute('style');
                     circuloSalida.setAttribute('fill', color);
                     circuloSalida.setAttribute('stroke', color);
-                    console.log(`    ✅ Círculo salida ${lineaId}_salida coloreado`);
                     
-                    let texto = circuloSalida.querySelector('text');
-                    if (!texto) {
-                        const cx = circuloSalida.getAttribute('cx');
-                        const cy = circuloSalida.getAttribute('cy');
-                        const r = parseFloat(circuloSalida.getAttribute('r')) || 12;
-                        texto = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                        texto.setAttribute('x', cx);
-                        texto.setAttribute('y', cy);
-                        texto.setAttribute('text-anchor', 'middle');
-                        texto.setAttribute('dominant-baseline', 'central');
-                        texto.setAttribute('fill', 'white');
-                        texto.setAttribute('font-size', `${r * 1.2}px`);
-                        texto.setAttribute('font-weight', 'bold');
-                        circuloSalida.appendChild(texto);
-                    }
+                    const cx = circuloSalida.getAttribute('cx');
+                    const cy = circuloSalida.getAttribute('cy');
+                    const r = parseFloat(circuloSalida.getAttribute('r')) || 12;
+                    
+                    // Eliminar texto anterior
+                    const oldText = circuloSalida.querySelector('text');
+                    if (oldText) oldText.remove();
+                    
+                    // Añadir símbolo
+                    const texto = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    texto.setAttribute('x', cx);
+                    texto.setAttribute('y', cy);
+                    texto.setAttribute('text-anchor', 'middle');
+                    texto.setAttribute('dominant-baseline', 'central');
+                    texto.setAttribute('fill', 'white');
+                    texto.setAttribute('font-size', `${r * 1.4}px`);
+                    texto.setAttribute('font-weight', 'bold');
                     texto.textContent = simbolo;
+                    circuloSalida.appendChild(texto);
+                    
+                    console.log(`    ✅ Círculo salida ${lineaId}_salida coloreado (símbolo: "${simbolo}")`);
                 } else {
                     console.log(`    ⚠️ No se encontró círculo salida para ${lineaId}_salida`);
                 }
@@ -525,225 +546,4 @@
             currentSector.bloques.forEach((bloque, idx) => {
                 const numBase = parseInt(bloque.id, 10);
                 if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] };
-                grupos[numBase].bloques.push({ ...bloque, idx });
-            });
-            Object.values(grupos).sort((a, b) => a.numBase - b.numBase).forEach(grupo => {
-                const grupoDiv = document.createElement('div');
-                grupoDiv.className = 'bloque-group';
-                grupoDiv.innerHTML = `<h3>Bloque ${grupo.numBase}</h3><div></div>`;
-                const listaDiv = grupoDiv.querySelector('div');
-                grupo.bloques.forEach(bloqueInfo => {
-                    bloqueInfo.vias.forEach(via => {
-                        const lineaDiv = document.createElement('div');
-                        lineaDiv.className = 'linea-item';
-                        const gradoColor = getColorByGrado(via.grado);
-                        lineaDiv.innerHTML = `<span class="linea-nombre">${via.linea_id} · ${via.nombre}</span>${via.grado ? `<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}`;
-                        lineaDiv.onclick = () => {
-                            const realIdx = currentSector.bloques.findIndex(b => b.id === bloqueInfo.id);
-                            if (realIdx !== -1) openFichaBloque(realIdx);
-                        };
-                        listaDiv.appendChild(lineaDiv);
-                    });
-                });
-                bloquesContainer.appendChild(grupoDiv);
-            });
-            navigateToScreen('screen-sector-detalle');
-            history.pushState({ sectorNombre: sectorNombre }, '');
-            setTimeout(() => dibujarGrafica(currentSector), 100);
-        }
-
-        function cargarCroquisEnArea(idx) {
-            if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return;
-            const area = document.getElementById('croquisViewerArea');
-            if (area) {
-                area.innerHTML = cargarCroquisInteractivo(currentSector, idx);
-            }
-        }
-
-        function dibujarGrafica(sector) {
-            const conteo = {};
-            sector.bloques.forEach(bloque => {
-                bloque.vias.forEach(via => {
-                    if (via.grado && via.grado.trim() !== "") {
-                        const gradoNorm = via.grado.trim();
-                        conteo[gradoNorm] = (conteo[gradoNorm] || 0) + 1;
-                    }
-                });
-            });
-            const ordenGrados = ["3", "4", "5", "5+", "6A", "6A+", "6B", "6B+", "6C", "6C+", "7A", "7A+", "7B", "7B+", "7C", "7C+", "8A", "8A+", "8B", "8B+", "8C", "8C+"];
-            const gradosFiltrados = ordenGrados.filter(g => conteo[g] > 0);
-            const valores = gradosFiltrados.map(g => conteo[g]);
-            const maxValor = Math.max(...valores, 1);
-            const canvas = document.getElementById('grafica-sector');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const container = canvas.parentElement;
-            const width = container.clientWidth;
-            const height = 220;
-            const scale = window.devicePixelRatio || 2;
-            canvas.width = width * scale;
-            canvas.height = height * scale;
-            canvas.style.width = `${width}px`;
-            canvas.style.height = `${height}px`;
-            ctx.scale(scale, scale);
-            const barWidth = (width - 60) / gradosFiltrados.length;
-            const startX = 40;
-            const startY = height - 30;
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, width, height);
-            ctx.beginPath();
-            ctx.moveTo(30, 10);
-            ctx.lineTo(30, startY);
-            ctx.lineTo(width - 20, startY);
-            ctx.strokeStyle = '#aaa';
-            ctx.stroke();
-            ctx.fillStyle = '#555';
-            ctx.font = '11px Roboto';
-            ctx.fillText('Nº vías', 10, 30);
-            ctx.fillText('Grado', width/2 - 20, height - 5);
-            gradosFiltrados.forEach((grado, i) => {
-                const valor = conteo[grado];
-                const barHeight = (valor / maxValor) * (startY - 30);
-                const x = startX + i * barWidth + 5;
-                const y = startY - barHeight;
-                ctx.fillStyle = getColorByGrado(grado);
-                ctx.fillRect(x, y, barWidth - 10, barHeight);
-                ctx.fillStyle = '#000';
-                ctx.font = '11px Roboto';
-                ctx.fillText(grado, x + 2, startY + 12);
-                ctx.fillStyle = '#333';
-                ctx.font = 'bold 11px Roboto';
-                ctx.fillText(valor, x + barWidth/2 - 5, y - 5);
-            });
-        }
-
-        function getTextoManos(via) {
-            if (via.manos_juntas && via.manos_juntas.trim() !== "") return `Manos juntas: ${via.manos_juntas}`;
-            let partes = [];
-            if (via.mano_izq && via.mano_izq.trim() !== "") partes.push(`Izq: ${via.mano_izq}`);
-            if (via.mano_der && via.mano_der.trim() !== "") partes.push(`Der: ${via.mano_der}`);
-            return partes.length > 0 ? partes.join(" · ") : "";
-        }
-
-        // ====================== CARGAR Y COLOREAR SVG DEL BLOQUE ======================
-        function cargarYColorearSVGBloque(bloque, slideIndex, vias) {
-            const svgUrl = `${bloque.foto_base}.svg?v=${Date.now()}`;
-            const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
-            if (!mediaContainer) return;
-            
-            fetch(svgUrl)
-                .then(res => {
-                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                    return res.text();
-                })
-                .then(svgText => {
-                    const parser = new DOMParser();
-                    const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                    const svgElement = svgDoc.documentElement;
-                    if (!svgElement) return;
-                    
-                    // Aplicar colores ANTES de insertar el SVG
-                    aplicarColoresSVG(svgDoc, bloque, vias);
-                    
-                    svgElement.setAttribute('preserveAspectRatio', 'none');
-                    svgElement.style.width = '100%';
-                    svgElement.style.height = '100%';
-                    svgElement.style.position = 'absolute';
-                    svgElement.style.top = '0';
-                    svgElement.style.left = '0';
-                    svgElement.style.pointerEvents = 'none';
-                    
-                    // Eliminar SVG anterior si existe
-                    const oldSvg = mediaContainer.querySelector('svg');
-                    if (oldSvg) oldSvg.remove();
-                    
-                    mediaContainer.appendChild(svgElement);
-                    console.log(`✅ SVG coloreado para bloque ${bloque.id}`);
-                })
-                .catch(err => console.log(`⚠️ No se pudo cargar SVG para bloque ${bloque.id}:`, err));
-        }
-
-        // ====================== FICHA DE BLOQUE ======================
-        function openFichaBloque(bloqueIndex) {
-            if (!currentSector) return;
-            const container = document.getElementById('ficha-bloque-content');
-            container.innerHTML = `<div class="bloque-swiper swiper"><div class="swiper-wrapper" id="bloquesSwiperWrapper"></div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>`;
-            const wrapper = document.getElementById('bloquesSwiperWrapper');
-            
-            currentSector.bloques.forEach((b, idx) => {
-                const slide = document.createElement('div');
-                slide.className = 'swiper-slide';
-                slide.innerHTML = `
-                    <div class="ficha-bloque">
-                        <div class="media-container" id="mediaContainer-${idx}" style="position: relative;">
-                            <img src="${b.foto_base}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
-                        </div>
-                        <div class="ficha-footer"><span>Bloque ${parseInt(b.id, 10)}</span><span>${currentSector.nombre}</span></div>
-                        <div class="ficha-vias" id="vias-${idx}"></div>
-                    </div>
-                `;
-                wrapper.appendChild(slide);
-                
-                const viasDiv = document.getElementById(`vias-${idx}`);
-                b.vias.forEach(via => {
-                    const textoManos = getTextoManos(via);
-                    let detalles = "";
-                    if (textoManos) detalles += `<div>${textoManos}</div>`;
-                    if (via.definicion) detalles += `<div>${via.definicion}</div>`;
-                    if (via.expuesta) detalles += `<div>⚠️ ${via.expuesta}</div>`;
-                    const gradoColor = getColorByGrado(via.grado);
-                    const viaDiv = document.createElement('div');
-                    viaDiv.className = 'ficha-via-item';
-                    viaDiv.innerHTML = `
-                        <div class="via-header">
-                            <span class="via-nombre">${via.linea_id} · ${via.nombre}</span>
-                            ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
-                            ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
-                        </div>
-                        ${detalles ? `<div class="detalles-texto">${detalles}</div>` : ''}
-                    `;
-                    viasDiv.appendChild(viaDiv);
-                });
-                
-                // Cargar, colorear y superponer SVG
-                cargarYColorearSVGBloque(b, idx, b.vias);
-            });
-            
-            if (swiperBloques) swiperBloques.destroy();
-            swiperBloques = new Swiper('.bloque-swiper', { initialSlide: bloqueIndex, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, pagination: { el: '.swiper-pagination', clickable: true }, spaceBetween: 20, autoHeight: true });
-            navigateToScreen('screen-ficha-bloque');
-            history.pushState({ sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }, '');
-        }
-
-        function initMenu() {
-            const toggle = document.getElementById('menuToggle');
-            const dropdown = document.getElementById('dropdownMenu');
-            toggle.onclick = () => dropdown.classList.toggle('show');
-            document.querySelectorAll('[data-screen]').forEach(btn => {
-                btn.onclick = () => {
-                    dropdown.classList.remove('show');
-                    const screen = btn.dataset.screen;
-                    if (screen === 'portada') navigateToScreen('screen-portada');
-                    if (screen === 'condiciones') navigateToScreen('screen-condiciones');
-                    if (screen === 'sectores') {
-                        navigateToScreen('screen-sectores');
-                        if (datosApp) renderSectoresList();
-                        else cargarDatos();
-                        currentSector = null;
-                    }
-                    history.pushState({ menu: screen }, '');
-                };
-            });
-        }
-        
-        function init() {
-            initMenu();
-            cargarDatos();
-            navigateToScreen('screen-portada');
-            history.pushState({}, '');
-        }
-        init();
-    </script>
-</body>
-</html>
+                grupos[numBase].blo
