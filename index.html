@@ -162,20 +162,12 @@
 
         // ====================== FUNCIÓN PARA OBTENER TEXTO DEL CÍRCULO ======================
         function getTextoParaCirculo(lineaId) {
-            // Extraer la letra base (lo que está antes del punto)
             const baseLetra = lineaId.split('.')[0];
-            
-            // Si el baseLetra tiene números (ej: "1", "2"), no mostrar nada
             if (/^\d+$/.test(baseLetra)) return '';
-            
-            // Verificar si es el primer elemento del grupo
             const partes = lineaId.split('.');
             if (partes.length === 1) {
-                // Sin punto, ej: "A", "B", "C" -> mostrar la letra
                 return baseLetra;
             } else if (partes.length === 2) {
-                // Con punto, ej: "A.1" -> mostrar la letra base
-                // "A.2", "B.1", etc. -> no mostrar nada
                 if (partes[1] === '1') {
                     return baseLetra;
                 }
@@ -184,13 +176,32 @@
             return '';
         }
 
+        // ====================== FUNCIÓN PARA OBTENER LA POSICIÓN DEL CÍRCULO ======================
+        function getCirclePosition(circle) {
+            let cx = circle.getAttribute('cx');
+            let cy = circle.getAttribute('cy');
+            
+            // Si no tiene cx/cy directamente, intentar obtener de transform
+            if ((!cx || !cy) && circle.hasAttribute('transform')) {
+                const transform = circle.getAttribute('transform');
+                const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+                if (translateMatch) {
+                    cx = translateMatch[1];
+                    cy = translateMatch[2];
+                }
+            }
+            
+            return { cx: parseFloat(cx), cy: parseFloat(cy) };
+        }
+
         // ====================== FUNCIÓN PARA ENCONTRAR ELEMENTOS POR inkscape:label ======================
         function encontrarElementoPorLabel(svgDoc, label) {
             if (!svgDoc) return null;
-            // Buscar por inkscape:label
+            // Buscar por inkscape:label con namespace
             let elemento = svgDoc.querySelector(`[inkscape\\:label="${label}"]`);
             if (elemento) return elemento;
-            // Buscar por atributo (sin namespace)
+            
+            // Buscar por atributo label (sin namespace)
             const todos = svgDoc.querySelectorAll('*');
             for (let el of todos) {
                 let labelValue = el.getAttribute('inkscape:label');
@@ -207,21 +218,21 @@
             return null;
         }
 
-        // ====================== APLICAR COLORES AL SVG DEL BLOQUE (con linea_id completo) ======================
+        // ====================== APLICAR COLORES Y TEXTOS AL SVG ======================
         function aplicarColoresSVG(svgDoc, bloque, vias) {
             if (!svgDoc) return;
             
             console.log(`🎨 Aplicando colores a SVG del bloque ${bloque.id}`);
             
             vias.forEach(via => {
-                const lineaId = via.linea_id;  // "A", "B.1", "B.2", "C", "D.1", "D.2", "D.3", "E"
+                const lineaId = via.linea_id;
                 const color = getColorByGrado(via.grado);
                 const simbolo = getSimboloSalida(via.salida);
                 const textoCirculo = getTextoParaCirculo(lineaId);
                 
-                console.log(`  Procesando: ${lineaId}, color: ${color}, texto: "${textoCirculo}", simbolo: "${simbolo}"`);
+                console.log(`  Procesando: ${lineaId}, texto: "${textoCirculo}", simbolo: "${simbolo}"`);
                 
-                // 1. Línea (buscar por inkscape:label = lineaId)
+                // 1. Línea
                 const linea = encontrarElementoPorLabel(svgDoc, `${lineaId}_linea`);
                 if (linea) {
                     linea.removeAttribute('style');
@@ -233,7 +244,7 @@
                     console.log(`    ⚠️ No se encontró línea para ${lineaId}_linea`);
                 }
                 
-                // 2. Círculo de entrada (buscar por inkscape:label = lineaId)
+                // 2. Círculo de entrada
                 const circuloEntrada = encontrarElementoPorLabel(svgDoc, `${lineaId}_entrada`);
                 if (circuloEntrada) {
                     circuloEntrada.removeAttribute('style');
@@ -241,30 +252,28 @@
                     circuloEntrada.setAttribute('stroke', color);
                     console.log(`    ✅ Círculo entrada ${lineaId}_entrada coloreado`);
                     
-                    // Obtener el radio del círculo para ajustar el tamaño del texto
-                    const radio = parseFloat(circuloEntrada.getAttribute('r')) || 16;
-                    const fontSize = radio * 1.4; // 70% del diámetro
-                    
-                    // Añadir o actualizar texto dentro del círculo
-                    let texto = circuloEntrada.querySelector('text');
-                    if (!texto && textoCirculo) {
-                        const cx = circuloEntrada.getAttribute('cx');
-                        const cy = circuloEntrada.getAttribute('cy');
-                        texto = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                        texto.setAttribute('x', cx);
-                        texto.setAttribute('y', cy);
-                        texto.setAttribute('text-anchor', 'middle');
-                        texto.setAttribute('dominant-baseline', 'central');
-                        texto.setAttribute('fill', 'white');
-                        texto.setAttribute('font-weight', 'bold');
-                        circuloEntrada.appendChild(texto);
-                    }
-                    if (texto && textoCirculo) {
-                        texto.textContent = textoCirculo;
-                        texto.setAttribute('font-size', `${fontSize}px`);
-                        texto.setAttribute('fill', 'white');
-                    } else if (texto && !textoCirculo) {
-                        texto.textContent = '';
+                    if (textoCirculo) {
+                        // Obtener posición del círculo
+                        const pos = getCirclePosition(circuloEntrada);
+                        const radio = parseFloat(circuloEntrada.getAttribute('r')) || 16;
+                        const fontSize = radio * 1.6; // 80% del diámetro para 90% visual
+                        
+                        // Buscar texto existente o crear nuevo
+                        let textElement = circuloEntrada.querySelector('text');
+                        if (!textElement) {
+                            textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                            circuloEntrada.appendChild(textElement);
+                        }
+                        
+                        textElement.setAttribute('x', pos.cx || 0);
+                        textElement.setAttribute('y', pos.cy || 0);
+                        textElement.setAttribute('text-anchor', 'middle');
+                        textElement.setAttribute('dominant-baseline', 'central');
+                        textElement.setAttribute('fill', 'white');
+                        textElement.setAttribute('font-size', `${fontSize}px`);
+                        textElement.setAttribute('font-weight', 'bold');
+                        textElement.textContent = textoCirculo;
+                        console.log(`      ✅ Texto "${textoCirculo}" añadido al círculo de entrada`);
                     }
                 } else {
                     console.log(`    ⚠️ No se encontró círculo entrada para ${lineaId}_entrada`);
@@ -278,26 +287,27 @@
                     circuloSalida.setAttribute('stroke', color);
                     console.log(`    ✅ Círculo salida ${lineaId}_salida coloreado`);
                     
-                    // Obtener el radio del círculo para ajustar el tamaño del símbolo
+                    // Obtener posición del círculo
+                    const pos = getCirclePosition(circuloSalida);
                     const radio = parseFloat(circuloSalida.getAttribute('r')) || 12;
-                    const fontSize = radio * 1.6; // ~80% del diámetro
+                    const fontSize = radio * 1.6; // 80% del diámetro
                     
-                    let texto = circuloSalida.querySelector('text');
-                    if (!texto) {
-                        const cx = circuloSalida.getAttribute('cx');
-                        const cy = circuloSalida.getAttribute('cy');
-                        texto = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                        texto.setAttribute('x', cx);
-                        texto.setAttribute('y', cy);
-                        texto.setAttribute('text-anchor', 'middle');
-                        texto.setAttribute('dominant-baseline', 'central');
-                        texto.setAttribute('fill', 'white');
-                        texto.setAttribute('font-weight', 'bold');
-                        circuloSalida.appendChild(texto);
+                    // Buscar texto existente o crear nuevo
+                    let textElement = circuloSalida.querySelector('text');
+                    if (!textElement) {
+                        textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        circuloSalida.appendChild(textElement);
                     }
-                    texto.textContent = simbolo;
-                    texto.setAttribute('font-size', `${fontSize}px`);
-                    texto.setAttribute('fill', 'white');
+                    
+                    textElement.setAttribute('x', pos.cx || 0);
+                    textElement.setAttribute('y', pos.cy || 0);
+                    textElement.setAttribute('text-anchor', 'middle');
+                    textElement.setAttribute('dominant-baseline', 'central');
+                    textElement.setAttribute('fill', 'white');
+                    textElement.setAttribute('font-size', `${fontSize}px`);
+                    textElement.setAttribute('font-weight', 'bold');
+                    textElement.textContent = simbolo;
+                    console.log(`      ✅ Símbolo "${simbolo}" añadido al círculo de salida`);
                 } else {
                     console.log(`    ⚠️ No se encontró círculo salida para ${lineaId}_salida`);
                 }
@@ -679,7 +689,7 @@
                     const svgElement = svgDoc.documentElement;
                     if (!svgElement) return;
                     
-                    // Aplicar colores ANTES de insertar el SVG
+                    // Aplicar colores, textos y símbolos ANTES de insertar el SVG
                     aplicarColoresSVG(svgDoc, bloque, vias);
                     
                     svgElement.setAttribute('preserveAspectRatio', 'none');
