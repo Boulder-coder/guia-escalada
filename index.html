@@ -66,6 +66,12 @@
             background: transparent;
             z-index: 10;
         }
+        .media-container svg text {
+            dominant-baseline: central;
+            text-anchor: middle;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+        }
         .bloque-id { font-size: 1.3rem; font-weight: 600; color: #6674FF; padding: 10px 16px 5px; font-family: 'Roboto', sans-serif; }
         .bloque-id-small { font-size: 0.85rem; font-weight: normal; color: #888; }
         .ficha-footer { background: #d4d4d4; padding: 14px 16px; display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #2c2c2c; letter-spacing: 0.5px; }
@@ -197,20 +203,6 @@
             return null;
         }
 
-        // Función para escalar coordenadas basado en viewBox
-        function escalarCoordenadas(svgDoc, x, y) {
-            const svgElement = svgDoc.documentElement;
-            const viewBox = svgElement.getAttribute('viewBox');
-            
-            if (viewBox) {
-                const [minX, minY, width, height] = viewBox.split(' ').map(Number);
-                // Las coordenadas ya están en el sistema de viewBox, no necesitan escalado
-                // porque el SVG se está mostrando a tamaño completo con preserveAspectRatio="none"
-                return { x, y };
-            }
-            return { x, y };
-        }
-
         function aplicarColoresSVG(svgDoc, bloque, vias) {
             if (!svgDoc) return;
             
@@ -247,7 +239,6 @@
                         let cy = parseFloat(circuloEntrada.getAttribute('cy'));
                         let radio = parseFloat(circuloEntrada.getAttribute('r')) || 17.5;
                         
-                        // Si no tiene cx/cy, intentar obtener de transform
                         if (isNaN(cx) && circuloEntrada.hasAttribute('transform')) {
                             const transform = circuloEntrada.getAttribute('transform');
                             const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
@@ -264,20 +255,34 @@
                         const oldTexts = circuloEntrada.querySelectorAll('text');
                         oldTexts.forEach(t => t.remove());
                         
-                        // Crear texto
-                        const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                        textElement.setAttribute('x', cx);
-                        textElement.setAttribute('y', cy);
-                        textElement.setAttribute('text-anchor', 'middle');
-                        textElement.setAttribute('dominant-baseline', 'central');
-                        textElement.setAttribute('fill', '#FFFFFF');
-                        textElement.setAttribute('font-size', `${radio * 1.0}px`);
-                        textElement.setAttribute('font-weight', 'bold');
-                        textElement.setAttribute('font-family', 'Arial, sans-serif');
-                        textElement.textContent = textoCirculo;
+                        // Crear texto CON BORDE NEGRO para que sea visible siempre
+                        const textStroke = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        textStroke.setAttribute('x', cx);
+                        textStroke.setAttribute('y', cy);
+                        textStroke.setAttribute('text-anchor', 'middle');
+                        textStroke.setAttribute('dominant-baseline', 'central');
+                        textStroke.setAttribute('fill', 'none');
+                        textStroke.setAttribute('stroke', '#000000');
+                        textStroke.setAttribute('stroke-width', '3');
+                        textStroke.setAttribute('font-size', `${radio * 1.2}px`);
+                        textStroke.setAttribute('font-weight', 'bold');
+                        textStroke.setAttribute('font-family', 'Arial, sans-serif');
+                        textStroke.textContent = textoCirculo;
                         
-                        circuloEntrada.appendChild(textElement);
-                        console.log(`      ✅ Texto "${textoCirculo}" añadido en (${cx},${cy}) con radio ${radio}`);
+                        const textFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        textFill.setAttribute('x', cx);
+                        textFill.setAttribute('y', cy);
+                        textFill.setAttribute('text-anchor', 'middle');
+                        textFill.setAttribute('dominant-baseline', 'central');
+                        textFill.setAttribute('fill', '#FFFFFF');
+                        textFill.setAttribute('font-size', `${radio * 1.2}px`);
+                        textFill.setAttribute('font-weight', 'bold');
+                        textFill.setAttribute('font-family', 'Arial, sans-serif');
+                        textFill.textContent = textoCirculo;
+                        
+                        circuloEntrada.appendChild(textStroke);
+                        circuloEntrada.appendChild(textFill);
+                        console.log(`      ✅ Texto "${textoCirculo}" añadido en (${cx},${cy}) con radio ${radio}, fontSize: ${radio * 1.2}px`);
                     }
                 }
                 
@@ -309,20 +314,34 @@
                     const oldTexts = circuloSalida.querySelectorAll('text');
                     oldTexts.forEach(t => t.remove());
                     
-                    // Crear texto del símbolo
-                    const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    textElement.setAttribute('x', cx);
-                    textElement.setAttribute('y', cy);
-                    textElement.setAttribute('text-anchor', 'middle');
-                    textElement.setAttribute('dominant-baseline', 'central');
-                    textElement.setAttribute('fill', '#FFFFFF');
-                    textElement.setAttribute('font-size', `${radio * 0.9}px`);
-                    textElement.setAttribute('font-weight', 'bold');
-                    textElement.setAttribute('font-family', 'Arial, sans-serif');
-                    textElement.textContent = simbolo;
+                    // Crear símbolo CON BORDE NEGRO
+                    const textStroke = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    textStroke.setAttribute('x', cx);
+                    textStroke.setAttribute('y', cy);
+                    textStroke.setAttribute('text-anchor', 'middle');
+                    textStroke.setAttribute('dominant-baseline', 'central');
+                    textStroke.setAttribute('fill', 'none');
+                    textStroke.setAttribute('stroke', '#000000');
+                    textStroke.setAttribute('stroke-width', '3');
+                    textStroke.setAttribute('font-size', `${radio * 1.1}px`);
+                    textStroke.setAttribute('font-weight', 'bold');
+                    textStroke.setAttribute('font-family', 'Arial, sans-serif');
+                    textStroke.textContent = simbolo;
                     
-                    circuloSalida.appendChild(textElement);
-                    console.log(`      ✅ Símbolo "${simbolo}" añadido en (${cx},${cy}) con radio ${radio}`);
+                    const textFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    textFill.setAttribute('x', cx);
+                    textFill.setAttribute('y', cy);
+                    textFill.setAttribute('text-anchor', 'middle');
+                    textFill.setAttribute('dominant-baseline', 'central');
+                    textFill.setAttribute('fill', '#FFFFFF');
+                    textFill.setAttribute('font-size', `${radio * 1.1}px`);
+                    textFill.setAttribute('font-weight', 'bold');
+                    textFill.setAttribute('font-family', 'Arial, sans-serif');
+                    textFill.textContent = simbolo;
+                    
+                    circuloSalida.appendChild(textStroke);
+                    circuloSalida.appendChild(textFill);
+                    console.log(`      ✅ Símbolo "${simbolo}" añadido en (${cx},${cy}) con radio ${radio}, fontSize: ${radio * 1.1}px`);
                 }
             });
         }
@@ -677,7 +696,6 @@
             return partes.length > 0 ? partes.join(" · ") : "";
         }
 
-        // Función para obtener dimensiones del contenedor y escalar SVG
         function cargarYColorearSVGBloque(bloque, slideIndex, vias) {
             const svgUrl = `${bloque.foto_base}.svg?v=${Date.now()}`;
             const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
@@ -694,27 +712,8 @@
                     const svgElement = svgDoc.documentElement;
                     if (!svgElement) return;
                     
-                    // Obtener viewBox original
-                    const viewBox = svgElement.getAttribute('viewBox');
-                    let scaleX = 1, scaleY = 1;
-                    
-                    if (viewBox) {
-                        const [, , vbWidth, vbHeight] = viewBox.split(' ').map(Number);
-                        const containerRect = mediaContainer.getBoundingClientRect();
-                        if (containerRect.width > 0 && containerRect.height > 0) {
-                            scaleX = containerRect.width / vbWidth;
-                            scaleY = containerRect.height / vbHeight;
-                        }
-                    }
-                    
-                    // Escalar las coordenadas de los círculos antes de aplicar colores
-                    if (scaleX !== 1 || scaleY !== 1) {
-                        // Escalar todos los círculos y sus textos después
-                    }
-                    
                     aplicarColoresSVG(svgDoc, bloque, vias);
                     
-                    // Configurar SVG para que se muestre correctamente
                     svgElement.setAttribute('preserveAspectRatio', 'none');
                     svgElement.style.width = '100%';
                     svgElement.style.height = '100%';
@@ -728,7 +727,7 @@
                     if (oldSvg) oldSvg.remove();
                     
                     mediaContainer.appendChild(svgElement);
-                    console.log(`✅ SVG coloreado para bloque ${bloque.id} con viewBox: ${viewBox}, scale: ${scaleX}, ${scaleY}`);
+                    console.log(`✅ SVG coloreado para bloque ${bloque.id}`);
                 })
                 .catch(err => console.log(`⚠️ No se pudo cargar SVG para bloque ${bloque.id}:`, err));
         }
