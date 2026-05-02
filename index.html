@@ -160,7 +160,6 @@
             return '●';
         }
 
-        // ====================== FUNCIÓN PARA OBTENER TEXTO DEL CÍRCULO ======================
         function getTextoParaCirculo(lineaId) {
             const baseLetra = lineaId.split('.')[0];
             if (/^\d+$/.test(baseLetra)) return '';
@@ -176,32 +175,11 @@
             return '';
         }
 
-        // ====================== FUNCIÓN PARA OBTENER LA POSICIÓN DEL CÍRCULO ======================
-        function getCirclePosition(circle) {
-            let cx = circle.getAttribute('cx');
-            let cy = circle.getAttribute('cy');
-            
-            // Si no tiene cx/cy directamente, intentar obtener de transform
-            if ((!cx || !cy) && circle.hasAttribute('transform')) {
-                const transform = circle.getAttribute('transform');
-                const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
-                if (translateMatch) {
-                    cx = translateMatch[1];
-                    cy = translateMatch[2];
-                }
-            }
-            
-            return { cx: parseFloat(cx), cy: parseFloat(cy) };
-        }
-
-        // ====================== FUNCIÓN PARA ENCONTRAR ELEMENTOS POR inkscape:label ======================
         function encontrarElementoPorLabel(svgDoc, label) {
             if (!svgDoc) return null;
-            // Buscar por inkscape:label con namespace
             let elemento = svgDoc.querySelector(`[inkscape\\:label="${label}"]`);
             if (elemento) return elemento;
             
-            // Buscar por atributo label (sin namespace)
             const todos = svgDoc.querySelectorAll('*');
             for (let el of todos) {
                 let labelValue = el.getAttribute('inkscape:label');
@@ -218,7 +196,7 @@
             return null;
         }
 
-        // ====================== APLICAR COLORES Y TEXTOS AL SVG ======================
+        // Versión mejorada de aplicarColoresSVG con mejor manejo de coordenadas
         function aplicarColoresSVG(svgDoc, bloque, vias) {
             if (!svgDoc) return;
             
@@ -240,81 +218,89 @@
                     linea.setAttribute('fill', 'none');
                     linea.setAttribute('stroke-width', '5');
                     console.log(`    ✅ Línea ${lineaId}_linea coloreada`);
-                } else {
-                    console.log(`    ⚠️ No se encontró línea para ${lineaId}_linea`);
                 }
                 
-                // 2. Círculo de entrada
+                // 2. Círculo de entrada con texto
                 const circuloEntrada = encontrarElementoPorLabel(svgDoc, `${lineaId}_entrada`);
                 if (circuloEntrada) {
                     circuloEntrada.removeAttribute('style');
                     circuloEntrada.setAttribute('fill', color);
                     circuloEntrada.setAttribute('stroke', color);
-                    console.log(`    ✅ Círculo entrada ${lineaId}_entrada coloreado`);
                     
                     if (textoCirculo) {
-                        // Obtener posición del círculo
-                        const pos = getCirclePosition(circuloEntrada);
-                        const radio = parseFloat(circuloEntrada.getAttribute('r')) || 16;
-                        const fontSize = radio * 1.6; // 80% del diámetro para 90% visual
+                        // Obtener coordenadas del círculo
+                        let cx = circuloEntrada.getAttribute('cx');
+                        let cy = circuloEntrada.getAttribute('cy');
+                        let radio = parseFloat(circuloEntrada.getAttribute('r')) || 16;
                         
-                        // Buscar texto existente o crear nuevo
-                        let textElement = circuloEntrada.querySelector('text');
-                        if (!textElement) {
-                            textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                            circuloEntrada.appendChild(textElement);
+                        // Si no tiene cx/cy, buscar en transform
+                        if ((!cx || !cy) && circuloEntrada.hasAttribute('transform')) {
+                            const transform = circuloEntrada.getAttribute('transform');
+                            const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+                            if (translateMatch) {
+                                cx = translateMatch[1];
+                                cy = translateMatch[2];
+                            }
                         }
                         
-                        textElement.setAttribute('x', pos.cx || 0);
-                        textElement.setAttribute('y', pos.cy || 0);
+                        // Usar coordenadas por defecto si no se encontraron
+                        cx = cx ? parseFloat(cx) : 0;
+                        cy = cy ? parseFloat(cy) : 0;
+                        
+                        // Crear texto dentro del círculo
+                        const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        textElement.setAttribute('x', cx);
+                        textElement.setAttribute('y', cy);
                         textElement.setAttribute('text-anchor', 'middle');
                         textElement.setAttribute('dominant-baseline', 'central');
                         textElement.setAttribute('fill', 'white');
-                        textElement.setAttribute('font-size', `${fontSize}px`);
+                        textElement.setAttribute('font-size', `${radio * 1.4}px`);
                         textElement.setAttribute('font-weight', 'bold');
                         textElement.textContent = textoCirculo;
-                        console.log(`      ✅ Texto "${textoCirculo}" añadido al círculo de entrada`);
+                        circuloEntrada.appendChild(textElement);
+                        console.log(`      ✅ Texto "${textoCirculo}" añadido en (${cx},${cy}) con radio ${radio}`);
                     }
-                } else {
-                    console.log(`    ⚠️ No se encontró círculo entrada para ${lineaId}_entrada`);
                 }
                 
-                // 3. Círculo de salida
+                // 3. Círculo de salida con símbolo
                 const circuloSalida = encontrarElementoPorLabel(svgDoc, `${lineaId}_salida`);
                 if (circuloSalida) {
                     circuloSalida.removeAttribute('style');
                     circuloSalida.setAttribute('fill', color);
                     circuloSalida.setAttribute('stroke', color);
-                    console.log(`    ✅ Círculo salida ${lineaId}_salida coloreado`);
                     
-                    // Obtener posición del círculo
-                    const pos = getCirclePosition(circuloSalida);
-                    const radio = parseFloat(circuloSalida.getAttribute('r')) || 12;
-                    const fontSize = radio * 1.6; // 80% del diámetro
+                    // Obtener coordenadas del círculo
+                    let cx = circuloSalida.getAttribute('cx');
+                    let cy = circuloSalida.getAttribute('cy');
+                    let radio = parseFloat(circuloSalida.getAttribute('r')) || 12;
                     
-                    // Buscar texto existente o crear nuevo
-                    let textElement = circuloSalida.querySelector('text');
-                    if (!textElement) {
-                        textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                        circuloSalida.appendChild(textElement);
+                    if ((!cx || !cy) && circuloSalida.hasAttribute('transform')) {
+                        const transform = circuloSalida.getAttribute('transform');
+                        const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+                        if (translateMatch) {
+                            cx = translateMatch[1];
+                            cy = translateMatch[2];
+                        }
                     }
                     
-                    textElement.setAttribute('x', pos.cx || 0);
-                    textElement.setAttribute('y', pos.cy || 0);
+                    cx = cx ? parseFloat(cx) : 0;
+                    cy = cy ? parseFloat(cy) : 0;
+                    
+                    const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    textElement.setAttribute('x', cx);
+                    textElement.setAttribute('y', cy);
                     textElement.setAttribute('text-anchor', 'middle');
                     textElement.setAttribute('dominant-baseline', 'central');
                     textElement.setAttribute('fill', 'white');
-                    textElement.setAttribute('font-size', `${fontSize}px`);
+                    textElement.setAttribute('font-size', `${radio * 1.2}px`);
                     textElement.setAttribute('font-weight', 'bold');
                     textElement.textContent = simbolo;
-                    console.log(`      ✅ Símbolo "${simbolo}" añadido al círculo de salida`);
-                } else {
-                    console.log(`    ⚠️ No se encontró círculo salida para ${lineaId}_salida`);
+                    circuloSalida.appendChild(textElement);
+                    console.log(`      ✅ Símbolo "${simbolo}" añadido en (${cx},${cy}) con radio ${radio}`);
                 }
             });
         }
 
-        // ====================== FUNCIÓN PARA ENCONTRAR ELEMENTOS POR inkscape:label (para mapa y croquis) ======================
         function encontrarElementosPorLabel(svgDoc, label) {
             const resultados = [];
             const todos = svgDoc.querySelectorAll('*');
@@ -335,7 +321,6 @@
             return resultados;
         }
 
-        // ====================== CARGAR MAPA (con anti-caché) ======================
         function cargarMapaInteractivo(sector) {
             if (!sector.mapa) return '<div class="info-sector"><p>No hay mapa disponible</p></div>';
             const mapaUrl = `${sector.mapa}.jpg`;
@@ -375,7 +360,6 @@
                                         e.stopPropagation();
                                         window.open(parkings[i], '_blank');
                                     });
-                                    console.log(`✅ Mapa: asignado evento a ${parkingLabel}`);
                                 });
                             }
                         }
@@ -386,7 +370,6 @@
             return html;
         }
 
-        // ====================== CARGAR CROQUIS (con anti-caché) ======================
         function cargarCroquisInteractivo(sector, croquisIndex) {
             const croquis = sector.croquis_list[croquisIndex];
             if (!croquis) return '<div class="info-sector"><p>Croquis no disponible</p></div>';
@@ -439,14 +422,10 @@
                                     if (bloqueEncontrado) {
                                         const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
                                         if (indice !== -1) {
-                                            console.log(`✅ Croquis: navegando a bloque ${bloqueEncontrado.id}`);
                                             openFichaBloque(indice);
                                         }
-                                    } else {
-                                        console.log(`⚠️ Croquis: bloque no encontrado para label "${label}"`);
                                     }
                                 });
-                                console.log(`✅ Croquis: asignado evento a inkscape:label="${label}"`);
                             }
                         });
                     }
@@ -672,7 +651,6 @@
             return partes.length > 0 ? partes.join(" · ") : "";
         }
 
-        // ====================== CARGAR Y COLOREAR SVG DEL BLOQUE ======================
         function cargarYColorearSVGBloque(bloque, slideIndex, vias) {
             const svgUrl = `${bloque.foto_base}.svg?v=${Date.now()}`;
             const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
@@ -689,7 +667,6 @@
                     const svgElement = svgDoc.documentElement;
                     if (!svgElement) return;
                     
-                    // Aplicar colores, textos y símbolos ANTES de insertar el SVG
                     aplicarColoresSVG(svgDoc, bloque, vias);
                     
                     svgElement.setAttribute('preserveAspectRatio', 'none');
@@ -700,7 +677,6 @@
                     svgElement.style.left = '0';
                     svgElement.style.pointerEvents = 'none';
                     
-                    // Eliminar SVG anterior si existe
                     const oldSvg = mediaContainer.querySelector('svg');
                     if (oldSvg) oldSvg.remove();
                     
@@ -710,7 +686,6 @@
                 .catch(err => console.log(`⚠️ No se pudo cargar SVG para bloque ${bloque.id}:`, err));
         }
 
-        // ====================== FICHA DE BLOQUE ======================
         function openFichaBloque(bloqueIndex) {
             if (!currentSector) return;
             const container = document.getElementById('ficha-bloque-content');
@@ -752,7 +727,6 @@
                     viasDiv.appendChild(viaDiv);
                 });
                 
-                // Cargar, colorear y superponer SVG
                 cargarYColorearSVGBloque(b, idx, b.vias);
             });
             
