@@ -513,7 +513,7 @@
               "mano_der": "Presa lateral alta",
               "manos_juntas": "",
               "definicion": "Recorre la arista",
-              "salida": "Top-out",
+              "salida": "Top",
               "expuesta": ""
             },
             {
@@ -525,7 +525,7 @@
               "mano_der": "Presa lateral alta",
               "manos_juntas": "",
               "definicion": "Misma entrada que A, salida hacia la derecha",
-              "salida": "Top-out",
+              "salida": "Top-out izquierda",
               "expuesta": ""
             },
             {
