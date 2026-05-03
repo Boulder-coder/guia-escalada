@@ -159,12 +159,12 @@
         }
 
         function getSimboloSalida(salida) {
-            if (!salida) return '●';
+            if (!salida) return 'text';
             const s = salida.toLowerCase();
             if (s.includes('top-out') && s.includes('derecha')) return '▶';
             if (s.includes('top-out') && s.includes('izquierda')) return '◀';
             if (s.includes('top-out')) return '▲';
-            if (s.includes('top')) return '●';
+            if (s.includes('top')) return 'circle';
             return '●';
         }
 
@@ -305,41 +305,85 @@
                     if (isNaN(cx)) cx = 0;
                     if (isNaN(cy)) cy = 0;
                     
-                    const oldSymbol = svgRoot.querySelector(`text[data-for="${lineaId}_salida"]`);
+                    const oldSymbol = svgRoot.querySelector(`[data-for="${lineaId}_salida"]`);
                     if (oldSymbol) oldSymbol.remove();
                     
-                    let fontSize = radio * 1.1;
-                    let xOffset = 0;
-                    
-                    if (simbolo === '▲') {
-                        fontSize = radio * 1.5;
+                    if (simbolo === 'circle') {
+                        // Dibujar un círculo SVG real que ocupe el 90% del círculo de salida
+                        const circleRadius = radio * 0.9; // 90% del radio del círculo padre
+                        const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                        innerCircle.setAttribute('data-for', `${lineaId}_salida`);
+                        innerCircle.setAttribute('cx', cx);
+                        innerCircle.setAttribute('cy', cy);
+                        innerCircle.setAttribute('r', circleRadius);
+                        innerCircle.setAttribute('fill', '#FFFFFF');
+                        innerCircle.setAttribute('stroke', 'none');
+                        svgRoot.appendChild(innerCircle);
+                        console.log(`      ✅ Círculo blanco añadido en (${cx},${cy}) con radio ${circleRadius}`);
+                    } else if (simbolo === '▲') {
+                        // Triángulo usando texto
+                        const fontSize = radio * 1.5;
+                        const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        symbolFill.setAttribute('data-for', `${lineaId}_salida`);
+                        symbolFill.setAttribute('x', cx);
+                        symbolFill.setAttribute('y', cy);
+                        symbolFill.setAttribute('text-anchor', 'middle');
+                        symbolFill.setAttribute('dominant-baseline', 'central');
+                        symbolFill.setAttribute('fill', '#FFFFFF');
+                        symbolFill.setAttribute('font-size', `${fontSize}px`);
+                        symbolFill.setAttribute('font-weight', 'bold');
+                        symbolFill.setAttribute('font-family', 'Arial, sans-serif');
+                        symbolFill.textContent = simbolo;
+                        svgRoot.appendChild(symbolFill);
+                        console.log(`      ✅ Símbolo "${simbolo}" añadido en (${cx},${cy}) con fontSize ${fontSize}px`);
                     } else if (simbolo === '▶') {
-                        fontSize = radio * 1.3;
-                        xOffset = radio * 0.15;
+                        const fontSize = radio * 1.3;
+                        const xOffset = radio * 0.15;
+                        const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        symbolFill.setAttribute('data-for', `${lineaId}_salida`);
+                        symbolFill.setAttribute('x', cx + xOffset);
+                        symbolFill.setAttribute('y', cy);
+                        symbolFill.setAttribute('text-anchor', 'middle');
+                        symbolFill.setAttribute('dominant-baseline', 'central');
+                        symbolFill.setAttribute('fill', '#FFFFFF');
+                        symbolFill.setAttribute('font-size', `${fontSize}px`);
+                        symbolFill.setAttribute('font-weight', 'bold');
+                        symbolFill.setAttribute('font-family', 'Arial, sans-serif');
+                        symbolFill.textContent = simbolo;
+                        svgRoot.appendChild(symbolFill);
+                        console.log(`      ✅ Símbolo "${simbolo}" añadido en (${cx + xOffset},${cy})`);
                     } else if (simbolo === '◀') {
-                        fontSize = radio * 1.3;
-                        xOffset = -radio * 0.15;
-                    } else if (simbolo === '●') {
-                        fontSize = radio * 1.5;
-                        xOffset = 0;
+                        const fontSize = radio * 1.3;
+                        const xOffset = -radio * 0.15;
+                        const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        symbolFill.setAttribute('data-for', `${lineaId}_salida`);
+                        symbolFill.setAttribute('x', cx + xOffset);
+                        symbolFill.setAttribute('y', cy);
+                        symbolFill.setAttribute('text-anchor', 'middle');
+                        symbolFill.setAttribute('dominant-baseline', 'central');
+                        symbolFill.setAttribute('fill', '#FFFFFF');
+                        symbolFill.setAttribute('font-size', `${fontSize}px`);
+                        symbolFill.setAttribute('font-weight', 'bold');
+                        symbolFill.setAttribute('font-family', 'Arial, sans-serif');
+                        symbolFill.textContent = simbolo;
+                        svgRoot.appendChild(symbolFill);
+                        console.log(`      ✅ Símbolo "${simbolo}" añadido en (${cx + xOffset},${cy})`);
                     } else {
-                        fontSize = radio * 1.1;
+                        const fontSize = radio * 1.1;
+                        const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        symbolFill.setAttribute('data-for', `${lineaId}_salida`);
+                        symbolFill.setAttribute('x', cx);
+                        symbolFill.setAttribute('y', cy);
+                        symbolFill.setAttribute('text-anchor', 'middle');
+                        symbolFill.setAttribute('dominant-baseline', 'central');
+                        symbolFill.setAttribute('fill', '#FFFFFF');
+                        symbolFill.setAttribute('font-size', `${fontSize}px`);
+                        symbolFill.setAttribute('font-weight', 'bold');
+                        symbolFill.setAttribute('font-family', 'Arial, sans-serif');
+                        symbolFill.textContent = simbolo;
+                        svgRoot.appendChild(symbolFill);
+                        console.log(`      ✅ Símbolo "${simbolo}" añadido en (${cx},${cy})`);
                     }
-                    
-                    const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    symbolFill.setAttribute('data-for', `${lineaId}_salida`);
-                    symbolFill.setAttribute('x', cx + xOffset);
-                    symbolFill.setAttribute('y', cy);
-                    symbolFill.setAttribute('text-anchor', 'middle');
-                    symbolFill.setAttribute('dominant-baseline', 'central');
-                    symbolFill.setAttribute('fill', '#FFFFFF');
-                    symbolFill.setAttribute('font-size', `${fontSize}px`);
-                    symbolFill.setAttribute('font-weight', 'bold');
-                    symbolFill.setAttribute('font-family', 'Arial, sans-serif');
-                    symbolFill.textContent = simbolo;
-                    
-                    svgRoot.appendChild(symbolFill);
-                    console.log(`      ✅ Símbolo "${simbolo}" añadido en (${cx + xOffset},${cy}) con fontSize ${fontSize}px`);
                 }
             });
         }
