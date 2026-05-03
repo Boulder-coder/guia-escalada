@@ -164,7 +164,7 @@
             if (s.includes('top-out') && s.includes('derecha')) return '▶';
             if (s.includes('top-out') && s.includes('izquierda')) return '◀';
             if (s.includes('top-out')) return '▲';
-            if (s.includes('top')) return '⏺︎';
+            if (s.includes('top')) return '●';
             return '●';
         }
 
@@ -227,7 +227,7 @@
                     console.log(`    ✅ Línea ${lineaId}_linea coloreada`);
                 }
                 
-                // 2. Círculo de entrada
+                // 2. Círculo de entrada (con borde blanco)
                 const circuloEntrada = encontrarElementoPorLabel(svgDoc, `${lineaId}_entrada`);
                 if (circuloEntrada) {
                     circuloEntrada.removeAttribute('style');
@@ -237,14 +237,15 @@
                     console.log(`    ✅ Círculo entrada ${lineaId}_entrada coloreado`);
                 }
                 
-                // 3. Círculo de salida
+                // 3. Círculo de salida (SIN borde)
                 const circuloSalida = encontrarElementoPorLabel(svgDoc, `${lineaId}_salida`);
                 if (circuloSalida) {
                     circuloSalida.removeAttribute('style');
                     circuloSalida.setAttribute('fill', color);
-                    circuloSalida.setAttribute('stroke', '#FFFFFF');
-                    circuloSalida.setAttribute('stroke-width', '2');
-                    console.log(`    ✅ Círculo salida ${lineaId}_salida coloreado`);
+                    // Eliminar cualquier atributo de stroke
+                    circuloSalida.removeAttribute('stroke');
+                    circuloSalida.removeAttribute('stroke-width');
+                    console.log(`    ✅ Círculo salida ${lineaId}_salida coloreado (sin borde)`);
                 }
                 
                 // CREAR TEXTO POR SEPARADO (fuera de los círculos)
@@ -272,7 +273,7 @@
                     const oldText = svgRoot.querySelector(`text[data-for="${lineaId}_entrada"]`);
                     if (oldText) oldText.remove();
                     
-                    // Texto blanco SIN contorno negro (borde muy fino opcional)
+                    // Texto blanco
                     const textFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                     textFill.setAttribute('data-for', `${lineaId}_entrada`);
                     textFill.setAttribute('x', cx);
@@ -289,7 +290,7 @@
                     console.log(`      ✅ Texto "${textoCirculo}" añadido en (${cx},${cy})`);
                 }
                 
-                // Símbolo de salida - tamaño ajustado según tipo
+                // Símbolo de salida
                 if (simbolo && circuloSalida) {
                     let cx = parseFloat(circuloSalida.getAttribute('cx'));
                     let cy = parseFloat(circuloSalida.getAttribute('cy'));
@@ -312,24 +313,24 @@
                     if (oldSymbol) oldSymbol.remove();
                     
                     // Ajustar tamaño y posición según el símbolo
-                    let fontSize = radio * 1.1; // Tamaño base
+                    let fontSize = radio * 1.1;
                     let xOffset = 0;
                     
                     if (simbolo === '▲') {
-                        fontSize = radio * 1.3; // Más grande para igualar a ▶
+                        fontSize = radio * 1.5; // Tamaño aumentado según solicitud
                     } else if (simbolo === '▶') {
                         fontSize = radio * 1.3;
                         xOffset = radio * 0.15; // Mover ligeramente a la derecha
                     } else if (simbolo === '◀') {
                         fontSize = radio * 1.3;
                         xOffset = -radio * 0.15; // Mover ligeramente a la izquierda
-                    } else if (simbolo === '⏺︎') {
+                    } else if (simbolo === '●') {
                         fontSize = radio * 1.1;
                     } else {
                         fontSize = radio * 1.1;
                     }
                     
-                    // Texto blanco SIN contorno negro
+                    // Texto blanco
                     const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                     symbolFill.setAttribute('data-for', `${lineaId}_salida`);
                     symbolFill.setAttribute('x', cx + xOffset);
