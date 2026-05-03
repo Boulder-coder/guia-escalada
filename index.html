@@ -9,60 +9,261 @@
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        .cocogoose-font, h1, .dropdown-menu button, .ficha-footer, h2, h3, h4, .tab-btn {
+        .cocogoose-font, h1, .tab-btn, .ficha-footer, h2, h3, h4, .sector-nombre, .sector-municipio, .bottom-nav button {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
         }
-        body { font-family: 'Roboto', sans-serif; background: #e8e8e8; height: 100vh; overflow: hidden; }
+        body { font-family: 'Roboto', sans-serif; background: #e8e8e8; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         .app-header { position: fixed; top: 0; left: 0; right: 0; background: #2c2c2c; color: #ffffff; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .header-top { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .menu-toggle { background: none; border: none; color: #FFDE66; font-size: 1.5rem; cursor: pointer; font-family: 'Roboto', sans-serif; }
-        .dropdown-menu { display: none; flex-direction: column; background: #3a3a3a; }
-        .dropdown-menu.show { display: flex; }
-        .dropdown-menu button { background: none; border: none; color: #ffffff; padding: 12px 20px; text-align: left; font-size: 0.9rem; font-weight: 300; cursor: pointer; letter-spacing: 0.5px; }
-        .dropdown-menu button:hover { background: #6674FF; color: #ffffff; }
-        .app-content { margin-top: 70px; height: calc(100vh - 70px); overflow-y: auto; padding: 15px; }
+        .header-top { padding: 15px; text-align: center; }
+        .app-content { margin-top: 70px; margin-bottom: 60px; height: calc(100vh - 130px); overflow-y: auto; padding: 15px; }
         .screen { display: none; }
         .screen.active { display: block; }
-        .sector-card { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
-        .sector-card img { width: 100%; height: 160px; object-fit: cover; }
-        .sector-info { padding: 12px; background: #d4d4d4; color: #2c2c2c; }
-        .sector-info h3 { color: #2c2c2c; font-size: 1.2rem; }
-        .tabs { display: flex; gap: 5px; background: #ffffff; border-radius: 12px; margin-bottom: 15px; padding: 5px; }
-        .tab-btn { flex: 1; padding: 10px; background: none; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: normal; color: #2c2c2c; transition: all 0.2s; }
-        .tab-btn.active { background: #FFDE66; color: #2c2c2c; }
-        .tab-pane { display: none; }
-        .tab-pane.active { display: block; }
-        .info-sector, .condiciones-content { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 60px; }
-        .croquis-list { margin-bottom: 20px; }
-        .croquis-list-title { margin: 15px 0 10px; font-weight: 600; color: #6674FF; }
-        .croquis-thumbnails { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
-        .croquis-thumb { flex: 1; min-width: 100px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #2c2c2c;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+        }
+        .bottom-nav button {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1rem;
+            padding: 8px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.5px;
+        }
+        .bottom-nav button.active {
+            color: #FFDE66;
+            border-bottom: 2px solid #FFDE66;
+        }
+        
+        /* Sector Cards */
+        .sector-card {
+            background: #ffffff;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        .sector-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+        .sector-info {
+            padding: 12px;
+            background: #d4d4d4;
+        }
+        .sector-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .sector-nombre {
+            font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
+            font-size: 1.2rem;
+            color: #2c2c2c;
+            text-align: left;
+        }
+        .sector-municipio {
+            font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
+            font-size: 1rem;
+            color: #6674FF;
+            text-align: right;
+        }
+        .sector-stats {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        /* Tabs dentro del sector */
+        .sector-tabs {
+            display: flex;
+            gap: 5px;
+            background: #ffffff;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            padding: 5px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: normal;
+            color: #2c2c2c;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: #FFDE66;
+            color: #2c2c2c;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        
+        .info-sector, .condiciones-content {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .info-sector p {
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .mapa-hint {
+            font-size: 0.8rem;
+            color: #6674FF;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        .croquis-list {
+            margin-bottom: 20px;
+        }
+        .croquis-list-title {
+            margin: 15px 0 10px;
+            font-weight: 600;
+            color: #6674FF;
+        }
+        .croquis-thumbnails {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .croquis-thumb {
+            flex: 1;
+            min-width: 100px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
         .croquis-thumb:active { transform: scale(0.98); }
         .croquis-thumb img { width: 100%; height: auto; display: block; }
         .croquis-thumb.active { border: 3px solid #6674FF; }
-        .croquis-viewer { position: relative; background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 60px; }
+        .croquis-viewer {
+            position: relative;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
         .croquis-viewer img { width: 100%; height: auto; display: block; }
-        .croquis-viewer object { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto; }
-        .bloque-group { background: #ffffff; border-radius: 12px; margin-bottom: 20px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .bloque-group:last-child { margin-bottom: 60px; }
-        .bloque-group h3 { background: #d4d4d4; padding: 12px 16px; font-size: 1rem; color: #2c2c2c; margin: 0; }
-        .linea-item { padding: 12px 16px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; display: flex; justify-content: space-between; align-items: center; }
+        .croquis-viewer object {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: auto;
+        }
+        .bloque-group {
+            background: #ffffff;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .bloque-group h3 {
+            background: #d4d4d4;
+            padding: 12px 16px;
+            font-size: 1rem;
+            color: #2c2c2c;
+            margin: 0;
+        }
+        .linea-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         .linea-item:last-child { border-bottom: none; }
         .linea-item:active { background: #f0f0f0; }
-        .linea-nombre { font-weight: 500; font-size: 0.9rem; flex: 1; text-align: left; }
-        .linea-grado-badge { display: inline-block; color: white; border-radius: 20px; padding: 2px 10px; font-size: 0.7rem; font-weight: 500; white-space: nowrap; margin-left: 10px; }
-        .grafica-container { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .grafica-titulo { text-align: left; margin-bottom: 15px; font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif; color: #6674FF; font-size: 1.1rem; }
-        canvas { width: 100%; max-width: 100%; height: auto; background: transparent; display: block; }
-        .ficha-bloque { background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 0; }
-        .media-container { position: relative; background: #d4d4d4; min-height: 200px; }
-        .media-container img { width: 100%; height: auto; display: block; }
-        .media-container svg { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
+        .linea-nombre {
+            font-weight: 500;
+            font-size: 0.9rem;
+            flex: 1;
+            text-align: left;
+        }
+        .linea-grado-badge {
+            display: inline-block;
+            color: white;
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+        .grafica-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .grafica-titulo {
+            text-align: left;
+            margin-bottom: 15px;
+            font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
+            color: #6674FF;
+            font-size: 1.1rem;
+        }
+        canvas {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            background: transparent;
+            display: block;
+        }
+        .ficha-bloque {
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        .media-container {
+            position: relative;
+            background: #d4d4d4;
+            min-height: 200px;
+        }
+        .media-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .media-container svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: transparent;
             z-index: 10;
         }
@@ -73,45 +274,83 @@
             font-family: Arial, sans-serif;
             z-index: 30;
         }
-        .bloque-id { font-size: 1.3rem; font-weight: 600; color: #6674FF; padding: 10px 16px 5px; font-family: 'Roboto', sans-serif; }
-        .bloque-id-small { font-size: 0.85rem; font-weight: normal; color: #888; }
-        .ficha-footer { background: #d4d4d4; padding: 14px 16px; display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #2c2c2c; letter-spacing: 0.5px; }
-        .ficha-vias { padding: 5px 16px 12px; }
-        .ficha-via-item { border-bottom: 1px solid #eee; padding: 8px 0; }
+        .ficha-footer {
+            background: #d4d4d4;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2c2c2c;
+            letter-spacing: 0.5px;
+        }
+        .ficha-vias {
+            padding: 5px 16px 20px;
+        }
+        .ficha-via-item {
+            border-bottom: 1px solid #eee;
+            padding: 8px 0;
+        }
         .ficha-via-item:last-child { border-bottom: none; }
-        .via-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; margin-bottom: 4px; }
+        .via-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
         .via-nombre { font-weight: 600; font-size: 0.95rem; }
-        .grado-badge { display: inline-block; color: white; border-radius: 20px; padding: 2px 10px; font-size: 0.7rem; font-weight: 500; }
+        .grado-badge {
+            display: inline-block;
+            color: white;
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
         .entrada-texto { font-size: 0.8rem; color: #444; }
         .detalles-texto { font-size: 0.75rem; color: #555; margin-top: 3px; line-height: 1.3; }
         .detalles-texto div { margin-top: 2px; }
-        .swiper-button-next, .swiper-button-prev { color: #6674FF !important; background: rgba(255,255,255,0.8); border-radius: 50%; width: 32px; height: 32px; }
+        .swiper-button-next, .swiper-button-prev {
+            color: #6674FF !important;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+        }
         .swiper-button-next:after, .swiper-button-prev:after { font-size: 14px; }
         .swiper-pagination-bullet-active { background: #6674FF !important; }
         .loader { text-align: center; padding: 40px; color: #666; }
-        .back-hint { text-align: center; padding: 8px; font-size: 0.65rem; color: #888; border-top: 1px solid #ddd; margin-top: 8px; }
+        .back-hint {
+            text-align: center;
+            padding: 8px;
+            font-size: 0.65rem;
+            color: #888;
+            border-top: 1px solid #ddd;
+            margin-top: 8px;
+        }
         h2, h3, h4 { color: #6674FF; letter-spacing: 0.5px; }
-        h1 { font-weight: 300 !important; letter-spacing: 1px; }
+        h1 { font-weight: 300 !important; letter-spacing: 1px; font-size: 1.4rem; }
     </style>
 </head>
 <body>
     <div class="app-header">
         <div class="header-top">
             <h1 style="font-family: 'Cocogoose', sans-serif; font-weight: 300; letter-spacing: 1px; color: #FFDE66;">GUÍA DE BOULDER</h1>
-            <button class="menu-toggle" id="menuToggle">☰</button>
-        </div>
-        <div class="dropdown-menu" id="dropdownMenu">
-            <button data-screen="portada" style="font-family: 'Cocogoose', sans-serif; font-weight: 300;">🏠 Portada</button>
-            <button data-screen="condiciones" style="font-family: 'Cocogoose', sans-serif; font-weight: 300;">📋 Condiciones</button>
-            <button data-screen="sectores" style="font-family: 'Cocogoose', sans-serif; font-weight: 300;">⛰️ Sectores</button>
         </div>
     </div>
     <div class="app-content">
-        <div id="screen-portada" class="screen"><div style="text-align:center;padding:20px"><h2 style="font-family: 'Cocogoose', sans-serif;">Bienvenido</h2><p>Guía de boulder del club.</p><div style="background:#d4d4d4;color:#2c2c2c;padding:20px;border-radius:12px;margin-top:20px">⚠️ Lee las condiciones de uso.</div></div></div>
-        <div id="screen-condiciones" class="screen"><div class="condiciones-content"><h3 style="font-family: 'Cocogoose', sans-serif;">📋 Condiciones</h3><p>Uso exclusivo para miembros del club. La información es orientativa. Cada escalador es responsable de su seguridad.</p><p style="margin-top:15px">📅 Abril 2025</p></div></div>
-        <div id="screen-sectores" class="screen"><h2 style="font-family: 'Cocogoose', sans-serif;">🏔️ Sectores</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
+        <div id="screen-sectores" class="screen active">
+            <div id="sectores-list"><div class="loader">Cargando...</div></div>
+        </div>
         <div id="screen-sector-detalle" class="screen"><div id="sector-detalle-content"></div></div>
         <div id="screen-ficha-bloque" class="screen"><div id="ficha-bloque-content"></div><div class="back-hint">← Botón atrás del móvil para volver</div></div>
+        <div id="screen-condiciones" class="screen"><div class="condiciones-content"><h3 style="font-family: 'Cocogoose', sans-serif;">📋 Condiciones</h3><p>Uso exclusivo para miembros del club. La información es orientativa. Cada escalador es responsable de su seguridad.</p><p style="margin-top:15px">📅 Mayo 2025</p></div></div>
+    </div>
+    
+    <div class="bottom-nav">
+        <button data-screen="sectores" class="active">⛰️ Sectores</button>
+        <button data-screen="condiciones">📋 Condiciones</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -119,6 +358,8 @@
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, navigationStack = [], swiperBloques = null;
 
+        // Funciones auxiliares (getColorByGrado, getSimboloSalida, getTextoParaCirculo, encontrarElementoPorLabel, aplicarColoresSVG, etc.)
+        // Se mantienen igual que en el código anterior...
         function getColorByGrado(grado) {
             if (!grado) return '#FF93DB';
             const g = grado.toUpperCase().trim();
@@ -187,7 +428,6 @@
             if (!svgDoc) return null;
             let elemento = svgDoc.querySelector(`[inkscape\\:label="${label}"]`);
             if (elemento) return elemento;
-            
             const todos = svgDoc.querySelectorAll('*');
             for (let el of todos) {
                 let labelValue = el.getAttribute('inkscape:label');
@@ -206,56 +446,43 @@
 
         function aplicarColoresSVG(svgDoc, bloque, vias) {
             if (!svgDoc) return;
-            
             console.log(`🎨 Aplicando colores a SVG del bloque ${bloque.id}`);
-            
             vias.forEach(via => {
                 const lineaId = via.linea_id;
                 const color = getColorByGrado(via.grado);
                 const simbolo = getSimboloSalida(via.salida);
                 const textoCirculo = getTextoParaCirculo(lineaId);
                 
-                console.log(`  Procesando: ${lineaId}, texto: "${textoCirculo}", simbolo: "${simbolo}"`);
-                
-                // 1. Línea
                 const linea = encontrarElementoPorLabel(svgDoc, `${lineaId}_linea`);
                 if (linea) {
                     linea.removeAttribute('style');
                     linea.setAttribute('stroke', color);
                     linea.setAttribute('fill', 'none');
                     linea.setAttribute('stroke-width', '6');
-                    console.log(`    ✅ Línea ${lineaId}_linea coloreada`);
                 }
                 
-                // 2. Círculo de entrada (con borde blanco)
                 const circuloEntrada = encontrarElementoPorLabel(svgDoc, `${lineaId}_entrada`);
                 if (circuloEntrada) {
                     circuloEntrada.removeAttribute('style');
                     circuloEntrada.setAttribute('fill', color);
                     circuloEntrada.setAttribute('stroke', '#FFFFFF');
                     circuloEntrada.setAttribute('stroke-width', '2');
-                    console.log(`    ✅ Círculo entrada ${lineaId}_entrada coloreado`);
                 }
                 
-                // 3. Círculo de salida (SIN borde)
                 const circuloSalida = encontrarElementoPorLabel(svgDoc, `${lineaId}_salida`);
                 if (circuloSalida) {
                     circuloSalida.removeAttribute('style');
                     circuloSalida.setAttribute('fill', color);
                     circuloSalida.removeAttribute('stroke');
                     circuloSalida.removeAttribute('stroke-width');
-                    console.log(`    ✅ Círculo salida ${lineaId}_salida coloreado (sin borde)`);
                 }
                 
-                // CREAR TEXTO POR SEPARADO (fuera de los círculos)
                 const svgRoot = svgDoc.documentElement;
                 
-                // Texto de entrada
                 if (textoCirculo && circuloEntrada) {
                     let cx = parseFloat(circuloEntrada.getAttribute('cx'));
                     let cy = parseFloat(circuloEntrada.getAttribute('cy'));
                     let radio = parseFloat(circuloEntrada.getAttribute('r')) || 17.5;
-                    
                     if (isNaN(cx) && circuloEntrada.hasAttribute('transform')) {
                         const transform = circuloEntrada.getAttribute('transform');
                         const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
@@ -264,13 +491,10 @@
                             cy = parseFloat(translateMatch[2]);
                         }
                     }
-                    
                     if (isNaN(cx)) cx = 0;
                     if (isNaN(cy)) cy = 0;
-                    
                     const oldText = svgRoot.querySelector(`text[data-for="${lineaId}_entrada"]`);
                     if (oldText) oldText.remove();
-                    
                     const textFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                     textFill.setAttribute('data-for', `${lineaId}_entrada`);
                     textFill.setAttribute('x', cx);
@@ -282,17 +506,13 @@
                     textFill.setAttribute('font-weight', 'bold');
                     textFill.setAttribute('font-family', 'Arial, sans-serif');
                     textFill.textContent = textoCirculo;
-                    
                     svgRoot.appendChild(textFill);
-                    console.log(`      ✅ Texto "${textoCirculo}" añadido en (${cx},${cy})`);
                 }
                 
-                // Símbolo de salida
                 if (simbolo && circuloSalida) {
                     let cx = parseFloat(circuloSalida.getAttribute('cx'));
                     let cy = parseFloat(circuloSalida.getAttribute('cy'));
                     let radio = parseFloat(circuloSalida.getAttribute('r')) || 12.5;
-                    
                     if (isNaN(cx) && circuloSalida.hasAttribute('transform')) {
                         const transform = circuloSalida.getAttribute('transform');
                         const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
@@ -301,15 +521,12 @@
                             cy = parseFloat(translateMatch[2]);
                         }
                     }
-                    
                     if (isNaN(cx)) cx = 0;
                     if (isNaN(cy)) cy = 0;
-                    
                     const oldSymbol = svgRoot.querySelector(`[data-for="${lineaId}_salida"]`);
                     if (oldSymbol) oldSymbol.remove();
                     
                     if (simbolo === 'circle') {
-                        // Dibujar un círculo SVG real que ocupe el 50% del círculo de salida
                         const circleRadius = radio * 0.5;
                         const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                         innerCircle.setAttribute('data-for', `${lineaId}_salida`);
@@ -319,10 +536,8 @@
                         innerCircle.setAttribute('fill', '#FFFFFF');
                         innerCircle.setAttribute('stroke', 'none');
                         svgRoot.appendChild(innerCircle);
-                        console.log(`      ✅ Círculo blanco añadido en (${cx},${cy}) con radio ${circleRadius}`);
                     } else if (simbolo === '▲') {
                         const fontSize = radio * 1.75;
-                        // Ajuste de centrado vertical para el triángulo (subir más)
                         const yOffset = -radio * 0.15;
                         const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                         symbolFill.setAttribute('data-for', `${lineaId}_salida`);
@@ -336,7 +551,6 @@
                         symbolFill.setAttribute('font-family', 'Arial, sans-serif');
                         symbolFill.textContent = simbolo;
                         svgRoot.appendChild(symbolFill);
-                        console.log(`      ✅ Símbolo "${simbolo}" añadido en (${cx},${cy + yOffset}) con fontSize ${fontSize}px`);
                     } else if (simbolo === '▶') {
                         const fontSize = radio * 1.3;
                         const xOffset = radio * 0.15;
@@ -352,7 +566,6 @@
                         symbolFill.setAttribute('font-family', 'Arial, sans-serif');
                         symbolFill.textContent = simbolo;
                         svgRoot.appendChild(symbolFill);
-                        console.log(`      ✅ Símbolo "${simbolo}" añadido en (${cx + xOffset},${cy})`);
                     } else if (simbolo === '◀') {
                         const fontSize = radio * 1.3;
                         const xOffset = -radio * 0.15;
@@ -368,7 +581,6 @@
                         symbolFill.setAttribute('font-family', 'Arial, sans-serif');
                         symbolFill.textContent = simbolo;
                         svgRoot.appendChild(symbolFill);
-                        console.log(`      ✅ Símbolo "${simbolo}" añadido en (${cx + xOffset},${cy})`);
                     } else {
                         const fontSize = radio * 1.1;
                         const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -383,7 +595,6 @@
                         symbolFill.setAttribute('font-family', 'Arial, sans-serif');
                         symbolFill.textContent = simbolo;
                         svgRoot.appendChild(symbolFill);
-                        console.log(`      ✅ Símbolo "${simbolo}" añadido en (${cx},${cy})`);
                     }
                 }
             });
@@ -402,9 +613,7 @@
                         }
                     }
                 }
-                if (labelValue === label) {
-                    resultados.push(el);
-                }
+                if (labelValue === label) resultados.push(el);
             }
             return resultados;
         }
@@ -414,11 +623,10 @@
             const mapaUrl = `${sector.mapa}.jpg`;
             const svgMapaUrl = `${sector.mapa}.svg?v=${Date.now()}`;
             const containerId = `mapaContainer_${Date.now()}`;
-            
             let html = `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${mapaUrl}" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `<object id="mapaObject_${containerId}" data="${svgMapaUrl}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object>`;
-            html += `</div>`;
+            html += `</div><div class="mapa-hint">📍 Haz clic en los puntos P1, P2, P3... para abrir la ubicación en Google Maps</div>`;
             
             setTimeout(() => {
                 const objectTag = document.getElementById(`mapaObject_${containerId}`);
@@ -436,7 +644,6 @@
                                 if (el.style) el.style.opacity = '0';
                             }
                         });
-                        
                         if (sector.info && sector.info.parking) {
                             const parkings = sector.info.parking;
                             for (let i = 0; i < parkings.length; i++) {
@@ -454,7 +661,6 @@
                     }
                 }
             }, 500);
-            
             return html;
         }
 
@@ -462,12 +668,10 @@
             const croquis = sector.croquis_list[croquisIndex];
             if (!croquis) return '<div class="info-sector"><p>Croquis no disponible</p></div>';
             const containerId = `croquisViewer_${Date.now()}`;
-            
             let html = `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg?v=${Date.now()}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object>`;
             html += `</div>`;
-            
             setTimeout(() => {
                 const objectTag = document.getElementById(`croquisObject_${containerId}`);
                 if (objectTag && objectTag.contentDocument) {
@@ -484,7 +688,6 @@
                                 if (el.style) el.style.opacity = '0';
                             }
                         });
-                        
                         const elementosConLabel = svgDoc.querySelectorAll('*');
                         elementosConLabel.forEach(el => {
                             let label = null;
@@ -509,9 +712,7 @@
                                     });
                                     if (bloqueEncontrado) {
                                         const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
-                                        if (indice !== -1) {
-                                            openFichaBloque(indice);
-                                        }
+                                        if (indice !== -1) openFichaBloque(indice);
                                     }
                                 });
                             }
@@ -519,7 +720,6 @@
                     }
                 }
             }, 500);
-            
             return html;
         }
 
@@ -529,6 +729,10 @@
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(screenId).style.display = 'block';
             document.querySelector('.app-content').scrollTop = 0;
+            document.querySelectorAll('.bottom-nav button').forEach(btn => {
+                if (btn.dataset.screen === screenId.replace('screen-', '')) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
         }
         
         function goBack() {
@@ -541,7 +745,8 @@
                 }
             } else {
                 navigateToScreen('screen-sectores');
-                renderSectoresList();
+                if (datosApp) renderSectoresList();
+                else cargarDatos();
                 currentSector = null;
             }
         }
@@ -568,7 +773,21 @@
                 const card = document.createElement('div');
                 card.className = 'sector-card';
                 const portadaUrl = sector.portada ? `${sector.portada}.jpg` : '';
-                card.innerHTML = `<img src="${portadaUrl}" onerror="this.src='https://picsum.photos/id/20/400/200'"><div class="sector-info"><h3>${sector.nombre}</h3><p>${sector.bloques.length} bloques</p></div>`;
+                let totalBloques = sector.bloques.length;
+                let totalLineas = sector.bloques.reduce((sum, b) => sum + b.vias.length, 0);
+                card.innerHTML = `
+                    <img src="${portadaUrl}" onerror="this.src='https://picsum.photos/id/20/400/200'">
+                    <div class="sector-info">
+                        <div class="sector-info-row">
+                            <span class="sector-nombre">${sector.nombre}</span>
+                            <span class="sector-municipio">${sector.municipio}</span>
+                        </div>
+                        <div class="sector-stats">
+                            <span>📦 ${totalBloques} bloques</span>
+                            <span>🧗 ${totalLineas} líneas</span>
+                        </div>
+                    </div>
+                `;
                 card.onclick = () => openSector(sector.nombre);
                 container.appendChild(card);
             });
@@ -579,36 +798,39 @@
             if (!currentSector) return;
             const container = document.getElementById('sector-detalle-content');
             const mapaHtml = cargarMapaInteractivo(currentSector);
+            let descripcionHtml = '';
+            if (currentSector.descripcion) {
+                const parrafos = currentSector.descripcion.split('//');
+                descripcionHtml = parrafos.map(p => `<p>${p.trim()}</p>`).join('');
+            }
             let croquisListHtml = '';
             if (currentSector.croquis_list && currentSector.croquis_list.length > 0) {
-                croquisListHtml = '<div class="croquis-list">';
-                croquisListHtml += '<div class="croquis-list-title">Selecciona un croquis:</div>';
-                croquisListHtml += '<div class="croquis-thumbnails">';
+                croquisListHtml = '<div class="croquis-list"><div class="croquis-list-title">📸 Selecciona un croquis:</div><div class="croquis-thumbnails">';
                 currentSector.croquis_list.forEach((croq, idx) => {
                     croquisListHtml += `<div class="croquis-thumb" data-croquis-idx="${idx}"><img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'"></div>`;
                 });
-                croquisListHtml += '</div></div>';
-                croquisListHtml += '<div id="croquisViewerArea" style="margin-bottom: 60px;"></div>';
+                croquisListHtml += '</div></div><div id="croquisViewerArea" style="margin-bottom: 20px;"></div>';
             } else {
                 croquisListHtml = '<div class="info-sector"><p>No hay croquis disponibles</p></div>';
             }
             container.innerHTML = `
                 <h2 style="font-family: 'Cocogoose', sans-serif;">${currentSector.nombre}</h2>
-                <div class="tabs">
+                <div class="sector-tabs">
                     <button class="tab-btn active" data-tab="info">ℹ️ Info</button>
                     <button class="tab-btn" data-tab="croquis">🗺️ Croquis</button>
                     <button class="tab-btn" data-tab="bloques">🧗 Bloques</button>
                 </div>
                 <div id="tab-info" class="tab-pane active">
-                    <div class="grafica-container"><div class="grafica-titulo">Distribución de grados</div><canvas id="grafica-sector"></canvas></div>
+                    <div class="info-sector">${descripcionHtml || '<p>Sin descripción disponible.</p>'}</div>
+                    <div class="grafica-container"><div class="grafica-titulo">📊 Distribución de grados</div><canvas id="grafica-sector"></canvas></div>
                     <div class="info-sector"><h4>📍 Mapa de accesos</h4><div id="mapaInfo">${mapaHtml}</div></div>
                 </div>
                 <div id="tab-croquis" class="tab-pane">${croquisListHtml}</div>
                 <div id="tab-bloques" class="tab-pane"><div id="bloques-list"></div></div>
             `;
-            container.querySelectorAll('.tab-btn').forEach(btn => {
+            container.querySelectorAll('.sector-tabs .tab-btn').forEach(btn => {
                 btn.onclick = () => {
-                    container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    container.querySelectorAll('.sector-tabs .tab-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     document.getElementById('tab-info').classList.remove('active');
                     document.getElementById('tab-croquis').classList.remove('active');
@@ -620,7 +842,6 @@
                     }
                 };
             });
-            
             setTimeout(() => {
                 document.querySelectorAll('.croquis-thumb').forEach(thumb => {
                     thumb.onclick = () => {
@@ -631,7 +852,6 @@
                     };
                 });
             }, 100);
-            
             const bloquesContainer = document.getElementById('bloques-list');
             bloquesContainer.innerHTML = '';
             const grupos = {};
@@ -643,7 +863,7 @@
             Object.values(grupos).sort((a, b) => a.numBase - b.numBase).forEach(grupo => {
                 const grupoDiv = document.createElement('div');
                 grupoDiv.className = 'bloque-group';
-                grupoDiv.innerHTML = `<h3>Bloque ${grupo.numBase}</h3><div></div>`;
+                grupoDiv.innerHTML = `<h3>📌 Bloque ${grupo.numBase}</h3><div></div>`;
                 const listaDiv = grupoDiv.querySelector('div');
                 grupo.bloques.forEach(bloqueInfo => {
                     bloqueInfo.vias.forEach(via => {
@@ -668,9 +888,7 @@
         function cargarCroquisEnArea(idx) {
             if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return;
             const area = document.getElementById('croquisViewerArea');
-            if (area) {
-                area.innerHTML = cargarCroquisInteractivo(currentSector, idx);
-            }
+            if (area) area.innerHTML = cargarCroquisInteractivo(currentSector, idx);
         }
 
         function dibujarGrafica(sector) {
@@ -732,10 +950,10 @@
         }
 
         function getTextoManos(via) {
-            if (via.manos_juntas && via.manos_juntas.trim() !== "") return `Manos juntas: ${via.manos_juntas}`;
+            if (via.manos_juntas && via.manos_juntas.trim() !== "") return `🤲 Manos juntas: ${via.manos_juntas}`;
             let partes = [];
-            if (via.mano_izq && via.mano_izq.trim() !== "") partes.push(`Izq: ${via.mano_izq}`);
-            if (via.mano_der && via.mano_der.trim() !== "") partes.push(`Der: ${via.mano_der}`);
+            if (via.mano_izq && via.mano_izq.trim() !== "") partes.push(`🫲 Izq: ${via.mano_izq}`);
+            if (via.mano_der && via.mano_der.trim() !== "") partes.push(`🫱 Der: ${via.mano_der}`);
             return partes.length > 0 ? partes.join(" · ") : "";
         }
 
@@ -743,36 +961,27 @@
             const svgUrl = `${bloque.foto_base}.svg?v=${Date.now()}`;
             const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
             if (!mediaContainer) return;
-            
-            fetch(svgUrl)
-                .then(res => {
-                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                    return res.text();
-                })
-                .then(svgText => {
-                    const parser = new DOMParser();
-                    const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                    const svgElement = svgDoc.documentElement;
-                    if (!svgElement) return;
-                    
-                    aplicarColoresSVG(svgDoc, bloque, vias);
-                    
-                    svgElement.setAttribute('preserveAspectRatio', 'none');
-                    svgElement.style.width = '100%';
-                    svgElement.style.height = '100%';
-                    svgElement.style.position = 'absolute';
-                    svgElement.style.top = '0';
-                    svgElement.style.left = '0';
-                    svgElement.style.pointerEvents = 'none';
-                    svgElement.style.zIndex = '20';
-                    
-                    const oldSvg = mediaContainer.querySelector('svg');
-                    if (oldSvg) oldSvg.remove();
-                    
-                    mediaContainer.appendChild(svgElement);
-                    console.log(`✅ SVG coloreado para bloque ${bloque.id}`);
-                })
-                .catch(err => console.log(`⚠️ No se pudo cargar SVG para bloque ${bloque.id}:`, err));
+            fetch(svgUrl).then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.text();
+            }).then(svgText => {
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                const svgElement = svgDoc.documentElement;
+                if (!svgElement) return;
+                aplicarColoresSVG(svgDoc, bloque, vias);
+                svgElement.setAttribute('preserveAspectRatio', 'none');
+                svgElement.style.width = '100%';
+                svgElement.style.height = '100%';
+                svgElement.style.position = 'absolute';
+                svgElement.style.top = '0';
+                svgElement.style.left = '0';
+                svgElement.style.pointerEvents = 'none';
+                svgElement.style.zIndex = '20';
+                const oldSvg = mediaContainer.querySelector('svg');
+                if (oldSvg) oldSvg.remove();
+                mediaContainer.appendChild(svgElement);
+            }).catch(err => console.log(`⚠️ No se pudo cargar SVG para bloque ${bloque.id}:`, err));
         }
 
         function openFichaBloque(bloqueIndex) {
@@ -780,7 +989,6 @@
             const container = document.getElementById('ficha-bloque-content');
             container.innerHTML = `<div class="bloque-swiper swiper"><div class="swiper-wrapper" id="bloquesSwiperWrapper"></div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>`;
             const wrapper = document.getElementById('bloquesSwiperWrapper');
-            
             currentSector.bloques.forEach((b, idx) => {
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
@@ -789,18 +997,17 @@
                         <div class="media-container" id="mediaContainer-${idx}" style="position: relative;">
                             <img src="${b.foto_base}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
                         </div>
-                        <div class="ficha-footer"><span>Bloque ${parseInt(b.id, 10)}</span><span>${currentSector.nombre}</span></div>
+                        <div class="ficha-footer"><span>📌 Bloque ${parseInt(b.id, 10)}</span><span>${currentSector.nombre}</span></div>
                         <div class="ficha-vias" id="vias-${idx}"></div>
                     </div>
                 `;
                 wrapper.appendChild(slide);
-                
                 const viasDiv = document.getElementById(`vias-${idx}`);
                 b.vias.forEach(via => {
                     const textoManos = getTextoManos(via);
                     let detalles = "";
                     if (textoManos) detalles += `<div>${textoManos}</div>`;
-                    if (via.definicion) detalles += `<div>${via.definicion}</div>`;
+                    if (via.definicion) detalles += `<div>📝 ${via.definicion}</div>`;
                     if (via.expuesta) detalles += `<div>⚠️ ${via.expuesta}</div>`;
                     const gradoColor = getColorByGrado(via.grado);
                     const viaDiv = document.createElement('div');
@@ -809,47 +1016,36 @@
                         <div class="via-header">
                             <span class="via-nombre">${via.linea_id} · ${via.nombre}</span>
                             ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
-                            ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
+                            ${via.entrada ? `<span class="entrada-texto">🎯 ${via.entrada}</span>` : ''}
                         </div>
                         ${detalles ? `<div class="detalles-texto">${detalles}</div>` : ''}
                     `;
                     viasDiv.appendChild(viaDiv);
                 });
-                
                 cargarYColorearSVGBloque(b, idx, b.vias);
             });
-            
             if (swiperBloques) swiperBloques.destroy();
             swiperBloques = new Swiper('.bloque-swiper', { initialSlide: bloqueIndex, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, pagination: { el: '.swiper-pagination', clickable: true }, spaceBetween: 20, autoHeight: true });
             navigateToScreen('screen-ficha-bloque');
             history.pushState({ sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }, '');
         }
 
-        function initMenu() {
-            const toggle = document.getElementById('menuToggle');
-            const dropdown = document.getElementById('dropdownMenu');
-            toggle.onclick = () => dropdown.classList.toggle('show');
-            document.querySelectorAll('[data-screen]').forEach(btn => {
+        function init() {
+            cargarDatos();
+            document.querySelectorAll('.bottom-nav button').forEach(btn => {
                 btn.onclick = () => {
-                    dropdown.classList.remove('show');
                     const screen = btn.dataset.screen;
-                    if (screen === 'portada') navigateToScreen('screen-portada');
-                    if (screen === 'condiciones') navigateToScreen('screen-condiciones');
                     if (screen === 'sectores') {
                         navigateToScreen('screen-sectores');
                         if (datosApp) renderSectoresList();
                         else cargarDatos();
                         currentSector = null;
                     }
+                    if (screen === 'condiciones') navigateToScreen('screen-condiciones');
                     history.pushState({ menu: screen }, '');
                 };
             });
-        }
-        
-        function init() {
-            initMenu();
-            cargarDatos();
-            navigateToScreen('screen-portada');
+            navigateToScreen('screen-sectores');
             history.pushState({}, '');
         }
         init();
