@@ -101,7 +101,7 @@
             <button class="menu-toggle" id="menuToggle">☰</button>
         </div>
         <div class="dropdown-menu" id="dropdownMenu">
-            <button data-screen="portada" style="font-family: 'Cocogoose', sans-serif; font-weight: 300;">🏠 Portada</button>
+            <button data-screen="portada" style="font-family: 'Cocogoose', sans-serif; font-weight: 300;">⛰️ Sectores</button>
             <button data-screen="condiciones" style="font-family: 'Cocogoose', sans-serif; font-weight: 300;">📋 Condiciones</button>
         </div>
     </div>
@@ -158,11 +158,11 @@
 
         function getSimboloSalida(salida) {
             if (!salida) return 'text';
-            const s = salida.toLowerCase();
-            if (s.includes('top-out') && s.includes('derecha')) return '▶';
-            if (s.includes('top-out') && s.includes('izquierda')) return '◀';
-            if (s.includes('top-out')) return '▲';
-            if (s.includes('top')) return 'circle';
+            // Códigos simplificados: T, TO, TOD, TOI
+            if (salida === 'T') return 'circle';
+            if (salida === 'TO') return '▲';
+            if (salida === 'TOD') return '▶';
+            if (salida === 'TOI') return '◀';
             return '●';
         }
 
@@ -307,6 +307,7 @@
                     if (oldSymbol) oldSymbol.remove();
                     
                     if (simbolo === 'circle') {
+                        // Dibujar un círculo SVG real que ocupe el 50% del círculo de salida
                         const circleRadius = radio * 0.5;
                         const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                         innerCircle.setAttribute('data-for', `${lineaId}_salida`);
