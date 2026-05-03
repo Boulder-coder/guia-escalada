@@ -9,7 +9,7 @@
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        .cocogoose-font, h1, .dropdown-menu button, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .sector-municipio {
+        .cocogoose-font, h1, .dropdown-menu button, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
         }
         body { font-family: 'Roboto', sans-serif; background: #e8e8e8; height: 100vh; overflow: hidden; }
@@ -27,29 +27,19 @@
         .sector-card img { width: 100%; height: 160px; object-fit: cover; }
         .sector-info { padding: 12px; background: #d4d4d4; }
         .sector-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
             margin-bottom: 8px;
         }
         .sector-nombre {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #2c2c2c;
             text-align: left;
         }
-        .sector-municipio {
-            font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
-            font-size: 1rem;
-            color: #2c2c2c;
-            text-align: right;
-        }
         .sector-stats {
-            display: flex;
-            justify-content: space-between;
             font-family: 'Roboto', sans-serif;
             font-size: 0.85rem;
             color: #555;
+            text-align: left;
         }
         .tabs { display: flex; gap: 5px; background: #ffffff; border-radius: 12px; margin-bottom: 15px; padding: 5px; }
         .tab-btn { flex: 1; padding: 10px; background: none; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: normal; color: #2c2c2c; transition: all 0.2s; }
@@ -589,21 +579,25 @@
                 card.className = 'sector-card';
                 const portadaUrl = sector.portada ? `${sector.portada}.jpg` : '';
                 
-                // Calcular total de bloques y líneas
+                // Calcular total de bloques y líneas (mismo criterio que la gráfica)
                 let totalBloques = sector.bloques.length;
-                let totalLineas = sector.bloques.reduce((sum, bloque) => sum + bloque.vias.length, 0);
+                let totalLineas = 0;
+                sector.bloques.forEach(bloque => {
+                    bloque.vias.forEach(via => {
+                        // Contar solo líneas con grado no vacío (mismo criterio que la gráfica)
+                        if (via.grado && via.grado.trim() !== "") {
+                            totalLineas++;
+                        }
+                    });
+                });
                 
                 card.innerHTML = `
                     <img src="${portadaUrl}" onerror="this.src='https://picsum.photos/id/20/400/200'">
                     <div class="sector-info">
                         <div class="sector-header">
-                            <span class="sector-nombre">${sector.nombre}</span>
-                            <span class="sector-municipio">${sector.municipio}</span>
+                            <div class="sector-nombre">${sector.nombre} · ${sector.municipio}</div>
                         </div>
-                        <div class="sector-stats">
-                            <span>📦 ${totalBloques} bloques</span>
-                            <span>🧗 ${totalLineas} líneas</span>
-                        </div>
+                        <div class="sector-stats">${totalBloques} bloques · ${totalLineas} líneas</div>
                     </div>
                 `;
                 card.onclick = () => openSector(sector.nombre);
