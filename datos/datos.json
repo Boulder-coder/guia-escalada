@@ -2,8 +2,10 @@
   "sectores": [
     {
       "nombre": "Monte La Cruz",
+      "municipio": "Buñol",
       "portada": "fotos/MLC_PORTADA",
       "mapa": "fotos/MLC_MAPA",
+      "descripcion": "El Monte La Cruz es un sector ubicado en la cima del característico monte buñolero. Se trata de un sector agradable, con vistas panorámicas del pueblo, donde acostumbra a soplar brisa. Ideal para ir una tarde de verano o una mañana de invierno. // El grueso de los bloques se encuentran en la cara Sur-Este (B1-B9), aunque también diponemos de un abanico de piedra pinchosa aún por abrir en su cara norte (B10), y un bloque solitario entre los bancales de la cara sur (B11). Son bloques de poca estatura (rondan entre 2,50-3,00m), poco desplome, pero canto pequeño. Abundan los sextos grados: perfecto para inciarse en roca si llevas rodaje en rocódromo.",
       "info": {
         "parking": [
           "https://maps.app.goo.gl/e1SB96eGaXCvjFn47",
@@ -14,25 +16,21 @@
       "croquis_list": [
         {
           "imagen": "fotos/MLC_CROQUIS_1",
-          "svg": "fotos/MLC_CROQUIS_1",
-          "bloques_ids": ["1", "2_1", "2_2", "2_3", "3_1", "3_2", "3_3", "4", "5_1", "5_2", "6", "7_1", "7_2", "7_3", "8_1", "8_2", "9"]
+          "svg": "fotos/MLC_CROQUIS_1"
         },
         {
           "imagen": "fotos/MLC_CROQUIS_2",
-          "svg": "fotos/MLC_CROQUIS_2",
-          "bloques_ids": ["10"]
+          "svg": "fotos/MLC_CROQUIS_2"
         },
         {
           "imagen": "fotos/MLC_CROQUIS_3",
-          "svg": "fotos/MLC_CROQUIS_3",
-          "bloques_ids": ["11_1", "11_2"]
+          "svg": "fotos/MLC_CROQUIS_3"
         }
       ],
       "bloques": [
         {
           "id": "1",
           "foto_base": "fotos/MLC_B1",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "A",
@@ -43,7 +41,7 @@
               "mano_der": "",
               "manos_juntas": "Canto al fondo",
               "definicion": "Entra al fondo de la cueva, sale recto",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -51,7 +49,6 @@
         {
           "id": "2_1",
           "foto_base": "fotos/MLC_B2_1",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "A",
@@ -62,7 +59,7 @@
               "mano_der": "Garbanzo plano",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -74,7 +71,7 @@
               "mano_der": "Agujero",
               "manos_juntas": "",
               "definicion": "Sale recto por la izquierda",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -86,7 +83,7 @@
               "mano_der": "Agujero",
               "manos_juntas": "",
               "definicion": "Mismo inicio que B, sale hacia la derecha",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -94,7 +91,6 @@
         {
           "id": "2_2",
           "foto_base": "fotos/MLC_B2_2",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "D",
@@ -105,7 +101,7 @@
               "mano_der": "Presa lateral",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -117,7 +113,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "Travesía hacia la izquierda, sale por A",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -129,7 +125,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "Mismo inicio que E, sale recto",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -137,7 +133,6 @@
         {
           "id": "2_3",
           "foto_base": "fotos/MLC_B2_3",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "G.1",
@@ -148,7 +143,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -168,7 +163,6 @@
         {
           "id": "3_1",
           "foto_base": "fotos/MLC_B3_1",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "A",
@@ -179,7 +173,7 @@
               "mano_der": "Plano horizontal",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -191,7 +185,7 @@
               "mano_der": "Rugosidad dentro de la grieta",
               "manos_juntas": "",
               "definicion": "¡Eliminatorio! No vale bloque derecho",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -203,7 +197,7 @@
               "mano_der": "Rugosidad dentro de la grieta",
               "manos_juntas": "",
               "definicion": "Mismo inicio que B, recorre la grieta",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -215,7 +209,7 @@
               "mano_der": "Regleta roma",
               "manos_juntas": "",
               "definicion": "¡Eliminatorio! No vale grieta ni bloque izquierdo",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -223,7 +217,6 @@
         {
           "id": "3_2",
           "foto_base": "fotos/MLC_B3_2",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "E",
@@ -233,8 +226,8 @@
               "mano_izq": "Agujero horizontal",
               "mano_der": "Agujero horizontal",
               "manos_juntas": "",
-              "definicion": "Sale hacia la izquierda",
-              "salida": "Top-out",
+              "definicion": "Sale hacia la izquieda",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -242,7 +235,6 @@
         {
           "id": "3_3",
           "foto_base": "fotos/MLC_B3_3",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "F",
@@ -253,7 +245,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "Sale recto por la fisura",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -262,10 +254,10 @@
               "grado": "5",
               "entrada": "Semi-Sit",
               "mano_izq": "",
-              "mano_der": "Agujero",
-              "manos_juntas": "",
+              "mano_der": "",
+              "manos_juntas": "Agujero",
               "definicion": "Sale recto",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -273,7 +265,6 @@
         {
           "id": "4",
           "foto_base": "fotos/MLC_B4",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "A",
@@ -283,8 +274,8 @@
               "mano_izq": "",
               "mano_der": "",
               "manos_juntas": "Presa grande",
-              "definicion": "Sale hacia la izquierda",
-              "salida": "Top-out",
+              "definicion": "Sale hacia la izquieda cogiendo la regleta lateral cruzando con mano derecha",
+              "salida": "",
               "expuesta": "Caída en desnivel"
             },
             {
@@ -295,8 +286,8 @@
               "mano_izq": "",
               "mano_der": "",
               "manos_juntas": "Presa grande",
-              "definicion": "Misma entrada que A, sale recto",
-              "salida": "Top-out",
+              "definicion": "Misma entrada que A, sale recto cogiendo la regleta lateral con izquieda",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -308,7 +299,7 @@
               "mano_der": "",
               "manos_juntas": "Presa grande",
               "definicion": "Misma entrada que A, sale hacia la derecha. No vale pisar la tierra",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -316,7 +307,6 @@
         {
           "id": "5_1",
           "foto_base": "fotos/MLC_B5_1",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "A",
@@ -327,7 +317,7 @@
               "mano_der": "Al aire",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -339,7 +329,7 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -351,7 +341,7 @@
               "mano_der": "Presa buena conglomerada",
               "manos_juntas": "",
               "definicion": "Hacia la derecha",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -363,7 +353,7 @@
               "mano_der": "Regleta lateral",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -371,7 +361,6 @@
         {
           "id": "5_2",
           "foto_base": "fotos/MLC_B5_2",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "D",
@@ -382,7 +371,7 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -394,7 +383,7 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -406,7 +395,7 @@
               "mano_der": "No me acuerdo",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -414,7 +403,6 @@
         {
           "id": "6",
           "foto_base": "fotos/MLC_B6",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "A",
@@ -425,7 +413,7 @@
               "mano_der": "No me acuerdo",
               "manos_juntas": "",
               "definicion": "Sentado desde arista",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -433,7 +421,6 @@
         {
           "id": "7_1",
           "foto_base": "fotos/MLC_B7_1",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "A",
@@ -444,7 +431,7 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -452,7 +439,6 @@
         {
           "id": "7_2",
           "foto_base": "fotos/MLC_B7_2",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "B",
@@ -463,7 +449,7 @@
               "mano_der": "Arista derecha",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -471,7 +457,6 @@
         {
           "id": "7_3",
           "foto_base": "fotos/MLC_B7_3",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "C.1",
@@ -482,7 +467,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "¡Morfa! Sale recto",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": "Caída delicada"
             },
             {
@@ -494,7 +479,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "¡Eliminatoria! Sin la arista derecha. Variante no morfa",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": "Caída delicada"
             }
           ]
@@ -502,7 +487,6 @@
         {
           "id": "8_1",
           "foto_base": "fotos/MLC_B8_1",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "A",
@@ -513,7 +497,7 @@
               "mano_der": "Presa lateral alta",
               "manos_juntas": "",
               "definicion": "Recorre la arista",
-              "salida": "Top",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -525,7 +509,7 @@
               "mano_der": "Presa lateral alta",
               "manos_juntas": "",
               "definicion": "Misma entrada que A, salida hacia la derecha",
-              "salida": "Top-out izquierda",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -537,7 +521,7 @@
               "mano_der": "Presa lateral alta",
               "manos_juntas": "",
               "definicion": "¡Eliminatoria! No vale la arista izquierda",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -554,14 +538,14 @@
             },
             {
               "linea_id": "D.1",
-              "nombre": "Saltamonty Burns",
+              "nombre": "Monty Burns",
               "grado": "6A",
               "entrada": "De Pie",
               "mano_izq": "Presa lateral",
               "mano_der": "Galleta blanca lateral",
               "manos_juntas": "",
-              "definicion": "Sale recto hacia la izquierda",
-              "salida": "Top-out",
+              "definicion": "Sale recto hacia la izquieda",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -573,7 +557,7 @@
               "mano_der": "Galleta blanca lateral",
               "manos_juntas": "",
               "definicion": "¡Eliminatoria! Sin arista. Lance directo",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -584,8 +568,8 @@
               "mano_izq": "",
               "mano_der": "",
               "manos_juntas": "",
-              "definicion": "",
-              "salida": "Top-out",
+              "definicion": "¡Eliminatoria! Sin arista. Entra sentado con presas por definir",
+              "salida": "",
               "expuesta": ""
             },
             {
@@ -597,7 +581,7 @@
               "mano_der": "Regleta en el plano tumbado",
               "manos_juntas": "",
               "definicion": "Recorre la arista",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -605,7 +589,6 @@
         {
           "id": "8_2",
           "foto_base": "fotos/MLC_B8_2",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "F",
@@ -616,7 +599,7 @@
               "mano_der": "",
               "manos_juntas": "Plano tumbado",
               "definicion": "",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": "Caída sin porteo"
             }
           ]
@@ -624,7 +607,6 @@
         {
           "id": "9",
           "foto_base": "fotos/MLC_B9",
-          "croquis_ref": 0,
           "vias": [
             {
               "linea_id": "A",
@@ -635,7 +617,7 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -643,7 +625,6 @@
         {
           "id": "10",
           "foto_base": "fotos/MLC_B10",
-          "croquis_ref": 1,
           "vias": [
             {
               "linea_id": "A",
@@ -654,7 +635,7 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
@@ -662,7 +643,6 @@
         {
           "id": "11_1",
           "foto_base": "fotos/MLC_B11_1",
-          "croquis_ref": 2,
           "vias": [
             {
               "linea_id": "A",
@@ -684,7 +664,7 @@
               "mano_izq": "Presa lateral",
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
-              "definicion": "Recorre la arista, sale por la parte alta",
+              "definicion": "Mismo inicio que A, recorre la arista y sale por la parte alta",
               "salida": "Top-out",
               "expuesta": ""
             },
@@ -717,7 +697,6 @@
         {
           "id": "11_2",
           "foto_base": "fotos/MLC_B11_2",
-          "croquis_ref": 2,
           "vias": [
             {
               "linea_id": "D",
@@ -728,12 +707,24 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "",
-              "salida": "Top-out",
+              "salida": "",
               "expuesta": ""
             }
           ]
         }
       ]
+    },
+    {
+      "nombre": "Barranco Grande",
+      "municipio": "Chiva",
+      "portada": "",
+      "mapa": "",
+      "descripcion": "",
+      "info": {
+        "parking": []
+      },
+      "croquis_list": [],
+      "bloques": []
     }
   ]
 }
