@@ -5,7 +5,7 @@
       "municipio": "Buñol",
       "portada": "fotos/MLC_PORTADA",
       "mapa": "fotos/MLC_MAPA",
-      "descripcion": "El Monte La Cruz es un sector ubicado en la cima del característico monte buñolero. Se trata de un sector agradable, con vistas panorámicas del pueblo, donde acostumbra a soplar brisa. Ideal para ir una tarde de verano o una mañana de invierno. // El grueso de los bloques se encuentran en la cara Sur-Este (B1-B9), aunque también diponemos de un abanico de piedra pinchosa aún por abrir en su cara norte (B10), y un bloque solitario entre los bancales de la cara sur (B11). Son bloques de poca estatura (rondan entre 2,50-3,00m), poco desplome, pero canto pequeño. Abundan los sextos grados: perfecto para inciarse en roca si llevas rodaje en rocódromo.",
+      "descripcion": "El Monte La Cruz es un sector ubicado en la cima del característico monte buñolero. Se trata de un sector agradable, con vistas panorámicas del pueblo, donde acostumbra a soplar brisa. Ideal para ir una tarde de verano o una mañana de invierno. // La mayaría de bloques se encuentran en la cara Sur-Este (B1-B9), aunque también diponemos de un abanico de piedra pinchosa aún por abrir en su cara norte (B10), y un bloque solitario entre los bancales de la cara sur (B11). Son bloques de poca estatura (rondan los 2,50-3,00m), con poco desplome, pero canto pequeño. Abundan los sextos grados: perfecto para inciarse en roca si llevas rodaje en rocódromo.",
       "info": {
         "parking": [
           "https://maps.app.goo.gl/e1SB96eGaXCvjFn47",
@@ -41,7 +41,7 @@
               "mano_der": "",
               "manos_juntas": "Canto al fondo",
               "definicion": "Entra al fondo de la cueva, sale recto",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
@@ -59,7 +59,7 @@
               "mano_der": "Garbanzo plano",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -71,7 +71,7 @@
               "mano_der": "Agujero",
               "manos_juntas": "",
               "definicion": "Sale recto por la izquierda",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -83,7 +83,7 @@
               "mano_der": "Agujero",
               "manos_juntas": "",
               "definicion": "Mismo inicio que B, sale hacia la derecha",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
@@ -101,7 +101,7 @@
               "mano_der": "Presa lateral",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -113,7 +113,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "Travesía hacia la izquierda, sale por A",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -125,7 +125,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "Mismo inicio que E, sale recto",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
@@ -143,7 +143,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -155,7 +155,7 @@
               "mano_der": "",
               "manos_juntas": "Repisa",
               "definicion": "¡Eliminatoria! Solo valen las presas en el plano de la repisa. Se hace top de pie sobre la repisa",
-              "salida": "Top",
+              "salida": "T",
               "expuesta": "¡Cuidado con el árbol!"
             }
           ]
@@ -173,7 +173,7 @@
               "mano_der": "Plano horizontal",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -185,7 +185,7 @@
               "mano_der": "Rugosidad dentro de la grieta",
               "manos_juntas": "",
               "definicion": "¡Eliminatorio! No vale bloque derecho",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -197,7 +197,7 @@
               "mano_der": "Rugosidad dentro de la grieta",
               "manos_juntas": "",
               "definicion": "Mismo inicio que B, recorre la grieta",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -209,7 +209,7 @@
               "mano_der": "Regleta roma",
               "manos_juntas": "",
               "definicion": "¡Eliminatorio! No vale grieta ni bloque izquierdo",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
@@ -227,7 +227,7 @@
               "mano_der": "Agujero horizontal",
               "manos_juntas": "",
               "definicion": "Sale hacia la izquieda",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
@@ -245,7 +245,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "Sale recto por la fisura",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -257,7 +257,7 @@
               "mano_der": "",
               "manos_juntas": "Agujero",
               "definicion": "Sale recto",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
@@ -275,7 +275,7 @@
               "mano_der": "",
               "manos_juntas": "Presa grande",
               "definicion": "Sale hacia la izquieda cogiendo la regleta lateral cruzando con mano derecha",
-              "salida": "",
+              "salida": "TO",
               "expuesta": "Caída en desnivel"
             },
             {
@@ -287,7 +287,7 @@
               "mano_der": "",
               "manos_juntas": "Presa grande",
               "definicion": "Misma entrada que A, sale recto cogiendo la regleta lateral con izquieda",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -299,7 +299,7 @@
               "mano_der": "",
               "manos_juntas": "Presa grande",
               "definicion": "Misma entrada que A, sale hacia la derecha. No vale pisar la tierra",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
@@ -317,7 +317,7 @@
               "mano_der": "Al aire",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -329,7 +329,7 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -341,7 +341,7 @@
               "mano_der": "Presa buena conglomerada",
               "manos_juntas": "",
               "definicion": "Hacia la derecha",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -353,7 +353,7 @@
               "mano_der": "Regleta lateral",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
@@ -371,7 +371,7 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -383,7 +383,7 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -395,7 +395,7 @@
               "mano_der": "No me acuerdo",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
@@ -413,7 +413,7 @@
               "mano_der": "No me acuerdo",
               "manos_juntas": "",
               "definicion": "Sentado desde arista",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
@@ -431,7 +431,7 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
@@ -449,7 +449,7 @@
               "mano_der": "Arista derecha",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
@@ -467,7 +467,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "¡Morfa! Sale recto",
-              "salida": "",
+              "salida": "TO",
               "expuesta": "Caída delicada"
             },
             {
@@ -479,7 +479,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "¡Eliminatoria! Sin la arista derecha. Variante no morfa",
-              "salida": "",
+              "salida": "TO",
               "expuesta": "Caída delicada"
             }
           ]
@@ -497,7 +497,7 @@
               "mano_der": "Presa lateral alta",
               "manos_juntas": "",
               "definicion": "Recorre la arista",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -509,7 +509,7 @@
               "mano_der": "Presa lateral alta",
               "manos_juntas": "",
               "definicion": "Misma entrada que A, salida hacia la derecha",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -521,7 +521,7 @@
               "mano_der": "Presa lateral alta",
               "manos_juntas": "",
               "definicion": "¡Eliminatoria! No vale la arista izquierda",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -533,7 +533,7 @@
               "mano_der": "Presa lateral alta",
               "manos_juntas": "",
               "definicion": "Misma entrada que A, travesía hacia la derecha",
-              "salida": "Top-out derecha",
+              "salida": "TOD",
               "expuesta": ""
             },
             {
@@ -545,7 +545,7 @@
               "mano_der": "Galleta blanca lateral",
               "manos_juntas": "",
               "definicion": "Sale recto hacia la izquieda",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -557,7 +557,7 @@
               "mano_der": "Galleta blanca lateral",
               "manos_juntas": "",
               "definicion": "¡Eliminatoria! Sin arista. Lance directo",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -569,7 +569,7 @@
               "mano_der": "",
               "manos_juntas": "",
               "definicion": "¡Eliminatoria! Sin arista. Entra sentado con presas por definir",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -581,7 +581,7 @@
               "mano_der": "Regleta en el plano tumbado",
               "manos_juntas": "",
               "definicion": "Recorre la arista",
-              "salida": "",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
@@ -599,7 +599,7 @@
               "mano_der": "",
               "manos_juntas": "Plano tumbado",
               "definicion": "",
-              "salida": "",
+              "salida": "TO",
               "expuesta": "Caída sin porteo"
             }
           ]
@@ -653,7 +653,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "Salida directa",
-              "salida": "Top-out",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -665,7 +665,7 @@
               "mano_der": "Presa buena lateral",
               "manos_juntas": "",
               "definicion": "Mismo inicio que A, recorre la arista y sale por la parte alta",
-              "salida": "Top-out",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -677,7 +677,7 @@
               "mano_der": "Regleta baja",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "Top-out",
+              "salida": "TO",
               "expuesta": ""
             },
             {
@@ -689,7 +689,7 @@
               "mano_der": "Tridedo positivo",
               "manos_juntas": "",
               "definicion": "Sale recto",
-              "salida": "Top-out",
+              "salida": "TO",
               "expuesta": ""
             }
           ]
