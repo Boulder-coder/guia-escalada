@@ -247,7 +247,7 @@
 </head>
 <body>
     <div class="app-header">
-        <div class="header-top">
+        <div class=" header-top">
             <h1 style="color: #FFDE66;">GUÍA DE BOULDER</h1>
             <button class="menu-toggle" id="menuToggle">☰</button>
         </div>
@@ -419,15 +419,6 @@
             return null;
         }
 
-        function resetToFirstBlock() {
-            if (swiperBloques) {
-                swiperBloques.slideTo(0);
-                currentSwiperIndex = 0;
-            } else if (currentSector) {
-                cargarFichaBloque(0);
-            }
-        }
-
         function cargarFichaBloque(bloqueIndex, keepSlide = false) {
             if (!currentSector) return;
             isInFichaBloque = true;
@@ -450,9 +441,9 @@
                 wrapper.appendChild(slide);
                 const viasDiv = document.getElementById(`vias-${idx}`);
                 b.vias.forEach(via => {
-                    const textoManos = getTextoManos(via);
+                    const testoManos = getTextoManos(via);
                     let detallesTexto = "";
-                    if (textoManos) detallesTexto += `<div>${textoManos}</div>`;
+                    if (testoManos) detallesTexto += `<div>${testoManos}</div>`;
                     if (via.definicion) detallesTexto += `<div>${via.definicion}</div>`;
                     if (via.expuesta) detallesTexto += `<div>⚠️ ${via.expuesta}</div>`;
                     const gradoColor = getColorByGrado(via.grado);
@@ -949,22 +940,26 @@
             btns.forEach(btn => {
                 btn.onclick = () => {
                     const tabName = btn.dataset.tab;
-                    currentTab = tabName;
                     
                     btns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     
                     if (tabName === 'bloques') {
+                        // Ir a la pantalla de bloques
                         cargarFichaBloque(0);
                         currentSwiperIndex = 0;
                         document.getElementById('screen-sector-detalle').style.display = 'none';
                         document.getElementById('screen-ficha-bloque').style.display = 'block';
                         document.querySelector('.app-content').scrollTop = 0;
                         bottomTabs.style.display = 'flex';
+                        currentTab = 'bloques';
                     } else {
+                        // Cambiar pestaña en la pantalla de sector
+                        currentTab = tabName;
                         document.getElementById('tab-info').style.display = 'none';
                         document.getElementById('tab-croquis').style.display = 'none';
                         document.getElementById('tab-resumen').style.display = 'none';
+                        document.getElementById('tab-bloques').style.display = 'none';
                         const tabElement = document.getElementById(`tab-${tabName}`);
                         if (tabElement) {
                             tabElement.style.display = 'block';
@@ -972,6 +967,12 @@
                         if (tabName === 'info') setTimeout(() => dibujarGrafica(currentSector), 100);
                         if (tabName === 'croquis' && currentSector.croquis_list?.length > 0) {
                             setTimeout(() => cargarCroquisEnArea(0), 100);
+                        }
+                        // Asegurar que estamos en la pantalla de sector
+                        if (document.getElementById('screen-ficha-bloque').style.display === 'block') {
+                            document.getElementById('screen-ficha-bloque').style.display = 'none';
+                            document.getElementById('screen-sector-detalle').style.display = 'block';
+                            document.querySelector('.app-content').scrollTop = 0;
                         }
                     }
                 };
