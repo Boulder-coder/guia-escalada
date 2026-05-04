@@ -74,14 +74,19 @@
             font-size: 0.9rem; 
         }
         .linea-grado-badge { 
-            display: inline-block; 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             color: white; 
             border-radius: 20px; 
-            padding: 2px 10px; 
+            padding: 2px 8px; 
+            min-width: 60px;
+            height: 24px;
             font-size: 0.7rem; 
             font-weight: 500; 
             white-space: nowrap; 
-            margin-left: 10px; 
+            margin-left: 10px;
+            text-align: center;
         }
         .linea-status-indicator {
             display: inline-flex;
@@ -130,7 +135,19 @@
         }
         .via-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; margin-bottom: 4px; }
         .via-nombre { font-weight: 600; font-size: 0.95rem; }
-        .grado-badge { display: inline-block; color: white; border-radius: 20px; padding: 2px 10px; font-size: 0.7rem; font-weight: 500; }
+        .grado-badge { 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white; 
+            border-radius: 20px; 
+            padding: 2px 8px; 
+            min-width: 60px;
+            height: 24px;
+            font-size: 0.7rem; 
+            font-weight: 500;
+            text-align: center;
+        }
         .entrada-texto { font-size: 0.8rem; color: #444; }
         .detalles-texto { 
             font-size: 0.75rem; 
@@ -362,7 +379,6 @@
             });
             resumenContainer.innerHTML = resumenHtml;
             
-            // Reasignar eventos
             document.querySelectorAll('#tab-resumen .linea-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const bloqueId = item.dataset.bloqueId;
@@ -912,7 +928,6 @@
                 descripcionHtml = parrafos.map(p => `<p>${p.trim()}</p>`).join('');
             }
             
-            // Generar contenido del resumen (con espacio reservado)
             let resumenHtml = '';
             const grupos = {};
             currentSector.bloques.forEach((bloque, idx) => {
@@ -954,7 +969,6 @@
                 </div>
             `;
             
-            // Configurar eventos del faldón inferior
             const bottomTabs = document.getElementById('globalBottomTabs');
             const btns = bottomTabs.querySelectorAll('.bottom-tab-btn');
             btns.forEach(btn => {
@@ -1001,7 +1015,6 @@
                 }
             });
             
-            // Eventos para las líneas del resumen
             setTimeout(() => {
                 document.querySelectorAll('#tab-resumen .linea-item').forEach(item => {
                     item.addEventListener('click', () => {
