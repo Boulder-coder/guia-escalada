@@ -259,7 +259,8 @@
     <div class="app-content">
         <div id="screen-portada" class="screen"><h2>🏔️ Sectores</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
         <div id="screen-condiciones" class="screen"><div class="condiciones-content"><h3>📋 Condiciones</h3><p>Uso exclusivo para miembros del club. La información es orientativa. Cada escalador es responsable de su seguridad.</p><p style="margin-top:15px">📅 Mayo 2025</p></div></div>
-        <div id="screen-sector-detaille" class="screen">
+        <!-- CORREGIDO: El ID ahora es 'screen-sector-detalle' (sin la 'e' extra) -->
+        <div id="screen-sector-detalle" class="screen">
             <div id="sector-detalle-content"></div>
         </div>
         <div id="screen-ficha-bloque" class="screen">
@@ -998,15 +999,12 @@
                     
                     if (isInFichaBloque) {
                         if (tabName === 'bloques') {
-                            // Si estamos en bloques y clicamos en bloques, reseteamos al bloque 1
                             resetToFirstBlock();
                         } else {
-                            // Desde cualquier otra pestaña, volvemos al sector con esa pestaña activa
                             navigateToScreen('screen-sector-detalle');
                             openSector(currentSector.nombre);
                         }
                     } else {
-                        // Ya estamos en el sector, solo cambiar la pestaña visible
                         document.getElementById('tab-info').style.display = 'none';
                         document.getElementById('tab-croquis').style.display = 'none';
                         document.getElementById('tab-resumen').style.display = 'none';
