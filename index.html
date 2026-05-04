@@ -139,8 +139,8 @@
             border-radius: 30px;
         }
         .bottom-tab-btn.active {
-            color: #FFDE66;
-            background: #2c2c2c;
+            color: #6674FF;
+            background: #FFDE66;
         }
         .sector-content-wrapper {
             padding-bottom: 20px;
@@ -193,11 +193,12 @@
         </div>
     </div>
 
-    <!-- Faldón inferior global (se muestra en sector-detalle y ficha-bloque) -->
+    <!-- Faldón inferior global -->
     <div id="globalBottomTabs" class="sector-bottom-tabs" style="display: none;">
         <button class="bottom-tab-btn" data-tab="info">ℹ️ Info</button>
         <button class="bottom-tab-btn" data-tab="croquis">🗺️ Croquis</button>
-        <button class="bottom-tab-btn" data-tab="bloques">🧗 Bloques</button>
+        <button class="bottom-tab-btn" data-tab="resumen">📋 Resumen</button>
+        <button class="bottom-tab-btn" data-tab="escalada">🧗 Escalada</button>
     </div>
 
     <div id="statusModal" class="modal-overlay">
@@ -218,7 +219,7 @@
         let datosApp = null, currentSector = null, navigationStack = [], swiperBloques = null;
         let currentLineaKey = null;
         let currentSwiperIndex = 0;
-        let currentTab = 'info'; // para recordar la pestaña activa
+        let currentTab = 'info';
 
         function getStatusStorageKey(sectorNombre, bloqueId, lineaId) {
             return `${sectorNombre}_${bloqueId}_${lineaId}_status`;
@@ -237,12 +238,15 @@
                 localStorage.setItem(key, status);
             }
             updateSingleLineIndicator(sectorNombre, bloqueId, lineaId);
+            // También actualizar en la pestaña de escalada si está visible
+            refreshEscaladaContent();
         }
 
         function updateSingleLineIndicator(sectorNombre, bloqueId, lineaId) {
-            const activeScreen = document.querySelector('.screen:not([style*="display: none"])');
-            if (activeScreen && activeScreen.id === 'screen-ficha-bloque') {
-                const viasDivs = document.querySelectorAll('.ficha-via-item');
+            // Actualizar en la pantalla de ficha de bloque (cuando se accede desde la pestaña Escalada)
+            const escaladaContainer = document.getElementById('tab-escalada');
+            if (escaladaContainer && escaladaContainer.style.display !== 'none') {
+                const viasDivs = escaladaContainer.querySelectorAll('.ficha-via-item');
                 for (let viaDiv of viasDivs) {
                     const viaNombreSpan = viaDiv.querySelector('.via-nombre');
                     if (viaNombreSpan && viaNombreSpan.textContent.startsWith(lineaId + ' ·')) {
@@ -258,6 +262,117 @@
                     }
                 }
             }
+        }
+
+        function refreshEscaladaContent() {
+            const escaladaContainer = document.getElementById('tab-escalada');
+            if (escaladaContainer && escaladaContainer.style.display !== 'none' && currentSector) {
+                cargarEscaladaContent();
+            }
+        }
+
+        function cargarEscaladaContent() {
+            const container = document.getElementById('tab-escalada');
+            if (!container) return;
+            container.innerHTML = `<div class="bloque-swiper swiper"><div class="swiper-wrapper" id="bloquesSwiperWrapperEscalada"></div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>`;
+            const wrapper = document.getElementById('bloquesSwiperWrapperEscalada');
+            
+            currentSector.bloques.forEach((b, idx) => {
+                const slide = document.createElement('div');
+                slide.className = 'swiper-slide';
+                slide.innerHTML = `
+                    <div class="ficha-bloque">
+                        <div class="media-container" style="position: relative;">
+                            <img src="${b.foto_base}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
+                        </div>
+                        <div class="ficha-footer"><span>Bloque ${parseInt(b.id, 10)}</span><span>${currentSector.nombre}</span></div>
+                        <div class="ficha-vias"></div>
+                    </div>
+                `;
+                wrapper.appendChild(slide);
+                const viasDiv = slide.querySelector('.ficha-vias');
+                b.vias.forEach(via => {
+                    const textoManos = getTextoManos(via);
+                    let detallesTexto = "";
+                    if (textoManos) detallesTexto += `<div>${textoManos}</div>`;
+                    if (via.definicion) detallesTexto += `<div>${via.definicion}</div>`;
+                    if (via.expuesta) detallesTexto += `<div>⚠️ ${via.expuesta}</div>`;
+                    const gradoColor = getColorByGrado(via.grado);
+                    const status = getLineStatus(currentSector.nombre, b.id, via.linea_id);
+                    const indicator = getStatusIndicator(status);
+                    
+                    const viaDiv = document.createElement('div');
+                    viaDiv.className = 'ficha-via-item';
+                    viaDiv.innerHTML = `
+                        <div class="via-content">
+                            <div class="via-header">
+                                <span class="via-nombre">${via.linea_id} · ${via.nombre}</span>
+                                ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
+                                ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
+                            </div>
+                            <div class="detalles-texto">${detallesTexto}</div>
+                        </div>
+                        ${indicator}
+                    `;
+                    viasDiv.appendChild(viaDiv);
+                    
+                    viaDiv.addEventListener('click', (e) => {
+                        if (e.target.closest('.status-indicator')) return;
+                        const currentStatus = getLineStatus(currentSector.nombre, b.id, via.linea_id);
+                        showStatusModal(currentSector.nombre, b.id, via.linea_id, currentStatus, () => {
+                            const newStatus = getLineStatus(currentSector.nombre, b.id, via.linea_id);
+                            const newIndicator = getStatusIndicator(newStatus);
+                            const oldIndicator = viaDiv.querySelector('.status-indicator');
+                            if (oldIndicator) {
+                                oldIndicator.outerHTML = newIndicator;
+                            } else if (newIndicator) {
+                                viaDiv.insertAdjacentHTML('beforeend', newIndicator);
+                            }
+                        });
+                    });
+                });
+                // Cargar SVG para este slide
+                cargarSVGParaSlide(b, idx, slide);
+            });
+            
+            if (swiperBloques) swiperBloques.destroy();
+            swiperBloques = new Swiper('.bloque-swiper', { 
+                initialSlide: currentSwiperIndex, 
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, 
+                pagination: { el: '.swiper-pagination', clickable: true }, 
+                spaceBetween: 20, 
+                autoHeight: true,
+                on: {
+                    slideChange: function() {
+                        currentSwiperIndex = this.activeIndex;
+                    }
+                }
+            });
+        }
+
+        function cargarSVGParaSlide(bloque, slideIndex, slideElement) {
+            const svgUrl = `${bloque.foto_base}.svg?v=${Date.now()}`;
+            const mediaContainer = slideElement.querySelector('.media-container');
+            if (!mediaContainer) return;
+            fetch(svgUrl).then(res => res.text()).then(svgText => {
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                const svgElement = svgDoc.documentElement;
+                if (!svgElement) return;
+                // Aplicar colores
+                aplicarColoresSVG(svgDoc, bloque, bloque.vias);
+                svgElement.setAttribute('preserveAspectRatio', 'none');
+                svgElement.style.width = '100%';
+                svgElement.style.height = '100%';
+                svgElement.style.position = 'absolute';
+                svgElement.style.top = '0';
+                svgElement.style.left = '0';
+                svgElement.style.pointerEvents = 'none';
+                svgElement.style.zIndex = '20';
+                const oldSvg = mediaContainer.querySelector('svg');
+                if (oldSvg) oldSvg.remove();
+                mediaContainer.appendChild(svgElement);
+            }).catch(err => console.log(`Error SVG ${bloque.id}:`, err));
         }
 
         function getColorByGrado(grado) {
@@ -567,7 +682,10 @@
                                     });
                                     if (bloqueEncontrado) {
                                         const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
-                                        if (indice !== -1) openFichaBloque(indice);
+                                        if (indice !== -1) {
+                                            currentTab = 'escalada';
+                                            openFichaBloque(indice);
+                                        }
                                     }
                                 });
                             }
@@ -585,9 +703,8 @@
             document.getElementById(screenId).style.display = 'block';
             document.querySelector('.app-content').scrollTop = 0;
             
-            // Mostrar/ocultar el faldón inferior según la pantalla
             const bottomTabs = document.getElementById('globalBottomTabs');
-            if (screenId === 'screen-sector-detalle' || screenId === 'screen-ficha-bloque') {
+            if (screenId === 'screen-sector-detalle') {
                 bottomTabs.style.display = 'flex';
             } else {
                 bottomTabs.style.display = 'none';
@@ -599,9 +716,6 @@
                 const prev = navigationStack.pop();
                 navigateToScreen(prev.screen);
                 if (prev.state?.sectorNombre) currentSector = datosApp.sectores.find(s => s.nombre === prev.state.sectorNombre);
-                if (prev.screen === 'screen-ficha-bloque' && prev.state?.bloqueIndex !== undefined) {
-                    setTimeout(() => { if (swiperBloques) swiperBloques.slideTo(prev.state.bloqueIndex); }, 100);
-                }
             } else {
                 navigateToScreen('screen-portada');
                 if (datosApp) renderSectoresList(); else cargarDatos();
@@ -666,6 +780,29 @@
                 const parrafos = currentSector.descripcion.split('//');
                 descripcionHtml = parrafos.map(p => `<p>${p.trim()}</p>`).join('');
             }
+            
+            // Generar contenido del resumen (antiguo bloques)
+            let resumenHtml = '';
+            const grupos = {};
+            currentSector.bloques.forEach((bloque, idx) => {
+                const numBase = parseInt(bloque.id, 10);
+                if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] };
+                grupos[numBase].bloques.push({ ...bloque, idx });
+            });
+            Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => {
+                resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`;
+                grupo.bloques.forEach(bloqueInfo => {
+                    bloqueInfo.vias.forEach(via => {
+                        const gradoColor = getColorByGrado(via.grado);
+                        resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}">
+                            <span class="linea-nombre">${via.linea_id} · ${via.nombre}</span>
+                            ${via.grado ? `<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
+                        </div>`;
+                    });
+                });
+                resumenHtml += `</div></div>`;
+            });
+            
             container.innerHTML = `
                 <div class="sector-content-wrapper">
                     <h2>${currentSector.nombre}</h2>
@@ -675,11 +812,12 @@
                         <div class="info-sector"><h4>📍 Mapa de accesos</h4><div id="mapaInfo">${mapaHtml}</div></div>
                     </div>
                     <div id="tab-croquis" class="tab-pane" style="display: ${currentTab === 'croquis' ? 'block' : 'none'}">${croquisListHtml}</div>
-                    <div id="tab-bloques" class="tab-pane" style="display: ${currentTab === 'bloques' ? 'block' : 'none'}"><div id="bloques-list"></div></div>
+                    <div id="tab-resumen" class="tab-pane" style="display: ${currentTab === 'resumen' ? 'block' : 'none'}">${resumenHtml}</div>
+                    <div id="tab-escalada" class="tab-pane" style="display: ${currentTab === 'escalada' ? 'block' : 'none'}"></div>
                 </div>
             `;
             
-            // Configurar eventos del faldón inferior global
+            // Configurar eventos del faldón inferior
             const bottomTabs = document.getElementById('globalBottomTabs');
             const btns = bottomTabs.querySelectorAll('.bottom-tab-btn');
             btns.forEach(btn => {
@@ -690,15 +828,20 @@
                     currentTab = tabName;
                     document.getElementById('tab-info').style.display = 'none';
                     document.getElementById('tab-croquis').style.display = 'none';
-                    document.getElementById('tab-bloques').style.display = 'none';
+                    document.getElementById('tab-resumen').style.display = 'none';
+                    document.getElementById('tab-escalada').style.display = 'none';
                     document.getElementById(`tab-${tabName}`).style.display = 'block';
                     if (tabName === 'info') setTimeout(() => dibujarGrafica(currentSector), 100);
                     if (tabName === 'croquis' && currentSector.croquis_list?.length > 0) {
                         setTimeout(() => cargarCroquisEnArea(0), 100);
                     }
+                    if (tabName === 'escalada') {
+                        cargarEscaladaContent();
+                    }
                 };
             });
-            // Activar el botón correspondiente a la pestaña actual
+            
+            // Activar el botón correspondiente
             btns.forEach(btn => {
                 if (btn.dataset.tab === currentTab) {
                     btn.classList.add('active');
@@ -707,7 +850,26 @@
                 }
             });
             
+            // Cargar croquis inicial si es necesario
+            if (currentTab === 'croquis' && currentSector.croquis_list?.length > 0) {
+                setTimeout(() => cargarCroquisEnArea(0), 100);
+            }
+            if (currentTab === 'escalada') {
+                cargarEscaladaContent();
+            }
+            
+            // Eventos para las líneas del resumen
             setTimeout(() => {
+                document.querySelectorAll('#tab-resumen .linea-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const bloqueId = item.dataset.bloqueId;
+                        const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId);
+                        if (bloqueIndex !== -1) {
+                            currentTab = 'escalada';
+                            openFichaBloque(bloqueIndex);
+                        }
+                    });
+                });
                 document.querySelectorAll('.croquis-thumb').forEach(thumb => {
                     thumb.onclick = () => {
                         const idx = parseInt(thumb.dataset.croquisIdx);
@@ -718,34 +880,6 @@
                 });
             }, 100);
             
-            const bloquesContainer = document.getElementById('bloques-list');
-            bloquesContainer.innerHTML = '';
-            const grupos = {};
-            currentSector.bloques.forEach((bloque, idx) => {
-                const numBase = parseInt(bloque.id, 10);
-                if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] };
-                grupos[numBase].bloques.push({ ...bloque, idx });
-            });
-            Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => {
-                const grupoDiv = document.createElement('div');
-                grupoDiv.className = 'bloque-group';
-                grupoDiv.innerHTML = `<h3>Bloque ${grupo.numBase}</h3><div></div>`;
-                const listaDiv = grupoDiv.querySelector('div');
-                grupo.bloques.forEach(bloqueInfo => {
-                    bloqueInfo.vias.forEach(via => {
-                        const lineaDiv = document.createElement('div');
-                        lineaDiv.className = 'linea-item';
-                        const gradoColor = getColorByGrado(via.grado);
-                        lineaDiv.innerHTML = `<span class="linea-nombre">${via.linea_id} · ${via.nombre}</span>${via.grado ? `<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}`;
-                        lineaDiv.onclick = () => {
-                            const realIdx = currentSector.bloques.findIndex(b => b.id === bloqueInfo.id);
-                            if (realIdx !== -1) openFichaBloque(realIdx);
-                        };
-                        listaDiv.appendChild(lineaDiv);
-                    });
-                });
-                bloquesContainer.appendChild(grupoDiv);
-            });
             navigateToScreen('screen-sector-detalle');
             history.pushState({ sectorNombre: sectorNombre }, '');
             setTimeout(() => dibujarGrafica(currentSector), 100);
@@ -823,30 +957,6 @@
             return partes.length > 0 ? partes.join(" · ") : "";
         }
 
-        function cargarYColorearSVGBloque(bloque, slideIndex, vias) {
-            const svgUrl = `${bloque.foto_base}.svg?v=${Date.now()}`;
-            const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
-            if (!mediaContainer) return;
-            fetch(svgUrl).then(res => res.text()).then(svgText => {
-                const parser = new DOMParser();
-                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                const svgElement = svgDoc.documentElement;
-                if (!svgElement) return;
-                aplicarColoresSVG(svgDoc, bloque, vias);
-                svgElement.setAttribute('preserveAspectRatio', 'none');
-                svgElement.style.width = '100%';
-                svgElement.style.height = '100%';
-                svgElement.style.position = 'absolute';
-                svgElement.style.top = '0';
-                svgElement.style.left = '0';
-                svgElement.style.pointerEvents = 'none';
-                svgElement.style.zIndex = '20';
-                const oldSvg = mediaContainer.querySelector('svg');
-                if (oldSvg) oldSvg.remove();
-                mediaContainer.appendChild(svgElement);
-            }).catch(err => console.log(`Error SVG ${bloque.id}:`, err));
-        }
-
         function getStatusIndicator(status) {
             if (status === 'flash') return '<span class="status-indicator status-flash">⚡</span>';
             if (status === 'redpoint') return '<span class="status-indicator status-redpoint"></span>';
@@ -886,6 +996,8 @@
 
         function openFichaBloque(bloqueIndex, keepSlide = false) {
             if (!currentSector) return;
+            currentTab = 'escalada';
+            // Navegar a la pantalla de ficha de bloque
             const container = document.getElementById('ficha-bloque-content');
             container.innerHTML = `<div class="bloque-swiper swiper"><div class="swiper-wrapper" id="bloquesSwiperWrapper"></div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>`;
             const wrapper = document.getElementById('bloquesSwiperWrapper');
@@ -944,6 +1056,7 @@
                         });
                     });
                 });
+                // Cargar SVG
                 cargarYColorearSVGBloque(b, idx, b.vias);
             });
             
@@ -964,6 +1077,30 @@
             currentSwiperIndex = initialSlide;
             navigateToScreen('screen-ficha-bloque');
             history.pushState({ sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }, '');
+        }
+
+        function cargarYColorearSVGBloque(bloque, slideIndex, vias) {
+            const svgUrl = `${bloque.foto_base}.svg?v=${Date.now()}`;
+            const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
+            if (!mediaContainer) return;
+            fetch(svgUrl).then(res => res.text()).then(svgText => {
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                const svgElement = svgDoc.documentElement;
+                if (!svgElement) return;
+                aplicarColoresSVG(svgDoc, bloque, vias);
+                svgElement.setAttribute('preserveAspectRatio', 'none');
+                svgElement.style.width = '100%';
+                svgElement.style.height = '100%';
+                svgElement.style.position = 'absolute';
+                svgElement.style.top = '0';
+                svgElement.style.left = '0';
+                svgElement.style.pointerEvents = 'none';
+                svgElement.style.zIndex = '20';
+                const oldSvg = mediaContainer.querySelector('svg');
+                if (oldSvg) oldSvg.remove();
+                mediaContainer.appendChild(svgElement);
+            }).catch(err => console.log(`Error SVG ${bloque.id}:`, err));
         }
 
         function initMenu() {
