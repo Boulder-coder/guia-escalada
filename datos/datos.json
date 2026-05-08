@@ -834,9 +834,11 @@
       "mapa": "fotos/CB_MAPA",
       "mapa_2": "",
       "mapa_3": "",
-      "descripcion": "",
+      "descripcion": "La <strong>Cueva del Buey del Arroz</strong> es un pequeño sector ubicado muy cerquita del Barrio los Condes de Yátova. La aproximación al sector son a penas 250 metros. La orientación es Oeste con amplias vistas al Motrotón y el Retoret, y la temperatura es fresca al tratarse de una cueva abierta. // Los bloques, aunque escasos, dan bastante juego. La piedra oscila entre caliza compacta y arenosa, disponiendo de agarres diferentes: agujeros confortables, romos peleones y regletas asesinas, entre otros.",
       "info": {
-        "parking": []
+        "parking": [
+          "https://maps.app.goo.gl/ruszNEAx3nNmGo9x9"
+        ]
       },
       "croquis_list": [
         {
@@ -932,7 +934,7 @@
         },
         {
           "id": "3_1",
-          "foto_base": "fotos/CB_B3",
+          "foto_base": "fotos/CB_B3_1",
           "vias": [
             {
               "linea_id": "A",
@@ -950,7 +952,7 @@
         },
         {
           "id": "3_2",
-          "foto_base": "fotos/CB_B3",
+          "foto_base": "fotos/CB_B3_2",
           "vias": [
             {
               "linea_id": "B",
