@@ -68,11 +68,16 @@
         .drawer-section-title {
             display: block;
             padding: 12px 20px;
-            color: #FFDE66;
             font-size: 1rem;
             letter-spacing: 1px;
             cursor: pointer;
             transition: background 0.2s;
+        }
+        .drawer-section-title.sectores {
+            color: #FFDE66;
+        }
+        .drawer-section-title.condiciones {
+            color: #ffffff;
         }
         .drawer-section-title:hover, .drawer-section-title:active {
             background: #6674FF;
@@ -93,23 +98,6 @@
             font-family: 'Roboto', sans-serif;
             font-weight: 400;
         }
-        .drawer-divider {
-            height: 1px;
-            background-color: #444;
-            margin: 12px 20px;
-        }
-        .drawer-footer {
-            padding: 20px;
-            border-top: none;
-        }
-        .drawer-footer a {
-            color: #ffffff;
-            text-decoration: none;
-            display: block;
-            padding: 8px 0;
-            font-size: 0.9rem;
-        }
-        
         /* Resto de estilos (sin cambios relevantes) */
         .sector-card { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
         .sector-card img { width: 100%; height: 160px; object-fit: cover; }
@@ -254,12 +242,9 @@
     <div id="drawer" class="drawer">
         <div class="drawer-header">GUÍA DE BOULDER</div>
         <div class="drawer-nav" id="drawerNav">
-            <div id="drawerSectoresBtn" class="drawer-section-title">⛰️ SECTORES</div>
+            <div id="drawerSectoresBtn" class="drawer-section-title sectores">⛰️ SECTORES</div>
             <div id="drawerSectoresList"></div>
-        </div>
-        <div class="drawer-divider"></div>
-        <div class="drawer-footer">
-            <a href="#" id="drawerCondiciones">📋 Condiciones</a>
+            <div class="drawer-section-title condiciones" id="drawerCondicionesBtn">📋 CONDICIONES</div>
         </div>
     </div>
 
@@ -1239,19 +1224,19 @@
                 toggleDrawer();
             };
             document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
-            document.getElementById('drawerCondiciones').addEventListener('click', (e) => {
-                e.preventDefault();
-                closeDrawer();
-                navigateToScreen('screen-condiciones');
-                currentSector = null;
-                isInFichaBloque = false;
-            });
             document.getElementById('drawerSectoresBtn').addEventListener('click', (e) => {
                 e.preventDefault();
                 closeDrawer();
                 navigateToScreen('screen-portada');
                 if (datosApp) renderSectoresList();
                 else cargarDatos();
+                currentSector = null;
+                isInFichaBloque = false;
+            });
+            document.getElementById('drawerCondicionesBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                closeDrawer();
+                navigateToScreen('screen-condiciones');
                 currentSector = null;
                 isInFichaBloque = false;
             });
