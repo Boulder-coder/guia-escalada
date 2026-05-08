@@ -996,16 +996,33 @@
             isInFichaBloque = false;
             const container = document.getElementById('sector-detalle-content');
             const mapasHtml = cargarTodosLosMapas(currentSector);
-            let croquisListHtml = '';
+            
+            // Preparar contenido de croquis según si hay selector o no
+            let croquisHtml = '';
             if (currentSector.croquis_list && currentSector.croquis_list.length > 0) {
-                croquisListHtml = '<div class="croquis-list"><div class="croquis-list-title">Selecciona un croquis:</div><div class="croquis-thumbnails">';
-                currentSector.croquis_list.forEach((croq, idx) => {
-                    croquisListHtml += `<div class="croquis-thumb" data-croquis-idx="${idx}"><img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'"></div>`;
-                });
-                croquisListHtml += '</div></div><div id="croquisViewerArea" style="margin-bottom: 20px;"></div>';
+                if (currentSector.croquis_list.length === 1) {
+                    // Un solo croquis: mostrar directamente sin selector
+                    const croq = currentSector.croquis_list[0];
+                    croquisHtml = `
+                        <div class="croquis-list">
+                            <div id="croquisViewerArea" style="margin-bottom: 20px;">
+                                ${cargarCroquisInteractivo(currentSector, 0)}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Múltiples croquis: mostrar selector de miniaturas
+                    let thumbsHtml = '<div class="croquis-list"><div class="croquis-list-title">Selecciona un croquis:</div><div class="croquis-thumbnails">';
+                    currentSector.croquis_list.forEach((croq, idx) => {
+                        thumbsHtml += `<div class="croquis-thumb" data-croquis-idx="${idx}"><img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'"></div>`;
+                    });
+                    thumbsHtml += '</div></div><div id="croquisViewerArea" style="margin-bottom: 20px;"></div>';
+                    croquisHtml = thumbsHtml;
+                }
             } else {
-                croquisListHtml = '<div class="info-sector"><p>No hay croquis disponibles</p></div>';
+                croquisHtml = '<div class="info-sector"><p>No hay croquis disponibles</p></div>';
             }
+            
             let descripcionHtml = '';
             if (currentSector.descripcion) {
                 let texto = currentSector.descripcion;
@@ -1050,7 +1067,7 @@
                             ${mapasHtml}
                         </div>
                     </div>
-                    <div id="tab-croquis" class="tab-pane" style="display: ${currentTab === 'croquis' ? 'block' : 'none'}">${croquisListHtml}</div>
+                    <div id="tab-croquis" class="tab-pane" style="display: ${currentTab === 'croquis' ? 'block' : 'none'}">${croquisHtml}</div>
                     <div id="tab-resumen" class="tab-pane" style="display: ${currentTab === 'resumen' ? 'block' : 'none'}">${resumenHtml}</div>
                     <div id="tab-bloques" class="tab-pane" style="display: ${currentTab === 'bloques' ? 'block' : 'none'}"></div>
                 </div>
@@ -1078,7 +1095,7 @@
                 if (tabName === 'info') {
                     setTimeout(() => dibujarGrafica(currentSector), 100);
                 }
-                if (tabName === 'croquis' && currentSector.croquis_list?.length > 0) {
+                if (tabName === 'croquis' && currentSector.croquis_list?.length > 1) {
                     setTimeout(() => cargarCroquisEnArea(0), 100);
                 }
             }
@@ -1124,17 +1141,21 @@
                         }
                     });
                 });
-                document.querySelectorAll('.croquis-thumb').forEach(thumb => {
-                    thumb.onclick = () => {
-                        const idx = parseInt(thumb.dataset.croquisIdx);
-                        cargarCroquisEnArea(idx);
-                        document.querySelectorAll('.croquis-thumb').forEach(t => t.classList.remove('active'));
-                        thumb.classList.add('active');
-                    };
-                });
+                
+                // Solo configurar eventos de miniaturas si hay más de un croquis
+                if (currentSector.croquis_list && currentSector.croquis_list.length > 1) {
+                    document.querySelectorAll('.croquis-thumb').forEach(thumb => {
+                        thumb.onclick = () => {
+                            const idx = parseInt(thumb.dataset.croquisIdx);
+                            cargarCroquisEnArea(idx);
+                            document.querySelectorAll('.croquis-thumb').forEach(t => t.classList.remove('active'));
+                            thumb.classList.add('active');
+                        };
+                    });
+                }
             }, 100);
             
-            if (currentTab === 'croquis' && currentSector.croquis_list?.length > 0) {
+            if (currentTab === 'croquis' && currentSector.croquis_list?.length > 1) {
                 setTimeout(() => cargarCroquisEnArea(0), 100);
             }
             
