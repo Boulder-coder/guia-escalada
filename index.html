@@ -9,21 +9,102 @@
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        .cocogoose-font, h1, .dropdown-menu button, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo {
+        .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
         }
         body { font-family: 'Roboto', sans-serif; background: #e8e8e8; height: 100vh; overflow: hidden; }
         .app-header { position: fixed; top: 0; left: 0; right: 0; background: #2c2c2c; color: #ffffff; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .header-top { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         .app-header h1 { color: #FFDE66; }
-        .menu-toggle { background: none; border: none; color: #FFDE66; font-size: 1.5rem; cursor: pointer; font-family: 'Roboto', sans-serif; }
-        .dropdown-menu { display: none; flex-direction: column; background: #3a3a3a; }
-        .dropdown-menu.show { display: flex; }
-        .dropdown-menu button { background: none; border: none; color: #ffffff; padding: 12px 20px; text-align: left; font-size: 0.9rem; font-weight: 300; cursor: pointer; letter-spacing: 0.5px; }
-        .dropdown-menu button:hover { background: #6674FF; color: #ffffff; }
+        .menu-toggle { background: none; border: none; color: #FFDE66; font-size: 1.8rem; cursor: pointer; font-family: 'Roboto', sans-serif; margin-right: auto; }
         .app-content { margin-top: 70px; height: calc(100vh - 70px); overflow-y: auto; padding: 15px; padding-bottom: 70px; }
         .screen { display: none; }
         .screen.active { display: block; }
+        
+        /* Drawer (menú lateral) */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1100;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s;
+        }
+        .drawer-overlay.open {
+            visibility: visible;
+            opacity: 1;
+        }
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: -66.66%;
+            width: 66.66%;
+            height: 100%;
+            background-color: #2c2c2c;
+            z-index: 1101;
+            transition: left 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+        }
+        .drawer.open {
+            left: 0;
+        }
+        .drawer-header {
+            padding: 20px;
+            border-bottom: 1px solid #444;
+            color: #FFDE66;
+            font-size: 1.2rem;
+        }
+        .drawer-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+        .drawer-nav a {
+            display: block;
+            padding: 12px 20px;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        .drawer-nav a:hover, .drawer-nav a:active {
+            background: #6674FF;
+        }
+        .drawer-nav .section-title {
+            color: #FFDE66;
+            font-size: 0.8rem;
+            padding: 12px 20px 4px;
+            letter-spacing: 1px;
+        }
+        .drawer-nav .sector-item {
+            padding-left: 30px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 400;
+        }
+        .drawer-divider {
+            height: 1px;
+            background-color: #444;
+            margin: 12px 0;
+        }
+        .drawer-footer {
+            padding: 20px;
+            border-top: 1px solid #444;
+        }
+        .drawer-footer a {
+            color: #ffffff;
+            text-decoration: none;
+            display: block;
+            padding: 8px 0;
+            font-size: 0.9rem;
+        }
+        
+        /* Resto de estilos (sin cambios relevantes) */
         .sector-card { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
         .sector-card img { width: 100%; height: 160px; object-fit: cover; }
         .sector-info { padding: 12px; background: #d4d4d4; }
@@ -34,15 +115,8 @@
         .grafica-titulo { text-align: left; margin-bottom: 15px; color: #6674FF; font-size: 1.1rem; }
         canvas { width: 100%; max-width: 100%; height: auto; background: transparent; display: block; }
         .info-sector, .condiciones-content { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        .info-sector p {
-            text-align: justify;
-            margin-bottom: 12px;
-            line-height: 1.4;
-        }
-        .info-sector strong, .info-sector b {
-            font-weight: 700;
-            color: #2c2c2c;
-        }
+        .info-sector p { text-align: justify; margin-bottom: 12px; line-height: 1.4; }
+        .info-sector strong, .info-sector b { font-weight: 700; color: #2c2c2c; }
         .croquis-list { margin-bottom: 20px; }
         .croquis-list-title { margin: 15px 0 10px; font-weight: 600; color: #6674FF; }
         .croquis-thumbnails { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 5px; }
@@ -71,133 +145,37 @@
         .bloque-group { background: #ffffff; border-radius: 12px; margin-bottom: 20px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .bloque-group:last-child { margin-bottom: 20px; }
         .bloque-group h3 { background: #d4d4d4; padding: 12px 16px; font-size: 1rem; color: #2c2c2c; margin: 0; }
-        .linea-item { 
-            padding: 12px 16px; 
-            border-bottom: 1px solid #eee; 
-            cursor: pointer; 
-            transition: background 0.2s; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
+        .linea-item { padding: 12px 16px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; display: flex; justify-content: space-between; align-items: center; }
         .linea-item:last-child { border-bottom: none; }
         .linea-item:active { background: #f0f0f0; }
-        .linea-nombre { 
-            font-weight: 500; 
-            font-size: 0.9rem; 
-            text-align: left;
-        }
-        .linea-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .linea-grado-badge { 
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white; 
-            border-radius: 20px; 
-            padding: 2px 6px; 
-            min-width: 42px;
-            height: 22px;
-            font-size: 0.7rem; 
-            font-weight: 500; 
-            white-space: nowrap; 
-            text-align: center;
-        }
-        .linea-status-indicator {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            font-weight: bold;
-            font-size: 0.65rem;
-            flex-shrink: 0;
-        }
-        .linea-status-flash {
-            background-color: #e74c3c;
-            color: white;
-        }
-        .linea-status-redpoint {
-            background-color: #e74c3c;
-        }
-        .linea-status-proyecto {
-            background-color: #2c2c2c;
-            color: white;
-        }
+        .linea-nombre { font-weight: 500; font-size: 0.9rem; text-align: left; }
+        .linea-right { display: flex; align-items: center; gap: 8px; }
+        .linea-grado-badge { display: inline-flex; align-items: center; justify-content: center; color: white; border-radius: 20px; padding: 2px 6px; min-width: 42px; height: 22px; font-size: 0.7rem; font-weight: 500; white-space: nowrap; text-align: center; }
+        .linea-status-indicator { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; font-weight: bold; font-size: 0.65rem; flex-shrink: 0; }
+        .linea-status-flash { background-color: #e74c3c; color: white; }
+        .linea-status-redpoint { background-color: #e74c3c; }
+        .linea-status-proyecto { background-color: #2c2c2c; color: white; }
         .ficha-bloque { background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 0; }
         .media-container { position: relative; background: #d4d4d4; min-height: 200px; }
         .media-container img { width: 100%; height: auto; display: block; }
-        .media-container svg { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 10;
-        }
+        .media-container svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 10; }
         .media-container svg text { dominant-baseline: central; text-anchor: middle; font-weight: bold; font-family: Arial, sans-serif; z-index: 30; }
         .ficha-footer { background: #d4d4d4; padding: 14px 16px; display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #2c2c2c; }
         .ficha-vias { padding: 5px 16px 20px; }
-        .ficha-via-item { 
-            border-bottom: 1px solid #eee; 
-            padding: 12px 0; 
-            cursor: pointer;
-            transition: background 0.1s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .ficha-via-item { border-bottom: 1px solid #eee; padding: 12px 0; cursor: pointer; transition: background 0.1s; display: flex; justify-content: space-between; align-items: center; }
         .ficha-via-item:active { background: #f5f5f5; }
         .ficha-via-item:last-child { border-bottom: none; }
-        .via-content {
-            flex: 1;
-        }
+        .via-content { flex: 1; }
         .via-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; margin-bottom: 4px; }
         .via-nombre { font-weight: 600; font-size: 0.95rem; }
-        .grado-badge { 
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white; 
-            border-radius: 20px; 
-            padding: 2px 6px; 
-            min-width: 42px;
-            height: 22px;
-            font-size: 0.7rem; 
-            font-weight: 500;
-            text-align: center;
-        }
+        .grado-badge { display: inline-flex; align-items: center; justify-content: center; color: white; border-radius: 20px; padding: 2px 6px; min-width: 42px; height: 22px; font-size: 0.7rem; font-weight: 500; text-align: center; }
         .entrada-texto { font-size: 0.8rem; color: #444; }
-        .detalles-texto { 
-            font-size: 0.75rem; 
-            color: #555; 
-            margin-top: 3px; 
-            line-height: 1.3;
-        }
+        .detalles-texto { font-size: 0.75rem; color: #555; margin-top: 3px; line-height: 1.3; }
         .detalles-texto div { margin-top: 2px; }
-        .status-indicator { 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center; 
-            width: 24px; 
-            height: 24px; 
-            border-radius: 50%; 
-            font-weight: bold; 
-            font-size: 0.75rem; 
-            margin-left: 12px;
-            flex-shrink: 0;
-        }
-        .status-flash { 
-            background-color: #e74c3c; 
-            color: white; 
-        }
-        .status-redpoint { 
-            background-color: #e74c3c; 
-        }
-        .status-proyecto { 
-            background-color: #2c2c2c; 
-            color: white; 
-        }
-        /* Faldón inferior de pestañas */
+        .status-indicator { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; font-weight: bold; font-size: 0.75rem; margin-left: 12px; flex-shrink: 0; }
+        .status-flash { background-color: #e74c3c; color: white; }
+        .status-redpoint { background-color: #e74c3c; }
+        .status-proyecto { background-color: #2c2c2c; color: white; }
         .sector-bottom-tabs {
             position: fixed;
             bottom: 0;
@@ -227,28 +205,12 @@
             color: #6674FF;
             background: #FFDE66;
         }
-        .sector-content-wrapper {
-            padding-bottom: 30px;
-        }
-        .info-section-spacing {
-            margin-bottom: 12px;
-        }
-        .info-section-spacing:last-child {
-            margin-bottom: 0;
-        }
-        .mapa-footer {
-            font-size: 0.7rem;
-            color: #6674FF;
-            margin-top: 4px;
-            text-align: center;
-            font-style: italic;
-        }
-        .mapa-single {
-            margin-bottom: 12px;
-        }
-        .mapa-single:last-child {
-            margin-bottom: 0;
-        }
+        .sector-content-wrapper { padding-bottom: 30px; }
+        .info-section-spacing { margin-bottom: 12px; }
+        .info-section-spacing:last-child { margin-bottom: 0; }
+        .mapa-footer { font-size: 0.7rem; color: #6674FF; margin-top: 4px; text-align: center; font-style: italic; }
+        .mapa-single { margin-bottom: 12px; }
+        .mapa-single:last-child { margin-bottom: 0; }
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 2000;
             display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: 0.2s;
@@ -276,14 +238,25 @@
 <body>
     <div class="app-header">
         <div class="header-top">
-            <h1 style="color: #FFDE66;">GUÍA DE BOULDER</h1>
             <button class="menu-toggle" id="menuToggle">☰</button>
-        </div>
-        <div class="dropdown-menu" id="dropdownMenu">
-            <button data-screen="portada">⛰️ Sectores</button>
-            <button data-screen="condiciones">📋 Condiciones</button>
+            <h1 style="color: #FFDE66;">GUÍA DE BOULDER</h1>
         </div>
     </div>
+
+    <!-- Drawer (menú lateral) -->
+    <div id="drawerOverlay" class="drawer-overlay"></div>
+    <div id="drawer" class="drawer">
+        <div class="drawer-header">GUÍA DE BOULDER</div>
+        <div class="drawer-nav" id="drawerNav">
+            <div class="section-title">SECTORES</div>
+            <div id="drawerSectoresList"></div>
+        </div>
+        <div class="drawer-footer">
+            <div class="drawer-divider"></div>
+            <a href="#" id="drawerCondiciones">📋 Condiciones</a>
+        </div>
+    </div>
+
     <div class="app-content">
         <div id="screen-portada" class="screen active"><h2>🏔️ Sectores</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
         <div id="screen-condiciones" class="screen"><div class="condiciones-content"><h3>📋 Condiciones</h3><p>Uso exclusivo para miembros del club. La información es orientativa. Cada escalador es responsable de su seguridad.</p><p style="margin-top:15px">📅 Mayo 2025</p></div></div>
@@ -328,211 +301,44 @@
         // Pila de navegación
         let navigationStack = [];
 
-        function getStatusStorageKey(sectorNombre, bloqueId, lineaId) {
-            return `${sectorNombre}_${bloqueId}_${lineaId}_status`;
+        // ----- Funciones del drawer -----
+        function openDrawer() {
+            document.getElementById('drawer').classList.add('open');
+            document.getElementById('drawerOverlay').classList.add('open');
         }
-
-        function getLineStatus(sectorNombre, bloqueId, lineaId) {
-            const key = getStatusStorageKey(sectorNombre, bloqueId, lineaId);
-            return localStorage.getItem(key);
+        function closeDrawer() {
+            document.getElementById('drawer').classList.remove('open');
+            document.getElementById('drawerOverlay').classList.remove('open');
         }
-
-        function setLineStatus(sectorNombre, bloqueId, lineaId, status) {
-            const key = getStatusStorageKey(sectorNombre, bloqueId, lineaId);
-            if (status === null || status === 'clear') {
-                localStorage.removeItem(key);
+        function toggleDrawer() {
+            if (document.getElementById('drawer').classList.contains('open')) {
+                closeDrawer();
             } else {
-                localStorage.setItem(key, status);
-            }
-            updateSingleLineIndicator(sectorNombre, bloqueId, lineaId);
-            refreshFichaBloqueContent();
-            refreshResumenContent();
-        }
-
-        function updateSingleLineIndicator(sectorNombre, bloqueId, lineaId) {
-            const activeScreen = document.querySelector('.screen:not([style*="display: none"])');
-            if (activeScreen && activeScreen.id === 'screen-ficha-bloque') {
-                const viasDivs = document.querySelectorAll('.ficha-via-item');
-                for (let viaDiv of viasDivs) {
-                    const viaNombreSpan = viaDiv.querySelector('.via-nombre');
-                    if (viaNombreSpan && viaNombreSpan.textContent.startsWith(lineaId + ' ·')) {
-                        const newStatus = getLineStatus(sectorNombre, bloqueId, lineaId);
-                        const newIndicator = getStatusIndicator(newStatus);
-                        const oldIndicator = viaDiv.querySelector('.status-indicator');
-                        if (oldIndicator) {
-                            oldIndicator.outerHTML = newIndicator;
-                        } else if (newIndicator) {
-                            viaDiv.insertAdjacentHTML('beforeend', newIndicator);
-                        }
-                        break;
-                    }
-                }
+                openDrawer();
             }
         }
 
-        function refreshFichaBloqueContent() {
-            const activeScreen = document.querySelector('.screen:not([style*="display: none"])');
-            if (activeScreen && activeScreen.id === 'screen-ficha-bloque' && currentSector) {
-                const currentIndex = swiperBloques ? swiperBloques.activeIndex : 0;
-                cargarFichaBloque(currentIndex, true);
-            }
-        }
-
-        function refreshResumenContent() {
-            const resumenPane = document.getElementById('tab-resumen');
-            if (resumenPane && resumenPane.style.display !== 'none' && currentSector) {
-                generarResumenContent();
-            }
-        }
-
-        function generarResumenContent() {
-            const resumenContainer = document.getElementById('tab-resumen');
-            if (!resumenContainer) return;
-            
-            let resumenHtml = '';
-            const grupos = {};
-            currentSector.bloques.forEach((bloque, idx) => {
-                const numBase = parseInt(bloque.id, 10);
-                if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] };
-                grupos[numBase].bloques.push({ ...bloque, idx });
-            });
-            Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => {
-                resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`;
-                grupo.bloques.forEach(bloqueInfo => {
-                    bloqueInfo.vias.forEach(via => {
-                        const gradoColor = getColorByGrado(via.grado);
-                        const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id);
-                        const statusIndicator = getLineaStatusIndicator(status);
-                        resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}">
-                            <span class="linea-nombre">${via.linea_id} · ${via.nombre}</span>
-                            <div class="linea-right">
-                                ${statusIndicator ? `<span class="linea-status-indicator ${statusIndicator.class}">${statusIndicator.text}</span>` : ''}
-                                ${via.grado ? `<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
-                            </div>
-                        </div>`;
-                    });
+        function populateDrawer() {
+            if (!datosApp || !datosApp.sectores) return;
+            const container = document.getElementById('drawerSectoresList');
+            container.innerHTML = '';
+            datosApp.sectores.forEach(sector => {
+                const link = document.createElement('a');
+                link.href = '#';
+                link.textContent = sector.nombre;
+                link.classList.add('sector-item');
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    closeDrawer();
+                    openSector(sector.nombre);
                 });
-                resumenHtml += `</div></div>`;
-            });
-            resumenContainer.innerHTML = resumenHtml;
-            
-            document.querySelectorAll('#tab-resumen .linea-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const bloqueId = item.dataset.bloqueId;
-                    const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId);
-                    if (bloqueIndex !== -1) {
-                        currentTab = 'bloques';
-                        isInFichaBloque = true;
-                        actualizarBotonActivo('bloques');
-                        cargarFichaBloque(bloqueIndex);
-                        navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex });
-                    }
-                });
+                container.appendChild(link);
             });
         }
 
-        function getLineaStatusIndicator(status) {
-            if (status === 'flash') return { class: 'linea-status-flash', text: '⚡' };
-            if (status === 'redpoint') return { class: 'linea-status-redpoint', text: '' };
-            if (status === 'proyecto') return { class: 'linea-status-proyecto', text: 'P' };
-            return null;
-        }
-
-        function actualizarBotonActivo(tabName) {
-            const btns = document.querySelectorAll('#globalBottomTabs .bottom-tab-btn');
-            btns.forEach(btn => {
-                if (btn.dataset.tab === tabName) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-        }
-
-        function cargarFichaBloque(bloqueIndex, keepSlide = false) {
-            if (!currentSector) return;
-            isInFichaBloque = true;
-            actualizarBotonActivo('bloques');
-            currentTab = 'bloques';
-            
-            const container = document.getElementById('ficha-bloque-content');
-            container.innerHTML = `<div class="bloque-swiper swiper"><div class="swiper-wrapper" id="bloquesSwiperWrapper"></div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>`;
-            const wrapper = document.getElementById('bloquesSwiperWrapper');
-            
-            currentSector.bloques.forEach((b, idx) => {
-                const slide = document.createElement('div');
-                slide.className = 'swiper-slide';
-                slide.innerHTML = `
-                    <div class="ficha-bloque">
-                        <div class="media-container" id="mediaContainer-${idx}" style="position: relative;">
-                            <img src="${b.foto_base}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
-                        </div>
-                        <div class="ficha-footer"><span>Bloque ${parseInt(b.id, 10)}</span><span>${currentSector.nombre}</span></div>
-                        <div class="ficha-vias" id="vias-${idx}"></div>
-                    </div>
-                `;
-                wrapper.appendChild(slide);
-                const viasDiv = document.getElementById(`vias-${idx}`);
-                b.vias.forEach(via => {
-                    const textoManos = getTextoManos(via);
-                    let detallesTexto = "";
-                    if (textoManos) detallesTexto += `<div>${textoManos}</div>`;
-                    if (via.definicion) detallesTexto += `<div>${via.definicion}</div>`;
-                    if (via.expuesta) detallesTexto += `<div>⚠️ ${via.expuesta}</div>`;
-                    const gradoColor = getColorByGrado(via.grado);
-                    const status = getLineStatus(currentSector.nombre, b.id, via.linea_id);
-                    const indicator = getStatusIndicator(status);
-                    
-                    const viaDiv = document.createElement('div');
-                    viaDiv.className = 'ficha-via-item';
-                    viaDiv.innerHTML = `
-                        <div class="via-content">
-                            <div class="via-header">
-                                <span class="via-nombre">${via.linea_id} · ${via.nombre}</span>
-                                ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
-                                ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
-                            </div>
-                            <div class="detalles-texto">${detallesTexto}</div>
-                        </div>
-                        ${indicator}
-                    `;
-                    viasDiv.appendChild(viaDiv);
-                    
-                    viaDiv.addEventListener('click', (e) => {
-                        if (e.target.closest('.status-indicator')) return;
-                        const currentStatus = getLineStatus(currentSector.nombre, b.id, via.linea_id);
-                        showStatusModal(currentSector.nombre, b.id, via.linea_id, currentStatus, () => {
-                            const newStatus = getLineStatus(currentSector.nombre, b.id, via.linea_id);
-                            const newIndicator = getStatusIndicator(newStatus);
-                            const oldIndicator = viaDiv.querySelector('.status-indicator');
-                            if (oldIndicator) {
-                                oldIndicator.outerHTML = newIndicator;
-                            } else if (newIndicator) {
-                                viaDiv.insertAdjacentHTML('beforeend', newIndicator);
-                            }
-                        });
-                    });
-                });
-                cargarYColorearSVGBloque(b, idx, b.vias);
-            });
-            
-            if (swiperBloques) swiperBloques.destroy();
-            const initialSlide = (keepSlide && currentSwiperIndex !== undefined) ? currentSwiperIndex : bloqueIndex;
-            swiperBloques = new Swiper('.bloque-swiper', { 
-                initialSlide: initialSlide, 
-                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, 
-                pagination: { el: '.swiper-pagination', clickable: true }, 
-                spaceBetween: 20, 
-                autoHeight: true,
-                on: {
-                    slideChange: function() {
-                        currentSwiperIndex = this.activeIndex;
-                    }
-                }
-            });
-            currentSwiperIndex = initialSlide;
-        }
-
+        // Resto de funciones (getColorByGrado, getSimboloSalida, getTextoParaCirculo, encontrarElementoPorLabel, aplicarColoresSVG, etc.)
+        // Se mantienen igual que en la versión anterior, no se modifican para ahorrar espacio.
+        // Copiamos las funciones necesarias desde la versión anterior.
         function getColorByGrado(grado) {
             if (!grado) return '#FF93DB';
             const g = grado.toUpperCase().trim();
@@ -759,7 +565,6 @@
 
         function cargarMapaIndividual(sector, mapaBase, incluirFooter = false) {
             if (!mapaBase) return '';
-            
             const mapaUrl = `${mapaBase}.jpg`;
             const svgMapaUrl = `${mapaBase}.svg?v=${Date.now()}`;
             const containerId = `mapaContainer_${Date.now()}_${Math.random()}`;
@@ -770,7 +575,6 @@
                 html += `<div class="mapa-footer">📍 Toca sobre los aparcamientos (P1, P2, P3...) para ver su ubicación en Google Maps</div>`;
             }
             html += `</div>`;
-            
             setTimeout(() => {
                 const objectTag = document.getElementById(`mapaObject_${containerId}`);
                 if (objectTag && objectTag.contentDocument) {
@@ -806,32 +610,21 @@
 
         function cargarTodosLosMapas(sector) {
             let mapasHtml = '';
-            
-            if (sector.mapa) {
-                mapasHtml += cargarMapaIndividual(sector, sector.mapa, true);
-            }
-            if (sector.mapa_2) {
-                mapasHtml += cargarMapaIndividual(sector, sector.mapa_2, false);
-            }
-            if (sector.mapa_3) {
-                mapasHtml += cargarMapaIndividual(sector, sector.mapa_3, false);
-            }
-            
+            if (sector.mapa) mapasHtml += cargarMapaIndividual(sector, sector.mapa, true);
+            if (sector.mapa_2) mapasHtml += cargarMapaIndividual(sector, sector.mapa_2, false);
+            if (sector.mapa_3) mapasHtml += cargarMapaIndividual(sector, sector.mapa_3, false);
             return mapasHtml;
         }
 
         function cargarCroquisInteractivo(sector, croquisIndex) {
             const croquis = sector.croquis_list[croquisIndex];
             if (!croquis) return '<div class="info-sector"><p>Croquis no disponible</p></div>';
-            
             const containerId = `croquisViewer_${Date.now()}`;
             const titulo = croquis.nombre || `Croquis ${croquisIndex + 1}`;
-            
             let html = `<div class="croquis-titulo">${titulo}</div>`;
             html += `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg?v=${Date.now()}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
-            
             setTimeout(() => {
                 const objectTag = document.getElementById(`croquisObject_${containerId}`);
                 if (objectTag && objectTag.contentDocument) {
@@ -888,7 +681,6 @@
             return html;
         }
 
-        // Navegación principal con pila
         function navigateToScreen(screenId, stateData = null) {
             const currentScreen = document.querySelector('.screen:not([style*="display: none"])');
             if (currentScreen && currentScreen.id !== screenId) {
@@ -897,17 +689,13 @@
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(screenId).style.display = 'block';
             document.querySelector('.app-content').scrollTop = 0;
-            
             const bottomTabs = document.getElementById('globalBottomTabs');
             if (screenId === 'screen-sector-detalle' || screenId === 'screen-ficha-bloque') {
                 bottomTabs.style.display = 'flex';
             } else {
                 bottomTabs.style.display = 'none';
             }
-            
-            if (screenId === 'screen-ficha-bloque') {
-                actualizarBotonActivo('bloques');
-            }
+            if (screenId === 'screen-ficha-bloque') actualizarBotonActivo('bloques');
         }
 
         function goBack() {
@@ -954,6 +742,7 @@
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 datosApp = await res.json();
                 renderSectoresList();
+                populateDrawer(); // Llenar el drawer con los sectores
             } catch (error) {
                 container.innerHTML = `<div class="loader" style="color:red;">Error: ${error.message}</div>`;
             }
@@ -967,15 +756,12 @@
                 const card = document.createElement('div');
                 card.className = 'sector-card';
                 const portadaUrl = sector.portada ? `${sector.portada}.jpg` : '';
-                
-                // Calcular número de bloques (agrupando por base numérica)
                 const bloquesBase = new Set();
                 sector.bloques.forEach(bloque => {
                     const numBase = parseInt(bloque.id, 10);
                     bloquesBase.add(numBase);
                 });
                 const totalBloques = bloquesBase.size;
-                
                 let totalLineas = 0;
                 sector.bloques.forEach(bloque => {
                     bloque.vias.forEach(via => { if (via.grado && via.grado.trim() !== "") totalLineas++; });
@@ -996,22 +782,12 @@
             isInFichaBloque = false;
             const container = document.getElementById('sector-detalle-content');
             const mapasHtml = cargarTodosLosMapas(currentSector);
-            
-            // Preparar contenido de croquis según si hay selector o no
             let croquisHtml = '';
             if (currentSector.croquis_list && currentSector.croquis_list.length > 0) {
                 if (currentSector.croquis_list.length === 1) {
-                    // Un solo croquis: mostrar directamente sin selector
                     const croq = currentSector.croquis_list[0];
-                    croquisHtml = `
-                        <div class="croquis-list">
-                            <div id="croquisViewerArea" style="margin-bottom: 20px;">
-                                ${cargarCroquisInteractivo(currentSector, 0)}
-                            </div>
-                        </div>
-                    `;
+                    croquisHtml = `<div class="croquis-list"><div id="croquisViewerArea" style="margin-bottom: 20px;">${cargarCroquisInteractivo(currentSector, 0)}</div></div>`;
                 } else {
-                    // Múltiples croquis: mostrar selector de miniaturas
                     let thumbsHtml = '<div class="croquis-list"><div class="croquis-list-title">Selecciona un croquis:</div><div class="croquis-thumbnails">';
                     currentSector.croquis_list.forEach((croq, idx) => {
                         thumbsHtml += `<div class="croquis-thumb" data-croquis-idx="${idx}"><img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'"></div>`;
@@ -1022,7 +798,6 @@
             } else {
                 croquisHtml = '<div class="info-sector"><p>No hay croquis disponibles</p></div>';
             }
-            
             let descripcionHtml = '';
             if (currentSector.descripcion) {
                 let texto = currentSector.descripcion;
@@ -1030,7 +805,6 @@
                 descripcionHtml = parrafos.map(p => `<p>${p.trim()}</p>`).join('');
                 descripcionHtml = descripcionHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             }
-            
             let resumenHtml = '';
             const grupos = {};
             currentSector.bloques.forEach((bloque, idx) => {
@@ -1056,57 +830,39 @@
                 });
                 resumenHtml += `</div></div>`;
             });
-            
             container.innerHTML = `
                 <div class="sector-content-wrapper">
                     <h2>${currentSector.nombre}</h2>
                     <div id="tab-info" class="tab-pane" style="display: ${currentTab === 'info' ? 'block' : 'none'}">
                         <div class="info-sector info-section-spacing">${descripcionHtml || '<p>Sin descripción disponible.</p>'}</div>
                         <div class="grafica-container info-section-spacing"><div class="grafica-titulo">📊 Distribución de grados</div><canvas id="grafica-sector"></canvas></div>
-                        <div class="info-sector info-section-spacing" id="mapasContainer">
-                            ${mapasHtml}
-                        </div>
+                        <div class="info-sector info-section-spacing" id="mapasContainer">${mapasHtml}</div>
                     </div>
                     <div id="tab-croquis" class="tab-pane" style="display: ${currentTab === 'croquis' ? 'block' : 'none'}">${croquisHtml}</div>
                     <div id="tab-resumen" class="tab-pane" style="display: ${currentTab === 'resumen' ? 'block' : 'none'}">${resumenHtml}</div>
                     <div id="tab-bloques" class="tab-pane" style="display: ${currentTab === 'bloques' ? 'block' : 'none'}"></div>
                 </div>
             `;
-            
             const bottomTabs = document.getElementById('globalBottomTabs');
             const btns = bottomTabs.querySelectorAll('.bottom-tab-btn');
-            
             function cambiarPestana(tabName) {
                 if (tabName === currentTab) return;
-                
                 currentTab = tabName;
-                
                 document.getElementById('tab-info').style.display = 'none';
                 document.getElementById('tab-croquis').style.display = 'none';
                 document.getElementById('tab-resumen').style.display = 'none';
                 document.getElementById('tab-bloques').style.display = 'none';
                 const tabElement = document.getElementById(`tab-${tabName}`);
-                if (tabElement) {
-                    tabElement.style.display = 'block';
-                }
-                
+                if (tabElement) tabElement.style.display = 'block';
                 actualizarBotonActivo(tabName);
-                
-                if (tabName === 'info') {
-                    setTimeout(() => dibujarGrafica(currentSector), 100);
-                }
-                if (tabName === 'croquis' && currentSector.croquis_list?.length > 1) {
-                    setTimeout(() => cargarCroquisEnArea(0), 100);
-                }
+                if (tabName === 'info') setTimeout(() => dibujarGrafica(currentSector), 100);
+                if (tabName === 'croquis' && currentSector.croquis_list?.length > 1) setTimeout(() => cargarCroquisEnArea(0), 100);
             }
-            
             btns.forEach(btn => {
                 btn.onclick = () => {
                     const tabName = btn.dataset.tab;
-                    
                     if (isInFichaBloque && tabName === 'bloques') return;
                     if (!isInFichaBloque && currentTab === tabName) return;
-                    
                     if (tabName === 'bloques') {
                         cargarFichaBloque(0);
                         currentSwiperIndex = 0;
@@ -1115,18 +871,14 @@
                         if (isInFichaBloque) {
                             isInFichaBloque = false;
                             navigateToScreen('screen-sector-detalle', { sectorNombre: currentSector.nombre });
-                            setTimeout(() => {
-                                cambiarPestana(tabName);
-                            }, 50);
+                            setTimeout(() => cambiarPestana(tabName), 50);
                         } else {
                             cambiarPestana(tabName);
                         }
                     }
                 };
             });
-            
             actualizarBotonActivo(currentTab);
-            
             setTimeout(() => {
                 document.querySelectorAll('#tab-resumen .linea-item').forEach(item => {
                     item.addEventListener('click', () => {
@@ -1141,8 +893,6 @@
                         }
                     });
                 });
-                
-                // Solo configurar eventos de miniaturas si hay más de un croquis
                 if (currentSector.croquis_list && currentSector.croquis_list.length > 1) {
                     document.querySelectorAll('.croquis-thumb').forEach(thumb => {
                         thumb.onclick = () => {
@@ -1154,11 +904,7 @@
                     });
                 }
             }, 100);
-            
-            if (currentTab === 'croquis' && currentSector.croquis_list?.length > 1) {
-                setTimeout(() => cargarCroquisEnArea(0), 100);
-            }
-            
+            if (currentTab === 'croquis' && currentSector.croquis_list?.length > 1) setTimeout(() => cargarCroquisEnArea(0), 100);
             navigateToScreen('screen-sector-detalle', { sectorNombre: currentSector.nombre });
             setTimeout(() => dibujarGrafica(currentSector), 100);
         }
@@ -1267,6 +1013,194 @@
             return '';
         }
 
+        function getLineaStatusIndicator(status) {
+            if (status === 'flash') return { class: 'linea-status-flash', text: '⚡' };
+            if (status === 'redpoint') return { class: 'linea-status-redpoint', text: '' };
+            if (status === 'proyecto') return { class: 'linea-status-proyecto', text: 'P' };
+            return null;
+        }
+
+        function getLineStatus(sectorNombre, bloqueId, lineaId) {
+            const key = getStatusStorageKey(sectorNombre, bloqueId, lineaId);
+            return localStorage.getItem(key);
+        }
+
+        function getStatusStorageKey(sectorNombre, bloqueId, lineaId) {
+            return `${sectorNombre}_${bloqueId}_${lineaId}_status`;
+        }
+
+        function setLineStatus(sectorNombre, bloqueId, lineaId, status) {
+            const key = getStatusStorageKey(sectorNombre, bloqueId, lineaId);
+            if (status === null || status === 'clear') {
+                localStorage.removeItem(key);
+            } else {
+                localStorage.setItem(key, status);
+            }
+            updateSingleLineIndicator(sectorNombre, bloqueId, lineaId);
+            refreshFichaBloqueContent();
+            refreshResumenContent();
+        }
+
+        function updateSingleLineIndicator(sectorNombre, bloqueId, lineaId) {
+            const activeScreen = document.querySelector('.screen:not([style*="display: none"])');
+            if (activeScreen && activeScreen.id === 'screen-ficha-bloque') {
+                const viasDivs = document.querySelectorAll('.ficha-via-item');
+                for (let viaDiv of viasDivs) {
+                    const viaNombreSpan = viaDiv.querySelector('.via-nombre');
+                    if (viaNombreSpan && viaNombreSpan.textContent.startsWith(lineaId + ' ·')) {
+                        const newStatus = getLineStatus(sectorNombre, bloqueId, lineaId);
+                        const newIndicator = getStatusIndicator(newStatus);
+                        const oldIndicator = viaDiv.querySelector('.status-indicator');
+                        if (oldIndicator) {
+                            oldIndicator.outerHTML = newIndicator;
+                        } else if (newIndicator) {
+                            viaDiv.insertAdjacentHTML('beforeend', newIndicator);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        function refreshFichaBloqueContent() {
+            const activeScreen = document.querySelector('.screen:not([style*="display: none"])');
+            if (activeScreen && activeScreen.id === 'screen-ficha-bloque' && currentSector) {
+                const currentIndex = swiperBloques ? swiperBloques.activeIndex : 0;
+                cargarFichaBloque(currentIndex, true);
+            }
+        }
+
+        function refreshResumenContent() {
+            const resumenPane = document.getElementById('tab-resumen');
+            if (resumenPane && resumenPane.style.display !== 'none' && currentSector) {
+                generarResumenContent();
+            }
+        }
+
+        function generarResumenContent() {
+            const resumenContainer = document.getElementById('tab-resumen');
+            if (!resumenContainer) return;
+            let resumenHtml = '';
+            const grupos = {};
+            currentSector.bloques.forEach((bloque, idx) => {
+                const numBase = parseInt(bloque.id, 10);
+                if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] };
+                grupos[numBase].bloques.push({ ...bloque, idx });
+            });
+            Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => {
+                resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`;
+                grupo.bloques.forEach(bloqueInfo => {
+                    bloqueInfo.vias.forEach(via => {
+                        const gradoColor = getColorByGrado(via.grado);
+                        const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id);
+                        const statusIndicator = getLineaStatusIndicator(status);
+                        resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}">
+                            <span class="linea-nombre">${via.linea_id} · ${via.nombre}</span>
+                            <div class="linea-right">
+                                ${statusIndicator ? `<span class="linea-status-indicator ${statusIndicator.class}">${statusIndicator.text}</span>` : ''}
+                                ${via.grado ? `<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
+                            </div>
+                        </div>`;
+                    });
+                });
+                resumenHtml += `</div></div>`;
+            });
+            resumenContainer.innerHTML = resumenHtml;
+            document.querySelectorAll('#tab-resumen .linea-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const bloqueId = item.dataset.bloqueId;
+                    const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId);
+                    if (bloqueIndex !== -1) {
+                        currentTab = 'bloques';
+                        isInFichaBloque = true;
+                        actualizarBotonActivo('bloques');
+                        cargarFichaBloque(bloqueIndex);
+                        navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex });
+                    }
+                });
+            });
+        }
+
+        function actualizarBotonActivo(tabName) {
+            const btns = document.querySelectorAll('#globalBottomTabs .bottom-tab-btn');
+            btns.forEach(btn => {
+                if (btn.dataset.tab === tabName) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+        }
+
+        function cargarFichaBloque(bloqueIndex, keepSlide = false) {
+            if (!currentSector) return;
+            isInFichaBloque = true;
+            actualizarBotonActivo('bloques');
+            currentTab = 'bloques';
+            const container = document.getElementById('ficha-bloque-content');
+            container.innerHTML = `<div class="bloque-swiper swiper"><div class="swiper-wrapper" id="bloquesSwiperWrapper"></div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>`;
+            const wrapper = document.getElementById('bloquesSwiperWrapper');
+            currentSector.bloques.forEach((b, idx) => {
+                const slide = document.createElement('div');
+                slide.className = 'swiper-slide';
+                slide.innerHTML = `
+                    <div class="ficha-bloque">
+                        <div class="media-container" id="mediaContainer-${idx}" style="position: relative;">
+                            <img src="${b.foto_base}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
+                        </div>
+                        <div class="ficha-footer"><span>Bloque ${parseInt(b.id, 10)}</span><span>${currentSector.nombre}</span></div>
+                        <div class="ficha-vias" id="vias-${idx}"></div>
+                    </div>
+                `;
+                wrapper.appendChild(slide);
+                const viasDiv = document.getElementById(`vias-${idx}`);
+                b.vias.forEach(via => {
+                    const textoManos = getTextoManos(via);
+                    let detallesTexto = "";
+                    if (textoManos) detallesTexto += `<div>${textoManos}</div>`;
+                    if (via.definicion) detallesTexto += `<div>${via.definicion}</div>`;
+                    if (via.expuesta) detallesTexto += `<div>⚠️ ${via.expuesta}</div>`;
+                    const gradoColor = getColorByGrado(via.grado);
+                    const status = getLineStatus(currentSector.nombre, b.id, via.linea_id);
+                    const indicator = getStatusIndicator(status);
+                    const viaDivEl = document.createElement('div');
+                    viaDivEl.className = 'ficha-via-item';
+                    viaDivEl.innerHTML = `
+                        <div class="via-content">
+                            <div class="via-header">
+                                <span class="via-nombre">${via.linea_id} · ${via.nombre}</span>
+                                ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
+                                ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
+                            </div>
+                            <div class="detalles-texto">${detallesTexto}</div>
+                        </div>
+                        ${indicator}
+                    `;
+                    viasDiv.appendChild(viaDivEl);
+                    viaDivEl.addEventListener('click', (e) => {
+                        if (e.target.closest('.status-indicator')) return;
+                        const currentStatus = getLineStatus(currentSector.nombre, b.id, via.linea_id);
+                        showStatusModal(currentSector.nombre, b.id, via.linea_id, currentStatus, () => {
+                            const newStatus = getLineStatus(currentSector.nombre, b.id, via.linea_id);
+                            const newIndicator = getStatusIndicator(newStatus);
+                            const oldIndicator = viaDivEl.querySelector('.status-indicator');
+                            if (oldIndicator) oldIndicator.outerHTML = newIndicator;
+                            else if (newIndicator) viaDivEl.insertAdjacentHTML('beforeend', newIndicator);
+                        });
+                    });
+                });
+                cargarYColorearSVGBloque(b, idx, b.vias);
+            });
+            if (swiperBloques) swiperBloques.destroy();
+            const initialSlide = (keepSlide && currentSwiperIndex !== undefined) ? currentSwiperIndex : bloqueIndex;
+            swiperBloques = new Swiper('.bloque-swiper', {
+                initialSlide: initialSlide,
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                pagination: { el: '.swiper-pagination', clickable: true },
+                spaceBetween: 20,
+                autoHeight: true,
+                on: { slideChange: function() { currentSwiperIndex = this.activeIndex; } }
+            });
+            currentSwiperIndex = initialSlide;
+        }
+
         function showStatusModal(sectorNombre, bloqueId, lineaId, currentStatus, callback) {
             currentLineaKey = { sectorNombre, bloqueId, lineaId, callback };
             document.getElementById('statusModal').classList.add('active');
@@ -1282,37 +1216,30 @@
                 const value = btn.dataset.value;
                 if (currentLineaKey) {
                     const { sectorNombre, bloqueId, lineaId, callback } = currentLineaKey;
-                    if (value === 'clear') {
-                        setLineStatus(sectorNombre, bloqueId, lineaId, null);
-                    } else {
-                        setLineStatus(sectorNombre, bloqueId, lineaId, value);
-                    }
+                    if (value === 'clear') setLineStatus(sectorNombre, bloqueId, lineaId, null);
+                    else setLineStatus(sectorNombre, bloqueId, lineaId, value);
                     if (callback) callback();
                 }
                 closeModal();
             });
         });
-
         document.getElementById('statusModal').addEventListener('click', (e) => {
             if (e.target === document.getElementById('statusModal')) closeModal();
         });
 
         function initMenu() {
             const toggle = document.getElementById('menuToggle');
-            const dropdown = document.getElementById('dropdownMenu');
-            toggle.onclick = () => dropdown.classList.toggle('show');
-            document.querySelectorAll('[data-screen]').forEach(btn => {
-                btn.onclick = () => {
-                    dropdown.classList.remove('show');
-                    const screen = btn.dataset.screen;
-                    if (screen === 'portada') {
-                        navigateToScreen('screen-portada');
-                        if (datosApp) renderSectoresList(); else cargarDatos();
-                        currentSector = null;
-                        isInFichaBloque = false;
-                    }
-                    if (screen === 'condiciones') navigateToScreen('screen-condiciones');
-                };
+            toggle.onclick = (e) => {
+                e.stopPropagation();
+                toggleDrawer();
+            };
+            document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
+            document.getElementById('drawerCondiciones').addEventListener('click', (e) => {
+                e.preventDefault();
+                closeDrawer();
+                navigateToScreen('screen-condiciones');
+                currentSector = null;
+                isInFichaBloque = false;
             });
         }
 
