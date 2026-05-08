@@ -7,7 +7,7 @@
       "mapa": "fotos/MLC_MAPA",
       "mapa_2": "",
       "mapa_3": "",
-      "descripcion": "El <strong>Monte La Cruz</strong> es un sector ubicado en la cima del característico monte buñolero. Se trata de un sector agradable, con vistas panorámicas del pueblo, donde acostumbra a soplar brisa. Ideal para una tarde de verano o una mañana de invierno. // La mayoría de bloques se encuentran en la cara <strong>Este (B1-B9)</strong>, aunque también diponemos de un abanico de piedra pinchosa aún por abrir en su cara <strong>Norte (B10)</strong>, y un bloque solitario entre los <strong>Bancales de la cara sur (B11)</strong>. Son bloques de poca estatura (rondan los 2,50-3,00m), con poco desplome, pero canto pequeño. Abundan los sextos grados: perfecto para iniciarse en roca si ya llevas algo de rodaje en rocódromo.",
+      "descripcion": "El <strong>Monte La Cruz</strong> es un sector ubicado en la cima del característico monte buñolero. Se trata de un sector agradable, con vistas panorámicas del pueblo, donde acostumbra a soplar brisa. Ideal para una tarde de verano o una mañana de invierno. // La mayoría de bloques se encuentran en la cara <strong>Este (B1-9)</strong>, aunque también diponemos de un abanico de piedra pinchosa aún por abrir en su cara <strong>Norte (B10)</strong>, y un bloque solitario entre los <strong>Bancales de la cara sur (B11)</strong>. Son bloques de poca estatura (rondan los 2,50-3,00m), con poco desplome, pero canto pequeño. Abundan los sextos grados: perfecto para iniciarse en roca si ya llevas algo de rodaje en rocódromo.",
       "info": {
         "parking": [
           "https://maps.app.goo.gl/e1SB96eGaXCvjFn47",
@@ -726,7 +726,7 @@
       "mapa": "fotos/BG_MAPA",
       "mapa_2": "fotos/BG_MAPA_2",
       "mapa_3": "fotos/BG_MAPA_3",
-      "descripcion": "<strong>Barranco Grande</strong> es un sector chivano ubicado entre la urbanización de Las Pedrizas y el Kartódromo. Dado que sus bloques se encuentran en el cauce del barranco, su orografía puede cambiar en riadas afectando al grado de los mismos. El cauce del barranco acostumbra a ser débil, y los pies de bloques no suelen encharcarse, a excepción de los bloques B6-7. En los meses calurosos abundan las avispas, que anidan entre las piedras del cauce. ¡Fijaos bien dónde pisáis! // El sector dispone de dos zonas: // ● Barranco arriba, <strong>El Salto de la Zorra (B1-9)</strong>, con bloques bajos de piedra caliza compacta y agarres pulidos por la erosión fluvial. Esta zona se encuentra muy expuesta al sol. // ● Barranco abajo, <strong>Tollo de Pedreguer (B10-15)</strong>, encontramos un caos de bloques de piedra caliza muy pulida (el B12 presenta picados artificiales de origen desconocido), y una cueva de conglomerado con buena adherencia (B14-15). Esta zona es húmeda y fresca, perfecta para meses calurosos, tanto para escaladores como para mosquitos. ¡Cuidado en la cueva conglomerada, su bóveda desprende piedras ocasionalmente!.",
+      "descripcion": "<strong>Barranco Grande</strong> es un sector chivano ubicado entre la urbanización de Las Pedrizas y el Kartódromo. Dado que sus bloques se encuentran en el cauce del barranco, su orografía puede cambiar en riadas afectando al grado de los mismos. El cauce del barranco acostumbra a ser débil, y los pies de bloques no suelen encharcarse, a excepción de los bloques B6-7. En los meses calurosos abundan las avispas, que anidan entre las piedras del cauce. ¡Fijaos bien dónde pisáis! // El sector dispone de dos zonas: // ● Barranco arriba, <strong>El Salto de la Zorra (B1-9)</strong>, con bloques bajos de piedra caliza compacta y agarres pulidos por la erosión fluvial. Esta zona se encuentra muy expuesta al sol. // ● Barranco abajo, <strong>Tollo de Pedreguer (B10-15)</strong>, encontramos un caos de bloques de piedra caliza muy pulida (el B12 presenta picados artificiales de origen desconocido); y una cueva de conglomerado con buena adherencia (B14-15). Esta zona es húmeda y fresca, perfecta para meses calurosos, tanto para escaladores como para mosquitos. ¡Cuidado en la cueva conglomerada, su bóveda desprende piedras ocasionalmente!",
       "info": {
         "parking": [
           "https://maps.app.goo.gl/c55iyQZggkbpnEKJA"
@@ -736,12 +736,12 @@
         {
           "imagen": "fotos/BG_CROQUIS_1",
           "svg": "fotos/BG_CROQUIS_1",
-          "nombre": "El Salto de la Zorra 1"
+          "nombre": "El Salto de la Zorra (1)"
         },
         {
           "imagen": "fotos/BG_CROQUIS_2",
           "svg": "fotos/BG_CROQUIS_2",
-          "nombre": "El Salto de la Zorra 2"
+          "nombre": "El Salto de la Zorra (2)"
         },
         {
           "imagen": "fotos/BG_CROQUIS_3",
@@ -824,6 +824,165 @@
           "id": "15",
           "foto_base": "fotos/BG_B15",
           "vias": []
+        }
+      ]
+    },
+    {
+      "nombre": "Cueva del Buey del Arroz",
+      "municipio": "Yátova",
+      "portada": "fotos/CB_PORTADA",
+      "mapa": "fotos/CB_MAPA",
+      "mapa_2": "",
+      "mapa_3": "",
+      "descripcion": "",
+      "info": {
+        "parking": []
+      },
+      "croquis_list": [
+        {
+          "imagen": "fotos/CB_CROQUIS",
+          "svg": "fotos/CB_CROQUIS",
+          "nombre": "Cueva del Buey del Arroz"
+        }
+      ],
+      "bloques": [
+        {
+          "id": "1",
+          "foto_base": "fotos/CB_B1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Cueva del hedonismo",
+              "grado": "5",
+              "entrada": "Sit",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Agujero grande",
+              "definicion": "Sale recto",
+              "salida": "TO",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B",
+              "nombre": "Consumido",
+              "grado": "6A",
+              "entrada": "Sit",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Agujero grande",
+              "definicion": "Ligera tavesía a la derecha",
+              "salida": "TO",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Consumado",
+              "grado": "6C",
+              "entrada": "Sit",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Agujero grande",
+              "definicion": "Travesía a la derecha, sale por la proa",
+              "salida": "TO",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D.1",
+              "nombre": "Adamendra",
+              "grado": "7A",
+              "entrada": "Sit",
+              "mano_izq": "Roma positiva",
+              "mano_der": "Regleta alta",
+              "manos_juntas": "",
+              "definicion": "Sale recto por la proa",
+              "salida": "TO",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D.2",
+              "nombre": "Adamendra Bajo",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "mano_izq": "Roma positiva",
+              "mano_der": "Canto plano bajo",
+              "manos_juntas": "",
+              "definicion": "Igual que D, pero inicio con manos bajas",
+              "salida": "TO",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "foto_base": "fotos/CB_B2",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Murciélago a caballo",
+              "grado": "Pr",
+              "entrada": "Semi-Sit",
+              "mano_izq": "Regleta",
+              "mano_der": "Bidedo",
+              "manos_juntas": "",
+              "definicion": "Inicia bajo la piedra flotante",
+              "salida": "TO",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "3_1",
+          "foto_base": "fotos/CB_B3",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Cuidado con la cabeza",
+              "grado": "6B+",
+              "entrada": "Sit",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Chorrera",
+              "definicion": "Sale por la arista izquierda",
+              "salida": "TOD",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "3_2",
+          "foto_base": "fotos/CB_B3",
+          "vias": [
+            {
+              "linea_id": "B",
+              "nombre": "Ajqueroso",
+              "grado": "6C",
+              "entrada": "Sit",
+              "mano_izq": "No recuerdo",
+              "mano_der": "No recuerdo",
+              "manos_juntas": "",
+              "definicion": "Travesía hacia la izquierda, hace top en presa a definir",
+              "salida": "T",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "foto_base": "fotos/CB_B4",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "salida": "",
+              "expuesta": ""
+            }
+          ]
         }
       ]
     }
