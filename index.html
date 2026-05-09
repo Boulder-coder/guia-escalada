@@ -85,13 +85,18 @@
         .drawer-section-title.sectores {
             color: #FFDE66;
         }
-        .drawer-section-title.condiciones {
+        .drawer-bottom-link {
+            display: block;
+            padding: 12px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
             color: #ffffff;
         }
-        .drawer-section-title.proteccion {
-            color: #ffffff;
-        }
-        .drawer-section-title:hover, .drawer-section-title:active {
+        .drawer-section-title:hover, .drawer-section-title:active,
+        .drawer-bottom-link:hover, .drawer-bottom-link:active {
             background: #6674FF;
         }
         .drawer-nav a {
@@ -281,8 +286,8 @@
             </div>
             <div class="drawer-bottom-links">
                 <div class="drawer-divider"></div>
-                <div id="drawerCondicionesBtn" class="drawer-section-title condiciones">📋 CONDICIONES</div>
-                <div id="drawerProteccionBtn" class="drawer-section-title proteccion">🔒 PROTECCIÓN DE DATOS</div>
+                <div id="drawerCondicionesBtn" class="drawer-bottom-link">📋 CONDICIONES</div>
+                <div id="drawerProteccionBtn" class="drawer-bottom-link">🔒 PROTECCIÓN DE DATOS</div>
             </div>
         </div>
     </div>
