@@ -103,7 +103,19 @@
             background-color: #444;
             margin: 12px 20px;
         }
-        /* Resto de estilos (sin cambios relevantes) */
+        .drawer-footer {
+            padding: 20px;
+            border-top: none;
+        }
+        .drawer-footer a {
+            color: #ffffff;
+            text-decoration: none;
+            display: block;
+            padding: 8px 0;
+            font-size: 0.9rem;
+        }
+        
+        /* Resto de estilos */
         .sector-card { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
         .sector-card img { width: 100%; height: 160px; object-fit: cover; }
         .sector-info { padding: 12px; background: #d4d4d4; }
@@ -116,6 +128,10 @@
         .info-sector, .condiciones-content { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
         .info-sector p { text-align: justify; margin-bottom: 12px; line-height: 1.4; }
         .info-sector strong, .info-sector b { font-weight: 700; color: #2c2c2c; }
+        .condiciones-content strong { color: #6674FF; }
+        .condiciones-content p { margin-bottom: 12px; line-height: 1.4; text-align: left; }
+        .condiciones-content ul { margin: 8px 0 12px 25px; }
+        .condiciones-content li { margin-bottom: 4px; line-height: 1.4; }
         .croquis-list { margin-bottom: 20px; }
         .croquis-list-title { margin: 15px 0 10px; font-weight: 600; color: #6674FF; }
         .croquis-thumbnails { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 5px; }
@@ -250,13 +266,46 @@
             <div id="drawerSectoresBtn" class="drawer-section-title sectores">⛰️ SECTORES</div>
             <div id="drawerSectoresList"></div>
             <div class="drawer-divider"></div>
-            <div id="drawerCondicionesBtn" class="drawer-section-title condiciones">📋 CONDICIONES</div>
+            <div id="drawerCondicionesBtn" class="drawer-section-title condiciones" style="margin-top: 0;">📋 CONDICIONES</div>
         </div>
     </div>
 
     <div class="app-content">
         <div id="screen-portada" class="screen active"><h2>🏔️ Sectores</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
-        <div id="screen-condiciones" class="screen"><div class="condiciones-content"><h3>📋 Condiciones</h3><p>Uso exclusivo para miembros del club. La información es orientativa. Cada escalador es responsable de su seguridad.</p><p style="margin-top:15px">📅 Mayo 2025</p></div></div>
+        <div id="screen-condiciones" class="screen">
+            <div class="condiciones-content">
+                <strong>CONDICIONES DE USO Y AVISO LEGAL</strong><br><br>
+                
+                <strong>1. Ámbito de aplicación</strong><br>
+                Esta aplicación (en adelante, «la Guía») es un instrumento digital de uso exclusivo para los socios del club Grupo Espeleo Carcalín. El acceso y la utilización de la Guía implican la aceptación íntegra de las presentes condiciones.<br><br>
+                
+                <strong>2. Acceso y renovación</strong><br>
+                El acceso está protegido mediante una contraseña que se renovará anualmente. La nueva contraseña será comunicada exclusivamente a los socios a través del canal oficial del club (grupo de WhatsApp). El usuario se compromete a no difundir la contraseña a terceros no autorizados.<br><br>
+                
+                <strong>3. Exención de responsabilidad por daños y accidentes</strong><br>
+                La Guía se proporciona únicamente con fines informativos y deportivos. El escalador asume toda la responsabilidad sobre su seguridad y sus actos durante el uso de la guía.<br><br>
+                
+                <strong>4. Advertencia sobre el estado de los bloques</strong><br>
+                El usuario es informado de que algunos bloques se encuentran poco escalados, por lo que determinadas presas o cantos pueden desprenderse inesperadamente. Es responsabilidad del usuario inspeccionar visualmente la roca antes de escalar y proceder con la prudencia que dicte su propia experiencia y criterio.<br><br>
+                
+                <strong>5. Uso responsable y conservación del entorno</strong><br>
+                Se exige al usuario un comportamiento cívico y responsable durante el uso de la Guía. En particular, deberá:<br>
+                • Respetar los accesos, caminos y zonas de aparcamiento.<br>
+                • No alterar el entorno natural ni los bloques (no tallar presas artificiales, no dejar residuos, etc.).<br>
+                • Abstenerse de escalar en condiciones climáticas adversas o cuando el terreno esté húmedo, para evitar daños a la roca y accidentes.<br><br>
+                
+                <strong>6. Actualización de la información</strong><br>
+                El contenido de la Guía se actualizará periódicamente conforme se abran nuevos bloques o sectores. No obstante, pueden existir desviaciones o información no actualizada. El club se reserva el derecho de modificar, suspender o interrumpir el servicio en cualquier momento.<br><br>
+                
+                <strong>7. Grados y comunidad</strong><br>
+                La graduación de los bloques es orientativa, igual que la indicación de las manos de inicio y el trazado de la línea. Nada te impide escalar como quieras. Si estás disconforme con el grado, abres nuevas líneas o desbloqueas algún proyecto, comunícalo a través del grupo de WhatsApp y evaluaremos introducir los cambios.<br><br>
+                
+                <strong>8. Aceptación</strong><br>
+                El simple uso de esta aplicación implica la total aceptación de las presentes condiciones. Si el usuario no está de acuerdo con alguna de ellas, deberá abstenerse de utilizar la Guía.<br><br>
+                
+                <strong>Finalmente, el club anima a los socios a disfrutar de la escalada en roca con responsabilidad, respeto hacia el medio ambiente y compañerismo. ¡Felices bloques!</strong>
+            </div>
+        </div>
         <div id="screen-sector-detalle" class="screen">
             <div id="sector-detalle-content"></div>
         </div>
@@ -299,21 +348,9 @@
         let navigationStack = [];
 
         // ----- Funciones del drawer -----
-        function openDrawer() {
-            document.getElementById('drawer').classList.add('open');
-            document.getElementById('drawerOverlay').classList.add('open');
-        }
-        function closeDrawer() {
-            document.getElementById('drawer').classList.remove('open');
-            document.getElementById('drawerOverlay').classList.remove('open');
-        }
-        function toggleDrawer() {
-            if (document.getElementById('drawer').classList.contains('open')) {
-                closeDrawer();
-            } else {
-                openDrawer();
-            }
-        }
+        function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
+        function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
+        function toggleDrawer() { if (document.getElementById('drawer').classList.contains('open')) closeDrawer(); else openDrawer(); }
 
         function populateDrawer() {
             if (!datosApp || !datosApp.sectores) return;
@@ -333,8 +370,7 @@
             });
         }
 
-        // Resto de funciones (getColorByGrado, getSimboloSalida, etc.) se mantienen igual que en la versión anterior.
-        // Para ahorrar espacio, las incluyo completas pero omito comentarios extensos.
+        // Funciones auxiliares (getColorByGrado, getSimboloSalida, etc.)
         function getColorByGrado(grado) {
             if (!grado) return '#FF93DB';
             const g = grado.toUpperCase().trim();
@@ -420,144 +456,42 @@
                 const simbolo = getSimboloSalida(via.salida);
                 const textoCirculo = getTextoParaCirculo(lineaId);
                 const linea = encontrarElementoPorLabel(svgDoc, `${lineaId}_linea`);
-                if (linea) {
-                    linea.removeAttribute('style');
-                    linea.setAttribute('stroke', color);
-                    linea.setAttribute('fill', 'none');
-                    linea.setAttribute('stroke-width', '6');
-                }
+                if (linea) { linea.removeAttribute('style'); linea.setAttribute('stroke', color); linea.setAttribute('fill', 'none'); linea.setAttribute('stroke-width', '6'); }
                 const circuloEntrada = encontrarElementoPorLabel(svgDoc, `${lineaId}_entrada`);
-                if (circuloEntrada) {
-                    circuloEntrada.removeAttribute('style');
-                    circuloEntrada.setAttribute('fill', color);
-                    circuloEntrada.setAttribute('stroke', '#FFFFFF');
-                    circuloEntrada.setAttribute('stroke-width', '2');
-                }
+                if (circuloEntrada) { circuloEntrada.removeAttribute('style'); circuloEntrada.setAttribute('fill', color); circuloEntrada.setAttribute('stroke', '#FFFFFF'); circuloEntrada.setAttribute('stroke-width', '2'); }
                 const circuloSalida = encontrarElementoPorLabel(svgDoc, `${lineaId}_salida`);
-                if (circuloSalida) {
-                    circuloSalida.removeAttribute('style');
-                    circuloSalida.setAttribute('fill', color);
-                    circuloSalida.removeAttribute('stroke');
-                    circuloSalida.removeAttribute('stroke-width');
-                }
+                if (circuloSalida) { circuloSalida.removeAttribute('style'); circuloSalida.setAttribute('fill', color); circuloSalida.removeAttribute('stroke'); circuloSalida.removeAttribute('stroke-width'); }
                 const svgRoot = svgDoc.documentElement;
                 if (textoCirculo && circuloEntrada) {
                     let cx = parseFloat(circuloEntrada.getAttribute('cx'));
                     let cy = parseFloat(circuloEntrada.getAttribute('cy'));
                     let radio = parseFloat(circuloEntrada.getAttribute('r')) || 17.5;
-                    if (isNaN(cx) && circuloEntrada.hasAttribute('transform')) {
-                        const transform = circuloEntrada.getAttribute('transform');
-                        const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
-                        if (translateMatch) { cx = parseFloat(translateMatch[1]); cy = parseFloat(translateMatch[2]); }
-                    }
+                    if (isNaN(cx) && circuloEntrada.hasAttribute('transform')) { const transform = circuloEntrada.getAttribute('transform'); const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/); if (translateMatch) { cx = parseFloat(translateMatch[1]); cy = parseFloat(translateMatch[2]); } }
                     if (isNaN(cx)) cx = 0; if (isNaN(cy)) cy = 0;
                     const oldText = svgRoot.querySelector(`text[data-for="${lineaId}_entrada"]`);
                     if (oldText) oldText.remove();
                     const textFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    textFill.setAttribute('data-for', `${lineaId}_entrada`);
-                    textFill.setAttribute('x', cx); textFill.setAttribute('y', cy);
-                    textFill.setAttribute('text-anchor', 'middle');
-                    textFill.setAttribute('dominant-baseline', 'central');
-                    textFill.setAttribute('fill', '#FFFFFF');
-                    textFill.setAttribute('font-size', `${radio * 1.3}px`);
-                    textFill.setAttribute('font-weight', 'bold');
-                    textFill.setAttribute('font-family', 'Arial, sans-serif');
-                    textFill.textContent = textoCirculo;
+                    textFill.setAttribute('data-for', `${lineaId}_entrada`); textFill.setAttribute('x', cx); textFill.setAttribute('y', cy); textFill.setAttribute('text-anchor', 'middle'); textFill.setAttribute('dominant-baseline', 'central'); textFill.setAttribute('fill', '#FFFFFF'); textFill.setAttribute('font-size', `${radio * 1.3}px`); textFill.setAttribute('font-weight', 'bold'); textFill.textContent = textoCirculo;
                     svgRoot.appendChild(textFill);
                 }
                 if (simbolo && circuloSalida) {
                     let cx = parseFloat(circuloSalida.getAttribute('cx'));
                     let cy = parseFloat(circuloSalida.getAttribute('cy'));
                     let radio = parseFloat(circuloSalida.getAttribute('r')) || 12.5;
-                    if (isNaN(cx) && circuloSalida.hasAttribute('transform')) {
-                        const transform = circuloSalida.getAttribute('transform');
-                        const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
-                        if (translateMatch) { cx = parseFloat(translateMatch[1]); cy = parseFloat(translateMatch[2]); }
-                    }
+                    if (isNaN(cx) && circuloSalida.hasAttribute('transform')) { const transform = circuloSalida.getAttribute('transform'); const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/); if (translateMatch) { cx = parseFloat(translateMatch[1]); cy = parseFloat(translateMatch[2]); } }
                     if (isNaN(cx)) cx = 0; if (isNaN(cy)) cy = 0;
                     const oldSymbol = svgRoot.querySelector(`[data-for="${lineaId}_salida"]`);
                     if (oldSymbol) oldSymbol.remove();
-                    if (simbolo === 'circle') {
-                        const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                        innerCircle.setAttribute('data-for', `${lineaId}_salida`);
-                        innerCircle.setAttribute('cx', cx); innerCircle.setAttribute('cy', cy);
-                        innerCircle.setAttribute('r', radio * 0.5);
-                        innerCircle.setAttribute('fill', '#FFFFFF');
-                        innerCircle.setAttribute('stroke', 'none');
-                        svgRoot.appendChild(innerCircle);
-                    } else if (simbolo === '▲') {
-                        const fontSize = radio * 1.75;
-                        const yOffset = -radio * 0.15;
-                        const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                        symbolFill.setAttribute('data-for', `${lineaId}_salida`);
-                        symbolFill.setAttribute('x', cx); symbolFill.setAttribute('y', cy + yOffset);
-                        symbolFill.setAttribute('text-anchor', 'middle');
-                        symbolFill.setAttribute('dominant-baseline', 'central');
-                        symbolFill.setAttribute('fill', '#FFFFFF');
-                        symbolFill.setAttribute('font-size', `${fontSize}px`);
-                        symbolFill.setAttribute('font-weight', 'bold');
-                        symbolFill.setAttribute('font-family', 'Arial, sans-serif');
-                        symbolFill.textContent = simbolo;
-                        svgRoot.appendChild(symbolFill);
-                    } else if (simbolo === '▶') {
-                        const fontSize = radio * 1.3;
-                        const xOffset = radio * 0.15;
-                        const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                        symbolFill.setAttribute('data-for', `${lineaId}_salida`);
-                        symbolFill.setAttribute('x', cx + xOffset); symbolFill.setAttribute('y', cy);
-                        symbolFill.setAttribute('text-anchor', 'middle');
-                        symbolFill.setAttribute('dominant-baseline', 'central');
-                        symbolFill.setAttribute('fill', '#FFFFFF');
-                        symbolFill.setAttribute('font-size', `${fontSize}px`);
-                        symbolFill.setAttribute('font-weight', 'bold');
-                        symbolFill.textContent = simbolo;
-                        svgRoot.appendChild(symbolFill);
-                    } else if (simbolo === '◀') {
-                        const fontSize = radio * 1.3;
-                        const xOffset = -radio * 0.15;
-                        const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                        symbolFill.setAttribute('data-for', `${lineaId}_salida`);
-                        symbolFill.setAttribute('x', cx + xOffset); symbolFill.setAttribute('y', cy);
-                        symbolFill.setAttribute('text-anchor', 'middle');
-                        symbolFill.setAttribute('dominant-baseline', 'central');
-                        symbolFill.setAttribute('fill', '#FFFFFF');
-                        symbolFill.setAttribute('font-size', `${fontSize}px`);
-                        symbolFill.setAttribute('font-weight', 'bold');
-                        symbolFill.textContent = simbolo;
-                        svgRoot.appendChild(symbolFill);
-                    } else {
-                        const fontSize = radio * 1.1;
-                        const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                        symbolFill.setAttribute('data-for', `${lineaId}_salida`);
-                        symbolFill.setAttribute('x', cx); symbolFill.setAttribute('y', cy);
-                        symbolFill.setAttribute('text-anchor', 'middle');
-                        symbolFill.setAttribute('dominant-baseline', 'central');
-                        symbolFill.setAttribute('fill', '#FFFFFF');
-                        symbolFill.setAttribute('font-size', `${fontSize}px`);
-                        symbolFill.setAttribute('font-weight', 'bold');
-                        symbolFill.textContent = simbolo;
-                        svgRoot.appendChild(symbolFill);
-                    }
+                    if (simbolo === 'circle') { const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); innerCircle.setAttribute('data-for', `${lineaId}_salida`); innerCircle.setAttribute('cx', cx); innerCircle.setAttribute('cy', cy); innerCircle.setAttribute('r', radio * 0.5); innerCircle.setAttribute('fill', '#FFFFFF'); svgRoot.appendChild(innerCircle); }
+                    else if (simbolo === '▲') { const fontSize = radio * 1.75; const yOffset = -radio * 0.15; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx); symbolFill.setAttribute('y', cy + yOffset); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); }
+                    else if (simbolo === '▶') { const fontSize = radio * 1.3; const xOffset = radio * 0.15; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx + xOffset); symbolFill.setAttribute('y', cy); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); }
+                    else if (simbolo === '◀') { const fontSize = radio * 1.3; const xOffset = -radio * 0.15; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx + xOffset); symbolFill.setAttribute('y', cy); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); }
+                    else { const fontSize = radio * 1.1; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx); symbolFill.setAttribute('y', cy); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); }
                 }
             });
         }
 
-        function encontrarElementosPorLabel(svgDoc, label) {
-            const resultados = [];
-            const todos = svgDoc.querySelectorAll('*');
-            for (let el of todos) {
-                let labelValue = el.getAttribute('inkscape:label');
-                if (!labelValue && el.attributes) {
-                    for (let attr of el.attributes) {
-                        if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) {
-                            labelValue = attr.value; break;
-                        }
-                    }
-                }
-                if (labelValue === label) resultados.push(el);
-            }
-            return resultados;
-        }
+        function encontrarElementosPorLabel(svgDoc, label) { const resultados = []; const todos = svgDoc.querySelectorAll('*'); for (let el of todos) { let labelValue = el.getAttribute('inkscape:label'); if (!labelValue && el.attributes) { for (let attr of el.attributes) { if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) { labelValue = attr.value; break; } } } if (labelValue === label) resultados.push(el); } return resultados; }
 
         function cargarMapaIndividual(sector, mapaBase, incluirFooter = false) {
             if (!mapaBase) return '';
@@ -567,50 +501,13 @@
             let html = `<div class="mapa-single"><div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${mapaUrl}" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `<object id="mapaObject_${containerId}" data="${svgMapaUrl}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
-            if (incluirFooter) {
-                html += `<div class="mapa-footer">📍 Toca sobre los aparcamientos (P1, P2, P3...) para ver su ubicación en Google Maps</div>`;
-            }
+            if (incluirFooter) html += `<div class="mapa-footer">📍 Toca sobre los aparcamientos (P1, P2, P3...) para ver su ubicación en Google Maps</div>`;
             html += `</div>`;
-            setTimeout(() => {
-                const objectTag = document.getElementById(`mapaObject_${containerId}`);
-                if (objectTag && objectTag.contentDocument) {
-                    const svgDoc = objectTag.contentDocument;
-                    const svgElement = svgDoc.documentElement;
-                    if (svgElement) {
-                        const allEl = svgElement.querySelectorAll('*');
-                        allEl.forEach(el => {
-                            if (el.tagName !== 'svg') {
-                                el.setAttribute('fill', 'transparent');
-                                el.setAttribute('stroke', 'transparent');
-                                el.setAttribute('fill-opacity', '0');
-                                el.setAttribute('stroke-opacity', '0');
-                                if (el.style) el.style.opacity = '0';
-                            }
-                        });
-                        if (sector.info && sector.info.parking && incluirFooter) {
-                            const parkings = sector.info.parking;
-                            for (let i = 0; i < parkings.length; i++) {
-                                const parkingLabel = `parking_${i+1}`;
-                                const elementos = encontrarElementosPorLabel(svgDoc, parkingLabel);
-                                elementos.forEach(el => {
-                                    el.style.cursor = 'pointer';
-                                    el.addEventListener('click', (e) => { e.stopPropagation(); window.open(parkings[i], '_blank'); });
-                                });
-                            }
-                        }
-                    }
-                }
-            }, 500);
+            setTimeout(() => { const objectTag = document.getElementById(`mapaObject_${containerId}`); if (objectTag && objectTag.contentDocument) { const svgDoc = objectTag.contentDocument; const svgElement = svgDoc.documentElement; if (svgElement) { const allEl = svgElement.querySelectorAll('*'); allEl.forEach(el => { if (el.tagName !== 'svg') { el.setAttribute('fill', 'transparent'); el.setAttribute('stroke', 'transparent'); el.setAttribute('fill-opacity', '0'); el.setAttribute('stroke-opacity', '0'); if (el.style) el.style.opacity = '0'; } }); if (sector.info && sector.info.parking && incluirFooter) { const parkings = sector.info.parking; for (let i = 0; i < parkings.length; i++) { const parkingLabel = `parking_${i+1}`; const elementos = encontrarElementosPorLabel(svgDoc, parkingLabel); elementos.forEach(el => { el.style.cursor = 'pointer'; el.addEventListener('click', (e) => { e.stopPropagation(); window.open(parkings[i], '_blank'); }); }); } } } } }, 500);
             return html;
         }
 
-        function cargarTodosLosMapas(sector) {
-            let mapasHtml = '';
-            if (sector.mapa) mapasHtml += cargarMapaIndividual(sector, sector.mapa, true);
-            if (sector.mapa_2) mapasHtml += cargarMapaIndividual(sector, sector.mapa_2, false);
-            if (sector.mapa_3) mapasHtml += cargarMapaIndividual(sector, sector.mapa_3, false);
-            return mapasHtml;
-        }
+        function cargarTodosLosMapas(sector) { let mapasHtml = ''; if (sector.mapa) mapasHtml += cargarMapaIndividual(sector, sector.mapa, true); if (sector.mapa_2) mapasHtml += cargarMapaIndividual(sector, sector.mapa_2, false); if (sector.mapa_3) mapasHtml += cargarMapaIndividual(sector, sector.mapa_3, false); return mapasHtml; }
 
         function cargarCroquisInteractivo(sector, croquisIndex) {
             const croquis = sector.croquis_list[croquisIndex];
@@ -621,76 +518,19 @@
             html += `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg?v=${Date.now()}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
-            setTimeout(() => {
-                const objectTag = document.getElementById(`croquisObject_${containerId}`);
-                if (objectTag && objectTag.contentDocument) {
-                    const svgDoc = objectTag.contentDocument;
-                    const svgElement = svgDoc.documentElement;
-                    if (svgElement) {
-                        const allEl = svgElement.querySelectorAll('*');
-                        allEl.forEach(el => {
-                            if (el.tagName !== 'svg') {
-                                el.setAttribute('fill', 'transparent');
-                                el.setAttribute('stroke', 'transparent');
-                                el.setAttribute('fill-opacity', '0');
-                                el.setAttribute('stroke-opacity', '0');
-                                if (el.style) el.style.opacity = '0';
-                            }
-                        });
-                        const elementosConLabel = svgDoc.querySelectorAll('*');
-                        elementosConLabel.forEach(el => {
-                            let label = null;
-                            label = el.getAttribute('inkscape:label');
-                            if (!label && el.attributes) {
-                                for (let attr of el.attributes) {
-                                    if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) {
-                                        label = attr.value; break;
-                                    }
-                                }
-                            }
-                            if (label && !isNaN(parseInt(label))) {
-                                el.style.cursor = 'pointer';
-                                el.addEventListener('click', (e) => {
-                                    e.stopPropagation();
-                                    const bloqueBase = label;
-                                    const bloqueEncontrado = sector.bloques.find(b => {
-                                        if (b.id === bloqueBase) return true;
-                                        if (b.id.startsWith(`${bloqueBase}_`)) return true;
-                                        return false;
-                                    });
-                                    if (bloqueEncontrado) {
-                                        const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
-                                        if (indice !== -1) {
-                                            currentTab = 'bloques';
-                                            isInFichaBloque = true;
-                                            actualizarBotonActivo('bloques');
-                                            cargarFichaBloque(indice);
-                                            navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice });
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    }
-                }
-            }, 500);
+            setTimeout(() => { const objectTag = document.getElementById(`croquisObject_${containerId}`); if (objectTag && objectTag.contentDocument) { const svgDoc = objectTag.contentDocument; const svgElement = svgDoc.documentElement; if (svgElement) { const allEl = svgElement.querySelectorAll('*'); allEl.forEach(el => { if (el.tagName !== 'svg') { el.setAttribute('fill', 'transparent'); el.setAttribute('stroke', 'transparent'); el.setAttribute('fill-opacity', '0'); el.setAttribute('stroke-opacity', '0'); if (el.style) el.style.opacity = '0'; } }); const elementosConLabel = svgDoc.querySelectorAll('*'); elementosConLabel.forEach(el => { let label = null; label = el.getAttribute('inkscape:label'); if (!label && el.attributes) { for (let attr of el.attributes) { if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) { label = attr.value; break; } } } if (label && !isNaN(parseInt(label))) { el.style.cursor = 'pointer'; el.addEventListener('click', (e) => { e.stopPropagation(); const bloqueBase = label; const bloqueEncontrado = sector.bloques.find(b => { if (b.id === bloqueBase) return true; if (b.id.startsWith(`${bloqueBase}_`)) return true; return false; }); if (bloqueEncontrado) { const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id); if (indice !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(indice); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice }); } } }); } }); } } }, 500);
             return html;
         }
 
         function navigateToScreen(screenId, stateData = null) {
             const currentScreen = document.querySelector('.screen:not([style*="display: none"])');
-            if (currentScreen && currentScreen.id !== screenId) {
-                navigationStack.push({ screen: currentScreen.id, state: { ...stateData, sectorNombre: currentSector?.nombre, currentTab, currentSwiperIndex } });
-            }
+            if (currentScreen && currentScreen.id !== screenId) navigationStack.push({ screen: currentScreen.id, state: { ...stateData, sectorNombre: currentSector?.nombre, currentTab, currentSwiperIndex } });
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(screenId).style.display = 'block';
             document.querySelector('.app-content').scrollTop = 0;
             const bottomTabs = document.getElementById('globalBottomTabs');
-            if (screenId === 'screen-sector-detalle' || screenId === 'screen-ficha-bloque') {
-                bottomTabs.style.display = 'flex';
-            } else {
-                bottomTabs.style.display = 'none';
-            }
+            if (screenId === 'screen-sector-detalle' || screenId === 'screen-ficha-bloque') bottomTabs.style.display = 'flex';
+            else bottomTabs.style.display = 'none';
             if (screenId === 'screen-ficha-bloque') actualizarBotonActivo('bloques');
         }
 
@@ -698,50 +538,17 @@
             if (navigationStack.length > 0) {
                 const prev = navigationStack.pop();
                 navigateToScreen(prev.screen);
-                if (prev.state?.sectorNombre) {
-                    currentSector = datosApp.sectores.find(s => s.nombre === prev.state.sectorNombre);
-                    if (currentSector && prev.screen === 'screen-ficha-bloque') {
-                        setTimeout(() => {
-                            if (swiperBloques) swiperBloques.slideTo(prev.state.currentSwiperIndex || 0);
-                            currentSwiperIndex = prev.state.currentSwiperIndex || 0;
-                        }, 100);
-                    }
-                }
-                if (prev.screen === 'screen-sector-detalle' && prev.state?.currentTab) {
-                    currentTab = prev.state.currentTab;
-                    actualizarBotonActivo(currentTab);
-                    if (document.getElementById('tab-info')) {
-                        document.getElementById('tab-info').style.display = 'none';
-                        document.getElementById('tab-croquis').style.display = 'none';
-                        document.getElementById('tab-resumen').style.display = 'none';
-                        document.getElementById('tab-bloques').style.display = 'none';
-                        const tabToShow = document.getElementById(`tab-${currentTab}`);
-                        if (tabToShow) tabToShow.style.display = 'block';
-                    }
-                }
+                if (prev.state?.sectorNombre) { currentSector = datosApp.sectores.find(s => s.nombre === prev.state.sectorNombre); if (currentSector && prev.screen === 'screen-ficha-bloque') { setTimeout(() => { if (swiperBloques) swiperBloques.slideTo(prev.state.currentSwiperIndex || 0); currentSwiperIndex = prev.state.currentSwiperIndex || 0; }, 100); } }
+                if (prev.screen === 'screen-sector-detalle' && prev.state?.currentTab) { currentTab = prev.state.currentTab; actualizarBotonActivo(currentTab); if (document.getElementById('tab-info')) { document.getElementById('tab-info').style.display = 'none'; document.getElementById('tab-croquis').style.display = 'none'; document.getElementById('tab-resumen').style.display = 'none'; document.getElementById('tab-bloques').style.display = 'none'; const tabToShow = document.getElementById(`tab-${currentTab}`); if (tabToShow) tabToShow.style.display = 'block'; } }
                 isInFichaBloque = (prev.screen === 'screen-ficha-bloque');
-            } else {
-                navigateToScreen('screen-portada');
-                if (datosApp) renderSectoresList(); else cargarDatos();
-                currentSector = null;
-                isInFichaBloque = false;
-            }
+            } else { navigateToScreen('screen-portada'); if (datosApp) renderSectoresList(); else cargarDatos(); currentSector = null; isInFichaBloque = false; }
         }
-
         window.addEventListener('popstate', () => goBack());
 
         async function cargarDatos() {
             const container = document.getElementById('sectores-list');
             container.innerHTML = '<div class="loader">Cargando...</div>';
-            try {
-                const res = await fetch(DATA_URL);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                datosApp = await res.json();
-                renderSectoresList();
-                populateDrawer();
-            } catch (error) {
-                container.innerHTML = `<div class="loader" style="color:red;">Error: ${error.message}</div>`;
-            }
+            try { const res = await fetch(DATA_URL); if (!res.ok) throw new Error(`HTTP ${res.status}`); datosApp = await res.json(); renderSectoresList(); populateDrawer(); } catch (error) { container.innerHTML = `<div class="loader" style="color:red;">Error: ${error.message}</div>`; }
         }
 
         function renderSectoresList() {
@@ -752,21 +559,10 @@
                 const card = document.createElement('div');
                 card.className = 'sector-card';
                 const portadaUrl = sector.portada ? `${sector.portada}.jpg` : '';
-                const bloquesBase = new Set();
-                sector.bloques.forEach(bloque => {
-                    const numBase = parseInt(bloque.id, 10);
-                    bloquesBase.add(numBase);
-                });
+                const bloquesBase = new Set(); sector.bloques.forEach(bloque => { const numBase = parseInt(bloque.id, 10); bloquesBase.add(numBase); });
                 const totalBloques = bloquesBase.size;
-                let totalLineas = 0;
-                sector.bloques.forEach(bloque => {
-                    bloque.vias.forEach(via => { if (via.grado && via.grado.trim() !== "") totalLineas++; });
-                });
-                card.innerHTML = `<img src="${portadaUrl}" onerror="this.src='https://picsum.photos/id/20/400/200'">
-                    <div class="sector-info">
-                        <div class="sector-header"><div class="sector-nombre">${sector.nombre} · ${sector.municipio}</div></div>
-                        <div class="sector-stats">${totalBloques} bloques · ${totalLineas} líneas</div>
-                    </div>`;
+                let totalLineas = 0; sector.bloques.forEach(bloque => { bloque.vias.forEach(via => { if (via.grado && via.grado.trim() !== "") totalLineas++; }); });
+                card.innerHTML = `<img src="${portadaUrl}" onerror="this.src='https://picsum.photos/id/20/400/200'"><div class="sector-info"><div class="sector-header"><div class="sector-nombre">${sector.nombre} · ${sector.municipio}</div></div><div class="sector-stats">${totalBloques} bloques · ${totalLineas} líneas</div></div>`;
                 card.onclick = () => openSector(sector.nombre);
                 container.appendChild(card);
             });
@@ -780,34 +576,14 @@
             const mapasHtml = cargarTodosLosMapas(currentSector);
             let croquisHtml = '';
             if (currentSector.croquis_list && currentSector.croquis_list.length > 0) {
-                if (currentSector.croquis_list.length === 1) {
-                    const croq = currentSector.croquis_list[0];
-                    croquisHtml = `<div class="croquis-list"><div id="croquisViewerArea" style="margin-bottom: 20px;">${cargarCroquisInteractivo(currentSector, 0)}</div></div>`;
-                } else {
-                    let thumbsHtml = '<div class="croquis-list"><div class="croquis-list-title">Selecciona un croquis:</div><div class="croquis-thumbnails">';
-                    currentSector.croquis_list.forEach((croq, idx) => {
-                        thumbsHtml += `<div class="croquis-thumb" data-croquis-idx="${idx}"><img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'"></div>`;
-                    });
-                    thumbsHtml += '</div></div><div id="croquisViewerArea" style="margin-bottom: 20px;"></div>';
-                    croquisHtml = thumbsHtml;
-                }
-            } else {
-                croquisHtml = '<div class="info-sector"><p>No hay croquis disponibles</p></div>';
-            }
+                if (currentSector.croquis_list.length === 1) { const croq = currentSector.croquis_list[0]; croquisHtml = `<div class="croquis-list"><div id="croquisViewerArea" style="margin-bottom: 20px;">${cargarCroquisInteractivo(currentSector, 0)}</div></div>`; }
+                else { let thumbsHtml = '<div class="croquis-list"><div class="croquis-list-title">Selecciona un croquis:</div><div class="croquis-thumbnails">'; currentSector.croquis_list.forEach((croq, idx) => { thumbsHtml += `<div class="croquis-thumb" data-croquis-idx="${idx}"><img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'"></div>`; }); thumbsHtml += '</div></div><div id="croquisViewerArea" style="margin-bottom: 20px;"></div>'; croquisHtml = thumbsHtml; }
+            } else { croquisHtml = '<div class="info-sector"><p>No hay croquis disponibles</p></div>'; }
             let descripcionHtml = '';
-            if (currentSector.descripcion) {
-                let texto = currentSector.descripcion;
-                const parrafos = texto.split('//');
-                descripcionHtml = parrafos.map(p => `<p>${p.trim()}</p>`).join('');
-                descripcionHtml = descripcionHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            }
+            if (currentSector.descripcion) { let texto = currentSector.descripcion; const parrafos = texto.split('//'); descripcionHtml = parrafos.map(p => `<p>${p.trim()}</p>`).join(''); descripcionHtml = descripcionHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); }
             let resumenHtml = '';
             const grupos = {};
-            currentSector.bloques.forEach((bloque, idx) => {
-                const numBase = parseInt(bloque.id, 10);
-                if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] };
-                grupos[numBase].bloques.push({ ...bloque, idx });
-            });
+            currentSector.bloques.forEach((bloque, idx) => { const numBase = parseInt(bloque.id, 10); if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] }; grupos[numBase].bloques.push({ ...bloque, idx }); });
             Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => {
                 resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`;
                 grupo.bloques.forEach(bloqueInfo => {
@@ -826,103 +602,44 @@
                 });
                 resumenHtml += `</div></div>`;
             });
-            container.innerHTML = `
-                <div class="sector-content-wrapper">
-                    <h2>${currentSector.nombre}</h2>
-                    <div id="tab-info" class="tab-pane" style="display: ${currentTab === 'info' ? 'block' : 'none'}">
-                        <div class="info-sector info-section-spacing">${descripcionHtml || '<p>Sin descripción disponible.</p>'}</div>
-                        <div class="grafica-container info-section-spacing"><div class="grafica-titulo">📊 Distribución de grados</div><canvas id="grafica-sector"></canvas></div>
-                        <div class="info-sector info-section-spacing" id="mapasContainer">${mapasHtml}</div>
-                    </div>
-                    <div id="tab-croquis" class="tab-pane" style="display: ${currentTab === 'croquis' ? 'block' : 'none'}">${croquisHtml}</div>
-                    <div id="tab-resumen" class="tab-pane" style="display: ${currentTab === 'resumen' ? 'block' : 'none'}">${resumenHtml}</div>
-                    <div id="tab-bloques" class="tab-pane" style="display: ${currentTab === 'bloques' ? 'block' : 'none'}"></div>
+            container.innerHTML = `<div class="sector-content-wrapper"><h2>${currentSector.nombre}</h2>
+                <div id="tab-info" class="tab-pane" style="display: ${currentTab === 'info' ? 'block' : 'none'}">
+                    <div class="info-sector info-section-spacing">${descripcionHtml || '<p>Sin descripción disponible.</p>'}</div>
+                    <div class="grafica-container info-section-spacing"><div class="grafica-titulo">📊 Distribución de grados</div><canvas id="grafica-sector"></canvas></div>
+                    <div class="info-sector info-section-spacing" id="mapasContainer">${mapasHtml}</div>
                 </div>
-            `;
+                <div id="tab-croquis" class="tab-pane" style="display: ${currentTab === 'croquis' ? 'block' : 'none'}">${croquisHtml}</div>
+                <div id="tab-resumen" class="tab-pane" style="display: ${currentTab === 'resumen' ? 'block' : 'none'}">${resumenHtml}</div>
+                <div id="tab-bloques" class="tab-pane" style="display: ${currentTab === 'bloques' ? 'block' : 'none'}"></div>
+            </div>`;
             const bottomTabs = document.getElementById('globalBottomTabs');
             const btns = bottomTabs.querySelectorAll('.bottom-tab-btn');
             function cambiarPestana(tabName) {
                 if (tabName === currentTab) return;
                 currentTab = tabName;
-                document.getElementById('tab-info').style.display = 'none';
-                document.getElementById('tab-croquis').style.display = 'none';
-                document.getElementById('tab-resumen').style.display = 'none';
-                document.getElementById('tab-bloques').style.display = 'none';
-                const tabElement = document.getElementById(`tab-${tabName}`);
-                if (tabElement) tabElement.style.display = 'block';
+                document.getElementById('tab-info').style.display = 'none'; document.getElementById('tab-croquis').style.display = 'none'; document.getElementById('tab-resumen').style.display = 'none'; document.getElementById('tab-bloques').style.display = 'none';
+                const tabElement = document.getElementById(`tab-${tabName}`); if (tabElement) tabElement.style.display = 'block';
                 actualizarBotonActivo(tabName);
                 if (tabName === 'info') setTimeout(() => dibujarGrafica(currentSector), 100);
                 if (tabName === 'croquis' && currentSector.croquis_list?.length > 1) setTimeout(() => cargarCroquisEnArea(0), 100);
             }
-            btns.forEach(btn => {
-                btn.onclick = () => {
-                    const tabName = btn.dataset.tab;
-                    if (isInFichaBloque && tabName === 'bloques') return;
-                    if (!isInFichaBloque && currentTab === tabName) return;
-                    if (tabName === 'bloques') {
-                        cargarFichaBloque(0);
-                        currentSwiperIndex = 0;
-                        navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: 0 });
-                    } else {
-                        if (isInFichaBloque) {
-                            isInFichaBloque = false;
-                            navigateToScreen('screen-sector-detalle', { sectorNombre: currentSector.nombre });
-                            setTimeout(() => cambiarPestana(tabName), 50);
-                        } else {
-                            cambiarPestana(tabName);
-                        }
-                    }
-                };
-            });
+            btns.forEach(btn => { btn.onclick = () => { const tabName = btn.dataset.tab; if (isInFichaBloque && tabName === 'bloques') return; if (!isInFichaBloque && currentTab === tabName) return; if (tabName === 'bloques') { cargarFichaBloque(0); currentSwiperIndex = 0; navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: 0 }); } else { if (isInFichaBloque) { isInFichaBloque = false; navigateToScreen('screen-sector-detalle', { sectorNombre: currentSector.nombre }); setTimeout(() => cambiarPestana(tabName), 50); } else { cambiarPestana(tabName); } } }; });
             actualizarBotonActivo(currentTab);
             setTimeout(() => {
-                document.querySelectorAll('#tab-resumen .linea-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        const bloqueId = item.dataset.bloqueId;
-                        const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId);
-                        if (bloqueIndex !== -1) {
-                            currentTab = 'bloques';
-                            isInFichaBloque = true;
-                            actualizarBotonActivo('bloques');
-                            cargarFichaBloque(bloqueIndex);
-                            navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex });
-                        }
-                    });
-                });
-                if (currentSector.croquis_list && currentSector.croquis_list.length > 1) {
-                    document.querySelectorAll('.croquis-thumb').forEach(thumb => {
-                        thumb.onclick = () => {
-                            const idx = parseInt(thumb.dataset.croquisIdx);
-                            cargarCroquisEnArea(idx);
-                            document.querySelectorAll('.croquis-thumb').forEach(t => t.classList.remove('active'));
-                            thumb.classList.add('active');
-                        };
-                    });
-                }
+                document.querySelectorAll('#tab-resumen .linea-item').forEach(item => { item.addEventListener('click', () => { const bloqueId = item.dataset.bloqueId; const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId); if (bloqueIndex !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(bloqueIndex); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }); } }); });
+                if (currentSector.croquis_list && currentSector.croquis_list.length > 1) { document.querySelectorAll('.croquis-thumb').forEach(thumb => { thumb.onclick = () => { const idx = parseInt(thumb.dataset.croquisIdx); cargarCroquisEnArea(idx); document.querySelectorAll('.croquis-thumb').forEach(t => t.classList.remove('active')); thumb.classList.add('active'); }; }); }
             }, 100);
             if (currentTab === 'croquis' && currentSector.croquis_list?.length > 1) setTimeout(() => cargarCroquisEnArea(0), 100);
             navigateToScreen('screen-sector-detalle', { sectorNombre: currentSector.nombre });
             setTimeout(() => dibujarGrafica(currentSector), 100);
         }
 
-        function cargarCroquisEnArea(idx) {
-            if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return;
-            const area = document.getElementById('croquisViewerArea');
-            if (area) area.innerHTML = cargarCroquisInteractivo(currentSector, idx);
-        }
+        function cargarCroquisEnArea(idx) { if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return; const area = document.getElementById('croquisViewerArea'); if (area) area.innerHTML = cargarCroquisInteractivo(currentSector, idx); }
 
         function dibujarGrafica(sector) {
             const conteo = {};
-            sector.bloques.forEach(bloque => {
-                bloque.vias.forEach(via => {
-                    if (via.grado && via.grado.trim() !== "") {
-                        let gradoNorm = via.grado.trim();
-                        if (gradoNorm === 'Pr') gradoNorm = 'Pr';
-                        conteo[gradoNorm] = (conteo[gradoNorm] || 0) + 1;
-                    }
-                });
-            });
-            const ordenGrados = ["3", "4", "5", "5+", "6A", "6A+", "6B", "6B+", "6C", "6C+", "7A", "7A+", "7B", "7B+", "7C", "7C+", "8A", "8A+", "8B", "8B+", "8C", "8C+", "Pr"];
+            sector.bloques.forEach(bloque => { bloque.vias.forEach(via => { if (via.grado && via.grado.trim() !== "") { let gradoNorm = via.grado.trim(); if (gradoNorm === 'Pr') gradoNorm = 'Pr'; conteo[gradoNorm] = (conteo[gradoNorm] || 0) + 1; } }); });
+            const ordenGrados = ["3","4","5","5+","6A","6A+","6B","6B+","6C","6C+","7A","7A+","7B","7B+","7C","7C+","8A","8A+","8B","8B+","8C","8C+","Pr"];
             const gradosFiltrados = ordenGrados.filter(g => conteo[g] > 0);
             const valores = gradosFiltrados.map(g => conteo[g]);
             const maxValor = Math.max(...valores, 1);
@@ -933,218 +650,48 @@
             const width = container.clientWidth;
             const height = 220;
             const scale = window.devicePixelRatio || 2;
-            canvas.width = width * scale;
-            canvas.height = height * scale;
-            canvas.style.width = `${width}px`;
-            canvas.style.height = `${height}px`;
+            canvas.width = width * scale; canvas.height = height * scale;
+            canvas.style.width = `${width}px`; canvas.style.height = `${height}px`;
             ctx.scale(scale, scale);
             const barWidth = (width - 60) / gradosFiltrados.length;
             const startX = 40;
             const startY = height - 30;
             ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, width, height);
-            ctx.beginPath();
-            ctx.moveTo(30, 10);
-            ctx.lineTo(30, startY);
-            ctx.lineTo(width - 20, startY);
-            ctx.strokeStyle = '#aaa';
-            ctx.stroke();
-            ctx.fillStyle = '#555';
-            ctx.font = '11px Roboto';
-            ctx.fillText('Nº vías', 10, 30);
-            ctx.fillText('Grado', width/2 - 20, height - 5);
-            gradosFiltrados.forEach((grado, i) => {
-                const valor = conteo[grado];
-                const barHeight = (valor / maxValor) * (startY - 30);
-                const x = startX + i * barWidth + 5;
-                const y = startY - barHeight;
-                ctx.fillStyle = getColorByGrado(grado);
-                ctx.fillRect(x, y, barWidth - 10, barHeight);
-                ctx.fillStyle = '#000';
-                ctx.font = '11px Roboto';
-                ctx.fillText(grado, x + 2, startY + 12);
-                ctx.fillStyle = '#333';
-                ctx.font = 'bold 11px Roboto';
-                ctx.fillText(valor, x + barWidth/2 - 5, y - 5);
-            });
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, width, height);
+            ctx.beginPath(); ctx.moveTo(30, 10); ctx.lineTo(30, startY); ctx.lineTo(width - 20, startY); ctx.strokeStyle = '#aaa'; ctx.stroke();
+            ctx.fillStyle = '#555'; ctx.font = '11px Roboto'; ctx.fillText('Nº vías', 10, 30); ctx.fillText('Grado', width/2 - 20, height - 5);
+            gradosFiltrados.forEach((grado, i) => { const valor = conteo[grado]; const barHeight = (valor / maxValor) * (startY - 30); const x = startX + i * barWidth + 5; const y = startY - barHeight; ctx.fillStyle = getColorByGrado(grado); ctx.fillRect(x, y, barWidth - 10, barHeight); ctx.fillStyle = '#000'; ctx.font = '11px Roboto'; ctx.fillText(grado, x + 2, startY + 12); ctx.fillStyle = '#333'; ctx.font = 'bold 11px Roboto'; ctx.fillText(valor, x + barWidth/2 - 5, y - 5); });
         }
 
-        function getTextoManos(via) {
-            if (via.manos_juntas && via.manos_juntas.trim() !== "") return `Manos juntas: ${via.manos_juntas}`;
-            let partes = [];
-            if (via.mano_izq && via.mano_izq.trim() !== "") partes.push(`Izq: ${via.mano_izq}`);
-            if (via.mano_der && via.mano_der.trim() !== "") partes.push(`Der: ${via.mano_der}`);
-            return partes.length > 0 ? partes.join(" · ") : "";
-        }
+        function getTextoManos(via) { if (via.manos_juntas && via.manos_juntas.trim() !== "") return `Manos juntas: ${via.manos_juntas}`; let partes = []; if (via.mano_izq && via.mano_izq.trim() !== "") partes.push(`Izq: ${via.mano_izq}`); if (via.mano_der && via.mano_der.trim() !== "") partes.push(`Der: ${via.mano_der}`); return partes.length > 0 ? partes.join(" · ") : ""; }
 
         function cargarYColorearSVGBloque(bloque, slideIndex, vias) {
             const svgUrl = `${bloque.foto_base}.svg?v=${Date.now()}`;
             const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
             if (!mediaContainer) return;
-            fetch(svgUrl).then(res => res.text()).then(svgText => {
-                const parser = new DOMParser();
-                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                const svgElement = svgDoc.documentElement;
-                if (!svgElement) return;
-                aplicarColoresSVG(svgDoc, bloque, vias);
-                svgElement.setAttribute('preserveAspectRatio', 'none');
-                svgElement.style.width = '100%';
-                svgElement.style.height = '100%';
-                svgElement.style.position = 'absolute';
-                svgElement.style.top = '0';
-                svgElement.style.left = '0';
-                svgElement.style.pointerEvents = 'none';
-                svgElement.style.zIndex = '20';
-                const oldSvg = mediaContainer.querySelector('svg');
-                if (oldSvg) oldSvg.remove();
-                mediaContainer.appendChild(svgElement);
-            }).catch(err => console.log(`Error SVG ${bloque.id}:`, err));
+            fetch(svgUrl).then(res => res.text()).then(svgText => { const parser = new DOMParser(); const svgDoc = parser.parseFromString(svgText, 'image/svg+xml'); const svgElement = svgDoc.documentElement; if (!svgElement) return; aplicarColoresSVG(svgDoc, bloque, vias); svgElement.setAttribute('preserveAspectRatio', 'none'); svgElement.style.width = '100%'; svgElement.style.height = '100%'; svgElement.style.position = 'absolute'; svgElement.style.top = '0'; svgElement.style.left = '0'; svgElement.style.pointerEvents = 'none'; svgElement.style.zIndex = '20'; const oldSvg = mediaContainer.querySelector('svg'); if (oldSvg) oldSvg.remove(); mediaContainer.appendChild(svgElement); }).catch(err => console.log(`Error SVG ${bloque.id}:`, err));
         }
 
-        function getStatusIndicator(status) {
-            if (status === 'flash') return '<span class="status-indicator status-flash">⚡</span>';
-            if (status === 'redpoint') return '<span class="status-indicator status-redpoint"></span>';
-            if (status === 'proyecto') return '<span class="status-indicator status-proyecto">P</span>';
-            return '';
-        }
-
-        function getLineaStatusIndicator(status) {
-            if (status === 'flash') return { class: 'linea-status-flash', text: '⚡' };
-            if (status === 'redpoint') return { class: 'linea-status-redpoint', text: '' };
-            if (status === 'proyecto') return { class: 'linea-status-proyecto', text: 'P' };
-            return null;
-        }
-
-        function getLineStatus(sectorNombre, bloqueId, lineaId) {
-            const key = getStatusStorageKey(sectorNombre, bloqueId, lineaId);
-            return localStorage.getItem(key);
-        }
-
-        function getStatusStorageKey(sectorNombre, bloqueId, lineaId) {
-            return `${sectorNombre}_${bloqueId}_${lineaId}_status`;
-        }
-
-        function setLineStatus(sectorNombre, bloqueId, lineaId, status) {
-            const key = getStatusStorageKey(sectorNombre, bloqueId, lineaId);
-            if (status === null || status === 'clear') {
-                localStorage.removeItem(key);
-            } else {
-                localStorage.setItem(key, status);
-            }
-            updateSingleLineIndicator(sectorNombre, bloqueId, lineaId);
-            refreshFichaBloqueContent();
-            refreshResumenContent();
-        }
-
-        function updateSingleLineIndicator(sectorNombre, bloqueId, lineaId) {
-            const activeScreen = document.querySelector('.screen:not([style*="display: none"])');
-            if (activeScreen && activeScreen.id === 'screen-ficha-bloque') {
-                const viasDivs = document.querySelectorAll('.ficha-via-item');
-                for (let viaDiv of viasDivs) {
-                    const viaNombreSpan = viaDiv.querySelector('.via-nombre');
-                    if (viaNombreSpan && viaNombreSpan.textContent.startsWith(lineaId + ' ·')) {
-                        const newStatus = getLineStatus(sectorNombre, bloqueId, lineaId);
-                        const newIndicator = getStatusIndicator(newStatus);
-                        const oldIndicator = viaDiv.querySelector('.status-indicator');
-                        if (oldIndicator) {
-                            oldIndicator.outerHTML = newIndicator;
-                        } else if (newIndicator) {
-                            viaDiv.insertAdjacentHTML('beforeend', newIndicator);
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-
-        function refreshFichaBloqueContent() {
-            const activeScreen = document.querySelector('.screen:not([style*="display: none"])');
-            if (activeScreen && activeScreen.id === 'screen-ficha-bloque' && currentSector) {
-                const currentIndex = swiperBloques ? swiperBloques.activeIndex : 0;
-                cargarFichaBloque(currentIndex, true);
-            }
-        }
-
-        function refreshResumenContent() {
-            const resumenPane = document.getElementById('tab-resumen');
-            if (resumenPane && resumenPane.style.display !== 'none' && currentSector) {
-                generarResumenContent();
-            }
-        }
-
-        function generarResumenContent() {
-            const resumenContainer = document.getElementById('tab-resumen');
-            if (!resumenContainer) return;
-            let resumenHtml = '';
-            const grupos = {};
-            currentSector.bloques.forEach((bloque, idx) => {
-                const numBase = parseInt(bloque.id, 10);
-                if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] };
-                grupos[numBase].bloques.push({ ...bloque, idx });
-            });
-            Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => {
-                resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`;
-                grupo.bloques.forEach(bloqueInfo => {
-                    bloqueInfo.vias.forEach(via => {
-                        const gradoColor = getColorByGrado(via.grado);
-                        const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id);
-                        const statusIndicator = getLineaStatusIndicator(status);
-                        resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}">
-                            <span class="linea-nombre">${via.linea_id} · ${via.nombre}</span>
-                            <div class="linea-right">
-                                ${statusIndicator ? `<span class="linea-status-indicator ${statusIndicator.class}">${statusIndicator.text}</span>` : ''}
-                                ${via.grado ? `<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
-                            </div>
-                        </div>`;
-                    });
-                });
-                resumenHtml += `</div></div>`;
-            });
-            resumenContainer.innerHTML = resumenHtml;
-            document.querySelectorAll('#tab-resumen .linea-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const bloqueId = item.dataset.bloqueId;
-                    const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId);
-                    if (bloqueIndex !== -1) {
-                        currentTab = 'bloques';
-                        isInFichaBloque = true;
-                        actualizarBotonActivo('bloques');
-                        cargarFichaBloque(bloqueIndex);
-                        navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex });
-                    }
-                });
-            });
-        }
-
-        function actualizarBotonActivo(tabName) {
-            const btns = document.querySelectorAll('#globalBottomTabs .bottom-tab-btn');
-            btns.forEach(btn => {
-                if (btn.dataset.tab === tabName) btn.classList.add('active');
-                else btn.classList.remove('active');
-            });
-        }
+        function getStatusIndicator(status) { if (status === 'flash') return '<span class="status-indicator status-flash">⚡</span>'; if (status === 'redpoint') return '<span class="status-indicator status-redpoint"></span>'; if (status === 'proyecto') return '<span class="status-indicator status-proyecto">P</span>'; return ''; }
+        function getLineaStatusIndicator(status) { if (status === 'flash') return { class: 'linea-status-flash', text: '⚡' }; if (status === 'redpoint') return { class: 'linea-status-redpoint', text: '' }; if (status === 'proyecto') return { class: 'linea-status-proyecto', text: 'P' }; return null; }
+        function getLineStatus(sectorNombre, bloqueId, lineaId) { const key = getStatusStorageKey(sectorNombre, bloqueId, lineaId); return localStorage.getItem(key); }
+        function getStatusStorageKey(sectorNombre, bloqueId, lineaId) { return `${sectorNombre}_${bloqueId}_${lineaId}_status`; }
+        function setLineStatus(sectorNombre, bloqueId, lineaId, status) { const key = getStatusStorageKey(sectorNombre, bloqueId, lineaId); if (status === null || status === 'clear') localStorage.removeItem(key); else localStorage.setItem(key, status); updateSingleLineIndicator(sectorNombre, bloqueId, lineaId); refreshFichaBloqueContent(); refreshResumenContent(); }
+        function updateSingleLineIndicator(sectorNombre, bloqueId, lineaId) { const activeScreen = document.querySelector('.screen:not([style*="display: none"])'); if (activeScreen && activeScreen.id === 'screen-ficha-bloque') { const viasDivs = document.querySelectorAll('.ficha-via-item'); for (let viaDiv of viasDivs) { const viaNombreSpan = viaDiv.querySelector('.via-nombre'); if (viaNombreSpan && viaNombreSpan.textContent.startsWith(lineaId + ' ·')) { const newStatus = getLineStatus(sectorNombre, bloqueId, lineaId); const newIndicator = getStatusIndicator(newStatus); const oldIndicator = viaDiv.querySelector('.status-indicator'); if (oldIndicator) oldIndicator.outerHTML = newIndicator; else if (newIndicator) viaDiv.insertAdjacentHTML('beforeend', newIndicator); break; } } } }
+        function refreshFichaBloqueContent() { const activeScreen = document.querySelector('.screen:not([style*="display: none"])'); if (activeScreen && activeScreen.id === 'screen-ficha-bloque' && currentSector) { const currentIndex = swiperBloques ? swiperBloques.activeIndex : 0; cargarFichaBloque(currentIndex, true); } }
+        function refreshResumenContent() { const resumenPane = document.getElementById('tab-resumen'); if (resumenPane && resumenPane.style.display !== 'none' && currentSector) { generarResumenContent(); } }
+        function generarResumenContent() { const resumenContainer = document.getElementById('tab-resumen'); if (!resumenContainer) return; let resumenHtml = ''; const grupos = {}; currentSector.bloques.forEach((bloque, idx) => { const numBase = parseInt(bloque.id, 10); if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] }; grupos[numBase].bloques.push({ ...bloque, idx }); }); Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => { resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`; grupo.bloques.forEach(bloqueInfo => { bloqueInfo.vias.forEach(via => { const gradoColor = getColorByGrado(via.grado); const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id); const statusIndicator = getLineaStatusIndicator(status); resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}"><span class="linea-nombre">${via.linea_id} · ${via.nombre}</span><div class="linea-right">${statusIndicator ? `<span class="linea-status-indicator ${statusIndicator.class}">${statusIndicator.text}</span>` : ''}${via.grado ? `<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}</div></div>`; }); }); resumenHtml += `</div></div>`; }); resumenContainer.innerHTML = resumenHtml; document.querySelectorAll('#tab-resumen .linea-item').forEach(item => { item.addEventListener('click', () => { const bloqueId = item.dataset.bloqueId; const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId); if (bloqueIndex !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(bloqueIndex); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }); } }); }); }
+        function actualizarBotonActivo(tabName) { const btns = document.querySelectorAll('#globalBottomTabs .bottom-tab-btn'); btns.forEach(btn => { if (btn.dataset.tab === tabName) btn.classList.add('active'); else btn.classList.remove('active'); }); }
 
         function cargarFichaBloque(bloqueIndex, keepSlide = false) {
             if (!currentSector) return;
-            isInFichaBloque = true;
-            actualizarBotonActivo('bloques');
-            currentTab = 'bloques';
+            isInFichaBloque = true; actualizarBotonActivo('bloques'); currentTab = 'bloques';
             const container = document.getElementById('ficha-bloque-content');
             container.innerHTML = `<div class="bloque-swiper swiper"><div class="swiper-wrapper" id="bloquesSwiperWrapper"></div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>`;
             const wrapper = document.getElementById('bloquesSwiperWrapper');
             currentSector.bloques.forEach((b, idx) => {
-                const slide = document.createElement('div');
-                slide.className = 'swiper-slide';
-                slide.innerHTML = `
-                    <div class="ficha-bloque">
-                        <div class="media-container" id="mediaContainer-${idx}" style="position: relative;">
-                            <img src="${b.foto_base}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
-                        </div>
-                        <div class="ficha-footer"><span>Bloque ${parseInt(b.id, 10)}</span><span>${currentSector.nombre}</span></div>
-                        <div class="ficha-vias" id="vias-${idx}"></div>
-                    </div>
-                `;
+                const slide = document.createElement('div'); slide.className = 'swiper-slide';
+                slide.innerHTML = `<div class="ficha-bloque"><div class="media-container" id="mediaContainer-${idx}" style="position: relative;"><img src="${b.foto_base}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'"></div><div class="ficha-footer"><span>Bloque ${parseInt(b.id, 10)}</span><span>${currentSector.nombre}</span></div><div class="ficha-vias" id="vias-${idx}"></div></div>`;
                 wrapper.appendChild(slide);
                 const viasDiv = document.getElementById(`vias-${idx}`);
                 b.vias.forEach(via => {
@@ -1156,104 +703,33 @@
                     const gradoColor = getColorByGrado(via.grado);
                     const status = getLineStatus(currentSector.nombre, b.id, via.linea_id);
                     const indicator = getStatusIndicator(status);
-                    const viaDivEl = document.createElement('div');
-                    viaDivEl.className = 'ficha-via-item';
-                    viaDivEl.innerHTML = `
-                        <div class="via-content">
-                            <div class="via-header">
-                                <span class="via-nombre">${via.linea_id} · ${via.nombre}</span>
-                                ${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
-                                ${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}
-                            </div>
-                            <div class="detalles-texto">${detallesTexto}</div>
-                        </div>
-                        ${indicator}
-                    `;
+                    const viaDivEl = document.createElement('div'); viaDivEl.className = 'ficha-via-item';
+                    viaDivEl.innerHTML = `<div class="via-content"><div class="via-header"><span class="via-nombre">${via.linea_id} · ${via.nombre}</span>${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}</div><div class="detalles-texto">${detallesTexto}</div></div>${indicator}`;
                     viasDiv.appendChild(viaDivEl);
-                    viaDivEl.addEventListener('click', (e) => {
-                        if (e.target.closest('.status-indicator')) return;
-                        const currentStatus = getLineStatus(currentSector.nombre, b.id, via.linea_id);
-                        showStatusModal(currentSector.nombre, b.id, via.linea_id, currentStatus, () => {
-                            const newStatus = getLineStatus(currentSector.nombre, b.id, via.linea_id);
-                            const newIndicator = getStatusIndicator(newStatus);
-                            const oldIndicator = viaDivEl.querySelector('.status-indicator');
-                            if (oldIndicator) oldIndicator.outerHTML = newIndicator;
-                            else if (newIndicator) viaDivEl.insertAdjacentHTML('beforeend', newIndicator);
-                        });
-                    });
+                    viaDivEl.addEventListener('click', (e) => { if (e.target.closest('.status-indicator')) return; const currentStatus = getLineStatus(currentSector.nombre, b.id, via.linea_id); showStatusModal(currentSector.nombre, b.id, via.linea_id, currentStatus, () => { const newStatus = getLineStatus(currentSector.nombre, b.id, via.linea_id); const newIndicator = getStatusIndicator(newStatus); const oldIndicator = viaDivEl.querySelector('.status-indicator'); if (oldIndicator) oldIndicator.outerHTML = newIndicator; else if (newIndicator) viaDivEl.insertAdjacentHTML('beforeend', newIndicator); }); });
                 });
                 cargarYColorearSVGBloque(b, idx, b.vias);
             });
             if (swiperBloques) swiperBloques.destroy();
             const initialSlide = (keepSlide && currentSwiperIndex !== undefined) ? currentSwiperIndex : bloqueIndex;
-            swiperBloques = new Swiper('.bloque-swiper', {
-                initialSlide: initialSlide,
-                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-                pagination: { el: '.swiper-pagination', clickable: true },
-                spaceBetween: 20,
-                autoHeight: true,
-                on: { slideChange: function() { currentSwiperIndex = this.activeIndex; } }
-            });
+            swiperBloques = new Swiper('.bloque-swiper', { initialSlide: initialSlide, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, pagination: { el: '.swiper-pagination', clickable: true }, spaceBetween: 20, autoHeight: true, on: { slideChange: function() { currentSwiperIndex = this.activeIndex; } } });
             currentSwiperIndex = initialSlide;
         }
 
-        function showStatusModal(sectorNombre, bloqueId, lineaId, currentStatus, callback) {
-            currentLineaKey = { sectorNombre, bloqueId, lineaId, callback };
-            document.getElementById('statusModal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('statusModal').classList.remove('active');
-            currentLineaKey = null;
-        }
-
-        document.querySelectorAll('.modal-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const value = btn.dataset.value;
-                if (currentLineaKey) {
-                    const { sectorNombre, bloqueId, lineaId, callback } = currentLineaKey;
-                    if (value === 'clear') setLineStatus(sectorNombre, bloqueId, lineaId, null);
-                    else setLineStatus(sectorNombre, bloqueId, lineaId, value);
-                    if (callback) callback();
-                }
-                closeModal();
-            });
-        });
-        document.getElementById('statusModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('statusModal')) closeModal();
-        });
+        function showStatusModal(sectorNombre, bloqueId, lineaId, currentStatus, callback) { currentLineaKey = { sectorNombre, bloqueId, lineaId, callback }; document.getElementById('statusModal').classList.add('active'); }
+        function closeModal() { document.getElementById('statusModal').classList.remove('active'); currentLineaKey = null; }
+        document.querySelectorAll('.modal-btn').forEach(btn => { btn.addEventListener('click', (e) => { const value = btn.dataset.value; if (currentLineaKey) { const { sectorNombre, bloqueId, lineaId, callback } = currentLineaKey; if (value === 'clear') setLineStatus(sectorNombre, bloqueId, lineaId, null); else setLineStatus(sectorNombre, bloqueId, lineaId, value); if (callback) callback(); } closeModal(); }); });
+        document.getElementById('statusModal').addEventListener('click', (e) => { if (e.target === document.getElementById('statusModal')) closeModal(); });
 
         function initMenu() {
             const toggle = document.getElementById('menuToggle');
-            toggle.onclick = (e) => {
-                e.stopPropagation();
-                toggleDrawer();
-            };
+            toggle.onclick = (e) => { e.stopPropagation(); toggleDrawer(); };
             document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
-            document.getElementById('drawerSectoresBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                closeDrawer();
-                navigateToScreen('screen-portada');
-                if (datosApp) renderSectoresList();
-                else cargarDatos();
-                currentSector = null;
-                isInFichaBloque = false;
-            });
-            document.getElementById('drawerCondicionesBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                closeDrawer();
-                navigateToScreen('screen-condiciones');
-                currentSector = null;
-                isInFichaBloque = false;
-            });
+            document.getElementById('drawerSectoresBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-portada'); if (datosApp) renderSectoresList(); else cargarDatos(); currentSector = null; isInFichaBloque = false; });
+            document.getElementById('drawerCondicionesBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-condiciones'); currentSector = null; isInFichaBloque = false; });
         }
 
-        function init() {
-            initMenu();
-            cargarDatos();
-            navigateToScreen('screen-portada');
-            history.pushState({}, '');
-        }
+        function init() { initMenu(); cargarDatos(); navigateToScreen('screen-portada'); history.pushState({}, ''); }
         init();
     </script>
 </body>
