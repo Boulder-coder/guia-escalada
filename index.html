@@ -64,6 +64,15 @@
             flex: 1;
             overflow-y: auto;
             padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .drawer-sectores-list {
+            flex: 1;
+        }
+        .drawer-bottom-links {
+            margin-top: auto;
+            padding-bottom: 20px;
         }
         .drawer-section-title {
             display: block;
@@ -118,7 +127,7 @@
             font-size: 0.9rem;
         }
         
-        /* Resto de estilos */
+        /* Resto de estilos (se mantienen igual que en tu original) */
         .sector-card { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
         .sector-card img { width: 100%; height: 160px; object-fit: cover; }
         .sector-info { padding: 12px; background: #d4d4d4; }
@@ -266,11 +275,15 @@
     <div id="drawer" class="drawer">
         <div class="drawer-header">GUÍA DE BOULDER</div>
         <div class="drawer-nav" id="drawerNav">
-            <div id="drawerSectoresBtn" class="drawer-section-title sectores">⛰️ SECTORES</div>
-            <div id="drawerSectoresList"></div>
-            <div class="drawer-divider"></div>
-            <div id="drawerCondicionesBtn" class="drawer-section-title condiciones">📋 CONDICIONES</div>
-            <div id="drawerProteccionBtn" class="drawer-section-title proteccion">🔒 PROTECCIÓN DE DATOS</div>
+            <div class="drawer-sectores-list">
+                <div id="drawerSectoresBtn" class="drawer-section-title sectores">⛰️ SECTORES</div>
+                <div id="drawerSectoresList"></div>
+            </div>
+            <div class="drawer-bottom-links">
+                <div class="drawer-divider"></div>
+                <div id="drawerCondicionesBtn" class="drawer-section-title condiciones">📋 CONDICIONES</div>
+                <div id="drawerProteccionBtn" class="drawer-section-title proteccion">🔒 PROTECCIÓN DE DATOS</div>
+            </div>
         </div>
     </div>
 
