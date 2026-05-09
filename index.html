@@ -79,6 +79,9 @@
         .drawer-section-title.condiciones {
             color: #ffffff;
         }
+        .drawer-section-title.proteccion {
+            color: #ffffff;
+        }
         .drawer-section-title:hover, .drawer-section-title:active {
             background: #6674FF;
         }
@@ -125,13 +128,13 @@
         .grafica-container { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .grafica-titulo { text-align: left; margin-bottom: 15px; color: #6674FF; font-size: 1.1rem; }
         canvas { width: 100%; max-width: 100%; height: auto; background: transparent; display: block; }
-        .info-sector, .condiciones-content { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .info-sector, .condiciones-content, .proteccion-content { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
         .info-sector p { text-align: justify; margin-bottom: 12px; line-height: 1.4; }
         .info-sector strong, .info-sector b { font-weight: 700; color: #2c2c2c; }
-        .condiciones-content strong { color: #6674FF; }
-        .condiciones-content p { margin-bottom: 12px; line-height: 1.4; text-align: left; }
-        .condiciones-content ul { margin: 8px 0 12px 25px; }
-        .condiciones-content li { margin-bottom: 4px; line-height: 1.4; }
+        .condiciones-content strong, .proteccion-content strong { color: #6674FF; }
+        .condiciones-content p, .proteccion-content p { margin-bottom: 12px; line-height: 1.4; text-align: left; }
+        .condiciones-content ul, .proteccion-content ul { margin: 8px 0 12px 25px; }
+        .condiciones-content li, .proteccion-content li { margin-bottom: 4px; line-height: 1.4; }
         .croquis-list { margin-bottom: 20px; }
         .croquis-list-title { margin: 15px 0 10px; font-weight: 600; color: #6674FF; }
         .croquis-thumbnails { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 5px; }
@@ -266,12 +269,14 @@
             <div id="drawerSectoresBtn" class="drawer-section-title sectores">⛰️ SECTORES</div>
             <div id="drawerSectoresList"></div>
             <div class="drawer-divider"></div>
-            <div id="drawerCondicionesBtn" class="drawer-section-title condiciones" style="margin-top: 0;">📋 CONDICIONES</div>
+            <div id="drawerCondicionesBtn" class="drawer-section-title condiciones">📋 CONDICIONES</div>
+            <div id="drawerProteccionBtn" class="drawer-section-title proteccion">🔒 PROTECCIÓN DE DATOS</div>
         </div>
     </div>
 
     <div class="app-content">
         <div id="screen-portada" class="screen active"><h2>🏔️ Sectores</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
+        
         <div id="screen-condiciones" class="screen">
             <div class="condiciones-content">
                 <strong>CONDICIONES DE USO Y AVISO LEGAL</strong><br><br>
@@ -306,6 +311,19 @@
                 <strong>Finalmente, el club anima a los socios a disfrutar de la escalada en roca con responsabilidad, respeto hacia el medio ambiente y compañerismo. ¡Felices bloques!</strong>
             </div>
         </div>
+        
+        <div id="screen-proteccion" class="screen">
+            <div class="proteccion-content">
+                <strong>PROTECCIÓN DE DATOS</strong><br><br>
+                
+                Esta aplicación no recopila ni almacena ningún dato personal (como nombre, correo electrónico o dirección IP). Únicamente guarda en tu dispositivo tus marcadores de progreso (Flash, Red point, Proyecto) para recordar tu historial de escalada.<br><br>
+                
+                Por este mismo motivo, si cambias de dispositivo, formateas o borras el caché de la Guía, perderás tu historial de escalada.<br><br>
+                
+                Estos datos no son accesibles por terceros ni se transmiten a ningún servidor. El uso de la app implica tu consentimiento para esta funcionalidad local.
+            </div>
+        </div>
+        
         <div id="screen-sector-detalle" class="screen">
             <div id="sector-detalle-content"></div>
         </div>
@@ -727,6 +745,7 @@
             document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
             document.getElementById('drawerSectoresBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-portada'); if (datosApp) renderSectoresList(); else cargarDatos(); currentSector = null; isInFichaBloque = false; });
             document.getElementById('drawerCondicionesBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-condiciones'); currentSector = null; isInFichaBloque = false; });
+            document.getElementById('drawerProteccionBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-proteccion'); currentSector = null; isInFichaBloque = false; });
         }
 
         function init() { initMenu(); cargarDatos(); navigateToScreen('screen-portada'); history.pushState({}, ''); }
