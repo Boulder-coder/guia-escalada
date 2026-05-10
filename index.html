@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
-        /* ===== Estilos generales (sin cambios importantes) ===== */
+        /* ===== Estilos generales ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
@@ -133,7 +133,7 @@
             font-size: 0.9rem;
         }
         
-        /* Resto de estilos originales (mantenidos) */
+        /* Resto de estilos */
         .sector-card { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
         .sector-card img { width: 100%; height: 160px; object-fit: cover; }
         .sector-info { padding: 12px; background: #d4d4d4; }
@@ -400,7 +400,7 @@
         </div>
     </div>
 
-    <!-- El resto de la aplicación (igual que antes) -->
+    <!-- El resto de la aplicación -->
     <div class="app-header">
         <div class="header-top">
             <button class="menu-toggle" id="menuToggle">☰</button>
@@ -498,7 +498,7 @@
         const STORAGE_TERMS = 'boulder_terms_accepted';
         const STORAGE_PRIVACY = 'boulder_privacy_accepted';
 
-        // Función para calcular hash SHA-256 (usando Web Crypto API)
+        // Función para calcular hash SHA-256
         async function sha256(message) {
             const encoder = new TextEncoder();
             const data = encoder.encode(message);
@@ -508,21 +508,17 @@
             return hashHex;
         }
 
-        // Verifica si la contraseña ya fue aceptada (versión correcta)
         function isPasswordAccepted() {
             const storedVersion = localStorage.getItem(STORAGE_PWD_VERSION);
             return storedVersion === PASSWORD_VERSION;
         }
 
-        // Guarda que la contraseña ha sido aceptada
         function acceptPassword() {
             localStorage.setItem(STORAGE_PWD_VERSION, PASSWORD_VERSION);
         }
 
-        // Pantalla de contraseña
         async function checkAndShowPassword() {
             if (isPasswordAccepted()) {
-                // Contraseña ya validada -> continuar con condiciones
                 return true;
             } else {
                 document.getElementById('passwordOverlay').classList.add('active');
@@ -530,7 +526,6 @@
             }
         }
 
-        // Verificar contraseña ingresada
         async function verifyPassword() {
             const inputEl = document.getElementById('passwordInput');
             const password = inputEl.value.trim();
@@ -541,17 +536,14 @@
             }
             const hash = await sha256(password);
             if (hash === VALID_PASSWORD_HASH) {
-                // Contraseña correcta
                 acceptPassword();
                 document.getElementById('passwordOverlay').classList.remove('active');
-                // Después de aceptar la contraseña, mostrar condiciones si es necesario
                 proceedToLegal();
             } else {
                 errorEl.textContent = 'Contraseña incorrecta. Acceso denegado.';
             }
         }
 
-        // ===== LÓGICA DE ACEPTACIÓN DE CONDICIONES Y PRIVACIDAD =====
         function isTermsAccepted() {
             return localStorage.getItem(STORAGE_TERMS) === 'true';
         }
@@ -591,14 +583,13 @@
         }
 
         function initAppAfterLegal() {
-            // Una vez aceptado todo, iniciamos la app (carga de datos, menú, etc.)
             cargarDatos();
             initMenu();
             navigateToScreen('screen-portada');
             history.pushState({}, '');
         }
 
-        // ===== FUNCIONES ORIGINALES DE LA APP (sin cambios significativos) =====
+        // ===== FUNCIONES ORIGINALES DE LA APP =====
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, swiperBloques = null;
         let currentLineaKey = null;
@@ -629,7 +620,6 @@
             });
         }
 
-        // Funciones auxiliares (getColorByGrado, getSimboloSalida, etc.) - todas iguales que antes
         function getColorByGrado(grado) {
             if (!grado) return '#FF93DB';
             const g = grado.toUpperCase().trim();
@@ -989,12 +979,23 @@
             document.getElementById('drawerProteccionBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-proteccion'); currentSector = null; isInFichaBloque = false; });
         }
 
+        // ===== REGISTRO DEL SERVICE WORKER =====
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('[App] Service Worker registrado con éxito en el ámbito:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('[App] Error al registrar el Service Worker:', error);
+                    });
+            });
+        }
+
         // ===== INICIO =====
-        // Primero comprobamos la contraseña
         (async () => {
             const passwordOk = await checkAndShowPassword();
             if (passwordOk) {
-                // Si ya tenía contraseña guardada, procede a condiciones
                 proceedToLegal();
             }
         })();
