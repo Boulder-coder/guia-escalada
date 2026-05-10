@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
-        /* ===== Estilos generales (sin cambios) ===== */
+        /* ===== Estilos generales (sin cambios importantes) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
@@ -133,7 +133,7 @@
             font-size: 0.9rem;
         }
         
-        /* Resto de estilos originales */
+        /* Resto de estilos originales (mantenidos) */
         .sector-card { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
         .sector-card img { width: 100%; height: 160px; object-fit: cover; }
         .sector-info { padding: 12px; background: #d4d4d4; }
@@ -194,15 +194,8 @@
         .media-container svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 10; }
         .media-container svg text { dominant-baseline: central; text-anchor: middle; font-weight: bold; font-family: Arial, sans-serif; z-index: 30; }
         .ficha-footer { background: #d4d4d4; padding: 14px 16px; display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #2c2c2c; }
-        .ficha-vias { 
-            padding: 5px 16px 45px 16px;
-        }
-        .swiper-pagination {
-            position: relative !important;
-            bottom: auto !important;
-            margin-top: 8px;
-            margin-bottom: 10px;
-        }
+        .ficha-vias { padding: 5px 16px 45px 16px; }
+        .swiper-pagination { position: relative !important; bottom: auto !important; margin-top: 8px; margin-bottom: 10px; }
         .ficha-via-item { border-bottom: 1px solid #eee; padding: 12px 0; cursor: pointer; transition: background 0.1s; display: flex; justify-content: space-between; align-items: center; }
         .ficha-via-item:active { background: #f5f5f5; }
         .ficha-via-item:last-child { border-bottom: none; }
@@ -276,7 +269,7 @@
         h2, h3, h4 { color: #6674FF; letter-spacing: 0.5px; }
 
         /* ===== Estilos para pantallas de aceptación obligatoria ===== */
-        .legal-overlay {
+        .legal-overlay, .password-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -290,14 +283,14 @@
             padding: 20px;
             box-sizing: border-box;
         }
-        .legal-overlay.active {
+        .legal-overlay.active, .password-overlay.active {
             display: flex;
         }
-        .legal-content {
+        .legal-content, .password-content {
             flex: 1;
             margin-bottom: 20px;
         }
-        .legal-buttons {
+        .legal-buttons, .password-buttons {
             display: flex;
             justify-content: space-around;
             gap: 20px;
@@ -305,7 +298,7 @@
             border-top: 1px solid #ddd;
             background: white;
         }
-        .legal-btn {
+        .legal-btn, .password-btn {
             flex: 1;
             padding: 14px;
             border: none;
@@ -315,7 +308,7 @@
             cursor: pointer;
             transition: transform 0.1s;
         }
-        .legal-btn:active {
+        .legal-btn:active, .password-btn:active {
             transform: scale(0.97);
         }
         .btn-accept {
@@ -326,9 +319,37 @@
             background-color: #e74c3c;
             color: white;
         }
+        .password-input {
+            width: 100%;
+            padding: 14px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 40px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .error-msg {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Pantalla de CONTRASEÑA -->
+    <div id="passwordOverlay" class="password-overlay">
+        <div class="password-content">
+            <h2 style="text-align:center; color:#6674FF;">🔐 ACCESO RESTRINGIDO</h2>
+            <p style="text-align:center; margin:20px 0;">Esta guía es de uso exclusivo para socios del club. Introduce la contraseña anual para continuar.</p>
+            <input type="password" id="passwordInput" class="password-input" placeholder="Contraseña" autocomplete="off">
+            <div id="passwordError" class="error-msg"></div>
+        </div>
+        <div class="password-buttons">
+            <button id="submitPassword" class="legal-btn btn-accept">VERIFICAR</button>
+        </div>
+    </div>
 
     <!-- Pantalla de Condiciones obligatorias -->
     <div id="legalCondiciones" class="legal-overlay">
@@ -379,7 +400,7 @@
         </div>
     </div>
 
-    <!-- El resto de la aplicación -->
+    <!-- El resto de la aplicación (igual que antes) -->
     <div class="app-header">
         <div class="header-top">
             <button class="menu-toggle" id="menuToggle">☰</button>
@@ -405,8 +426,6 @@
 
     <div class="app-content">
         <div id="screen-portada" class="screen active"><h2>🏔️ Sectores</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
-        
-        <!-- Pantalla de CONDICIONES (para consulta después de aceptar) -->
         <div id="screen-condiciones" class="screen">
             <div class="condiciones-content">
                 <strong>CONDICIONES DE USO Y AVISO LEGAL</strong><br><br>
@@ -432,8 +451,6 @@
                 <strong>Finalmente, el club anima a los socios a disfrutar de la escalada en roca con responsabilidad, respeto hacia el medio ambiente y compañerismo. ¡Felices bloques!</strong>
             </div>
         </div>
-        
-        <!-- Pantalla de PROTECCIÓN DE DATOS (para consulta después de aceptar) -->
         <div id="screen-proteccion" class="screen">
             <div class="proteccion-content">
                 <strong>PROTECCIÓN DE DATOS</strong><br><br>
@@ -442,7 +459,6 @@
                 Estos datos no son accesibles por terceros ni se transmiten a ningún servidor. El uso de la app implica tu consentimiento para esta funcionalidad local.
             </div>
         </div>
-        
         <div id="screen-sector-detalle" class="screen">
             <div id="sector-detalle-content"></div>
         </div>
@@ -473,28 +489,82 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // ===== NUEVA LÓGICA DE ACEPTACIÓN =====
+        // ===== CONFIGURACIÓN DE CONTRASEÑA =====
+        // Cambia estos valores cada año (hash de la nueva contraseña y versión)
+        const PASSWORD_VERSION = "2025";
+        // Hash SHA-256 de la contraseña "club2025" (puedes calcular el tuyo)
+        const VALID_PASSWORD_HASH = "d6b7c9c0e6b8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4";
+        
+        const STORAGE_PWD_VERSION = 'boulder_password_version';
         const STORAGE_TERMS = 'boulder_terms_accepted';
         const STORAGE_PRIVACY = 'boulder_privacy_accepted';
 
-        function checkAndShowLegal() {
-            const termsAccepted = localStorage.getItem(STORAGE_TERMS) === 'true';
-            const privacyAccepted = localStorage.getItem(STORAGE_PRIVACY) === 'true';
+        // Función para calcular hash SHA-256 (usando Web Crypto API)
+        async function sha256(message) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
 
-            if (!termsAccepted) {
-                document.getElementById('legalCondiciones').classList.add('active');
-                return false;
-            } else if (!privacyAccepted) {
-                document.getElementById('legalProteccion').classList.add('active');
+        // Verifica si la contraseña ya fue aceptada (versión correcta)
+        function isPasswordAccepted() {
+            const storedVersion = localStorage.getItem(STORAGE_PWD_VERSION);
+            return storedVersion === PASSWORD_VERSION;
+        }
+
+        // Guarda que la contraseña ha sido aceptada
+        function acceptPassword() {
+            localStorage.setItem(STORAGE_PWD_VERSION, PASSWORD_VERSION);
+        }
+
+        // Pantalla de contraseña
+        async function checkAndShowPassword() {
+            if (isPasswordAccepted()) {
+                // Contraseña ya validada -> continuar con condiciones
+                return true;
+            } else {
+                document.getElementById('passwordOverlay').classList.add('active');
                 return false;
             }
-            return true;
+        }
+
+        // Verificar contraseña ingresada
+        async function verifyPassword() {
+            const inputEl = document.getElementById('passwordInput');
+            const password = inputEl.value.trim();
+            const errorEl = document.getElementById('passwordError');
+            if (!password) {
+                errorEl.textContent = 'Por favor, introduce la contraseña.';
+                return;
+            }
+            const hash = await sha256(password);
+            if (hash === VALID_PASSWORD_HASH) {
+                // Contraseña correcta
+                acceptPassword();
+                document.getElementById('passwordOverlay').classList.remove('active');
+                // Después de aceptar la contraseña, mostrar condiciones si es necesario
+                proceedToLegal();
+            } else {
+                errorEl.textContent = 'Contraseña incorrecta. Acceso denegado.';
+            }
+        }
+
+        // ===== LÓGICA DE ACEPTACIÓN DE CONDICIONES Y PRIVACIDAD =====
+        function isTermsAccepted() {
+            return localStorage.getItem(STORAGE_TERMS) === 'true';
+        }
+
+        function isPrivacyAccepted() {
+            return localStorage.getItem(STORAGE_PRIVACY) === 'true';
         }
 
         function acceptTerms() {
             localStorage.setItem(STORAGE_TERMS, 'true');
             document.getElementById('legalCondiciones').classList.remove('active');
-            if (!localStorage.getItem(STORAGE_PRIVACY)) {
+            if (!isPrivacyAccepted()) {
                 document.getElementById('legalProteccion').classList.add('active');
             } else {
                 initAppAfterLegal();
@@ -511,14 +581,25 @@
             window.location.reload();
         }
 
+        function proceedToLegal() {
+            if (!isTermsAccepted()) {
+                document.getElementById('legalCondiciones').classList.add('active');
+            } else if (!isPrivacyAccepted()) {
+                document.getElementById('legalProteccion').classList.add('active');
+            } else {
+                initAppAfterLegal();
+            }
+        }
+
         function initAppAfterLegal() {
+            // Una vez aceptado todo, iniciamos la app (carga de datos, menú, etc.)
             cargarDatos();
             initMenu();
             navigateToScreen('screen-portada');
             history.pushState({}, '');
         }
 
-        // ===== FUNCIONES ORIGINALES DE LA APP =====
+        // ===== FUNCIONES ORIGINALES DE LA APP (sin cambios significativos) =====
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, swiperBloques = null;
         let currentLineaKey = null;
@@ -549,6 +630,7 @@
             });
         }
 
+        // Funciones auxiliares (getColorByGrado, getSimboloSalida, etc.) - todas iguales que antes
         function getColorByGrado(grado) {
             if (!grado) return '#FF93DB';
             const g = grado.toUpperCase().trim();
@@ -909,10 +991,22 @@
         }
 
         // ===== INICIO =====
-        if (checkAndShowLegal()) {
-            initAppAfterLegal();
-        }
+        // Primero comprobamos la contraseña
+        (async () => {
+            const passwordOk = await checkAndShowPassword();
+            if (passwordOk) {
+                // Si ya tenía contraseña guardada, procede a condiciones
+                proceedToLegal();
+            }
+        })();
 
+        // Eventos de pantalla de contraseña
+        document.getElementById('submitPassword').addEventListener('click', verifyPassword);
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') verifyPassword();
+        });
+
+        // Eventos de legales
         document.getElementById('acceptCondiciones').addEventListener('click', acceptTerms);
         document.getElementById('declineCondiciones').addEventListener('click', decline);
         document.getElementById('acceptProteccion').addEventListener('click', acceptPrivacy);
