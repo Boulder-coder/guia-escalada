@@ -334,9 +334,57 @@
             margin-top: 10px;
             font-weight: bold;
         }
+        
+        /* ===== Estilos pantalla de carga ===== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #2c2c2c;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #FFDE66;
+            font-family: 'Cocogoose', sans-serif;
+            text-align: center;
+            transition: opacity 0.5s;
+        }
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #FFDE66;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading-progress {
+            font-size: 14px;
+            margin-top: 10px;
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Pantalla de carga inicial -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <div id="loadingMessage">Cargando guía por primera vez...</div>
+        <div id="loadingProgress" class="loading-progress"></div>
+        <div style="font-size: 12px; margin-top: 20px;">Descargando todas las fotos para uso offline.<br>Puede tardar unos minutos en la primera ejecución.</div>
+    </div>
 
     <!-- Pantalla de CONTRASEÑA -->
     <div id="passwordOverlay" class="password-overlay">
@@ -491,7 +539,7 @@
     <script>
         // ===== CONFIGURACIÓN DE CONTRASEÑA =====
         // Cambia estos valores cada año (hash de la nueva contraseña y versión)
-        const PASSWORD_VERSION = "2026";
+        const PASSWORD_VERSION = "2026.1";
         const VALID_PASSWORD_HASH = "7a9a19e3cf1bcd6721812a9c23f98a4ab4fb5c5f88670dbe1cddf4407cc82857";
         
         const STORAGE_PWD_VERSION = 'boulder_password_version';
@@ -979,20 +1027,61 @@
             document.getElementById('drawerProteccionBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-proteccion'); currentSector = null; isInFichaBloque = false; });
         }
 
-        // ===== REGISTRO DEL SERVICE WORKER =====
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('[App] Service Worker registrado con éxito en el ámbito:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('[App] Error al registrar el Service Worker:', error);
-                    });
-            });
-        }
+        // ===== REGISTRO DEL SERVICE WORKER Y CONTROL DE CARGA =====
+        window.addEventListener('load', async () => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.register('/guia-escalada/sw.js');
+                    console.log('[App] Service Worker registrado');
+                    
+                    // Función para comprobar si ya hay contenido en caché
+                    const isContentCached = async () => {
+                        const cache = await caches.open('guia-escalada-v1');
+                        const jsonCached = await cache.match('/guia-escalada/datos/datos.json');
+                        return !!jsonCached;
+                    };
+                    
+                    // Si el SW está instalando o ya está activo pero sin caché, mostramos pantalla de carga
+                    if (registration.installing || (registration.active && !(await isContentCached()))) {
+                        const sw = registration.installing || registration.active;
+                        if (sw) {
+                            sw.addEventListener('statechange', (e) => {
+                                if (e.target.state === 'activated') {
+                                    console.log('[App] SW activado y contenido cacheado');
+                                    setTimeout(() => {
+                                        loadingScreen.classList.add('hidden');
+                                        setTimeout(() => {
+                                            loadingScreen.style.display = 'none';
+                                        }, 500);
+                                    }, 1000);
+                                }
+                            });
+                        } else {
+                            // Si no hay SW, ocultamos la pantalla de carga
+                            loadingScreen.style.display = 'none';
+                        }
+                    } else {
+                        // Ya hay contenido cacheado, ocultamos pantalla de carga rápidamente
+                        setTimeout(() => {
+                            loadingScreen.classList.add('hidden');
+                            setTimeout(() => {
+                                loadingScreen.style.display = 'none';
+                            }, 500);
+                        }, 500);
+                    }
+                } catch (error) {
+                    console.error('[App] Error al registrar SW:', error);
+                    loadingScreen.style.display = 'none';
+                }
+            } else {
+                console.warn('[App] Service Workers no soportados');
+                loadingScreen.style.display = 'none';
+            }
+        });
 
-        // ===== INICIO =====
+        // ===== INICIO DE LA APP =====
         (async () => {
             const passwordOk = await checkAndShowPassword();
             if (passwordOk) {
