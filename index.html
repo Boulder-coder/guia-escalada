@@ -538,15 +538,13 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         // ===== CONFIGURACIÓN DE CONTRASEÑA =====
-        // Cambia estos valores cada año (hash de la nueva contraseña y versión)
-        const PASSWORD_VERSION = "2026.1";
+        const PASSWORD_VERSION = "2026";
         const VALID_PASSWORD_HASH = "7a9a19e3cf1bcd6721812a9c23f98a4ab4fb5c5f88670dbe1cddf4407cc82857";
         
         const STORAGE_PWD_VERSION = 'boulder_password_version';
         const STORAGE_TERMS = 'boulder_terms_accepted';
         const STORAGE_PRIVACY = 'boulder_privacy_accepted';
 
-        // Función para calcular hash SHA-256
         async function sha256(message) {
             const encoder = new TextEncoder();
             const data = encoder.encode(message);
@@ -637,7 +635,7 @@
             history.pushState({}, '');
         }
 
-        // ===== FUNCIONES ORIGINALES DE LA APP =====
+        // ===== FUNCIONES ORIGINALES DE LA APP (con SVGs sin timestamp) =====
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, swiperBloques = null;
         let currentLineaKey = null;
@@ -793,7 +791,7 @@
         function cargarMapaIndividual(sector, mapaBase, incluirFooter = false) {
             if (!mapaBase) return '';
             const mapaUrl = `${mapaBase}.jpg`;
-            const svgMapaUrl = `${mapaBase}.svg?v=${Date.now()}`;
+            const svgMapaUrl = `${mapaBase}.svg`;
             const containerId = `mapaContainer_${Date.now()}_${Math.random()}`;
             let html = `<div class="mapa-single"><div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${mapaUrl}" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
@@ -814,7 +812,7 @@
             let html = `<div class="croquis-titulo">${titulo}</div>`;
             html += `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
-            html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg?v=${Date.now()}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
+            html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
             setTimeout(() => { const objectTag = document.getElementById(`croquisObject_${containerId}`); if (objectTag && objectTag.contentDocument) { const svgDoc = objectTag.contentDocument; const svgElement = svgDoc.documentElement; if (svgElement) { const allEl = svgElement.querySelectorAll('*'); allEl.forEach(el => { if (el.tagName !== 'svg') { el.setAttribute('fill', 'transparent'); el.setAttribute('stroke', 'transparent'); el.setAttribute('fill-opacity', '0'); el.setAttribute('stroke-opacity', '0'); if (el.style) el.style.opacity = '0'; } }); const elementosConLabel = svgDoc.querySelectorAll('*'); elementosConLabel.forEach(el => { let label = null; label = el.getAttribute('inkscape:label'); if (!label && el.attributes) { for (let attr of el.attributes) { if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) { label = attr.value; break; } } } if (label && !isNaN(parseInt(label))) { el.style.cursor = 'pointer'; el.addEventListener('click', (e) => { e.stopPropagation(); const bloqueBase = label; const bloqueEncontrado = sector.bloques.find(b => { if (b.id === bloqueBase) return true; if (b.id.startsWith(`${bloqueBase}_`)) return true; return false; }); if (bloqueEncontrado) { const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id); if (indice !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(indice); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice }); } } }); } }); } } }, 500);
             return html;
         }
@@ -963,7 +961,7 @@
         function getTextoManos(via) { if (via.manos_juntas && via.manos_juntas.trim() !== "") return `Manos juntas: ${via.manos_juntas}`; let partes = []; if (via.mano_izq && via.mano_izq.trim() !== "") partes.push(`Izq: ${via.mano_izq}`); if (via.mano_der && via.mano_der.trim() !== "") partes.push(`Der: ${via.mano_der}`); return partes.length > 0 ? partes.join(" · ") : ""; }
 
         function cargarYColorearSVGBloque(bloque, slideIndex, vias) {
-            const svgUrl = `${bloque.foto_base}.svg?v=${Date.now()}`;
+            const svgUrl = `${bloque.foto_base}.svg`;
             const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
             if (!mediaContainer) return;
             fetch(svgUrl).then(res => res.text()).then(svgText => { const parser = new DOMParser(); const svgDoc = parser.parseFromString(svgText, 'image/svg+xml'); const svgElement = svgDoc.documentElement; if (!svgElement) return; aplicarColoresSVG(svgDoc, bloque, vias); svgElement.setAttribute('preserveAspectRatio', 'none'); svgElement.style.width = '100%'; svgElement.style.height = '100%'; svgElement.style.position = 'absolute'; svgElement.style.top = '0'; svgElement.style.left = '0'; svgElement.style.pointerEvents = 'none'; svgElement.style.zIndex = '20'; const oldSvg = mediaContainer.querySelector('svg'); if (oldSvg) oldSvg.remove(); mediaContainer.appendChild(svgElement); }).catch(err => console.log(`Error SVG ${bloque.id}:`, err));
@@ -1036,14 +1034,12 @@
                     const registration = await navigator.serviceWorker.register('/guia-escalada/sw.js');
                     console.log('[App] Service Worker registrado');
                     
-                    // Función para comprobar si ya hay contenido en caché
                     const isContentCached = async () => {
-                        const cache = await caches.open('guia-escalada-v5');
+                        const cache = await caches.open('guia-escalada-v6');
                         const jsonCached = await cache.match('/guia-escalada/datos/datos.json');
                         return !!jsonCached;
                     };
                     
-                    // Si el SW está instalando o ya está activo pero sin caché, mostramos pantalla de carga
                     if (registration.installing || (registration.active && !(await isContentCached()))) {
                         const sw = registration.installing || registration.active;
                         if (sw) {
@@ -1059,11 +1055,9 @@
                                 }
                             });
                         } else {
-                            // Si no hay SW, ocultamos la pantalla de carga
                             loadingScreen.style.display = 'none';
                         }
                     } else {
-                        // Ya hay contenido cacheado, ocultamos pantalla de carga rápidamente
                         setTimeout(() => {
                             loadingScreen.classList.add('hidden');
                             setTimeout(() => {
@@ -1089,13 +1083,11 @@
             }
         })();
 
-        // Eventos de pantalla de contraseña
         document.getElementById('submitPassword').addEventListener('click', verifyPassword);
         document.getElementById('passwordInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') verifyPassword();
         });
 
-        // Eventos de legales
         document.getElementById('acceptCondiciones').addEventListener('click', acceptTerms);
         document.getElementById('declineCondiciones').addEventListener('click', decline);
         document.getElementById('acceptProteccion').addEventListener('click', acceptPrivacy);
