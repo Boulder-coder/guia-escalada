@@ -1,6 +1,19 @@
-// sw.js - Precarga completa para offline total (con SVGs)
-const CACHE_NAME = 'guia-escalada-v5';
+// sw.js - Precarga completa para offline total (con soporte para parámetros en SVGs)
+const CACHE_NAME = 'guia-escalada-v6';
 const DATA_JSON_URL = '/guia-escalada/datos/datos.json';
+
+// Normaliza URLs eliminando parámetros de timestamp para el cacheo
+function normalizeUrl(url) {
+    try {
+        const urlObj = new URL(url);
+        // Eliminar el parámetro 'v' (timestamp) y otros parámetros dinámicos
+        urlObj.searchParams.delete('v');
+        urlObj.searchParams.delete('timestamp');
+        return urlObj.toString();
+    } catch (e) {
+        return url;
+    }
+}
 
 // Esta función obtiene TODAS las URLs (JPG y SVG) del datos.json
 async function getAllAssetUrls() {
@@ -59,12 +72,11 @@ async function getAllAssetUrls() {
 
 // Instalación: precarga de TODOS los assets (JPG y SVG)
 self.addEventListener('install', event => {
-  console.log('[SW] Instalando y precargando TODO el contenido (JPGs + SVGs)...');
+  console.log('[SW] Instalando v6 con soporte offline para SVGs...');
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
       
-      // 1. Cachear recursos críticos
       console.log('[SW] Cacheando recursos críticos...');
       await cache.addAll([
         '/guia-escalada/',
@@ -72,13 +84,11 @@ self.addEventListener('install', event => {
         DATA_JSON_URL,
       ]);
       
-      // 2. Obtener todas las URLs
       const allAssetUrls = await getAllAssetUrls();
       console.log(`[SW] Precargando ${allAssetUrls.length} assets...`);
       
       let successCount = 0;
       let failCount = 0;
-      const failedUrls = [];
       
       for (let i = 0; i < allAssetUrls.length; i++) {
         const url = allAssetUrls[i];
@@ -91,13 +101,10 @@ self.addEventListener('install', event => {
             failCount++;
             if (response.status !== 404) {
               console.warn(`[SW] Falló (HTTP ${response.status}): ${url}`);
-            } else {
-              failedUrls.push(url);
             }
           }
         } catch (error) {
           failCount++;
-          console.warn(`[SW] Error de red: ${url}`, error);
         }
         
         if ((successCount + failCount) % 20 === 0 || i === allAssetUrls.length - 1) {
@@ -105,15 +112,7 @@ self.addEventListener('install', event => {
         }
       }
       
-      console.log(`[SW] Precarga completada.`);
-      console.log(`[SW] ✅ Éxitos: ${successCount}`);
-      console.log(`[SW] ❌ Fallos: ${failCount}`);
-      if (failedUrls.length > 0 && failedUrls.length <= 10) {
-        console.log(`[SW] Archivos no encontrados (404):`, failedUrls);
-      } else if (failedUrls.length > 10) {
-        console.log(`[SW] ${failedUrls.length} archivos no encontrados (404) - normal si aún no has subido todos los SVGs`);
-      }
-      
+      console.log(`[SW] Precarga completada. ✅ Éxitos: ${successCount}, ❌ Fallos: ${failCount}`);
       await self.skipWaiting();
     })()
   );
@@ -138,45 +137,47 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch: estrategia Cache First para todo
+// Fetch: estrategia inteligente con normalización de URLs
 self.addEventListener('fetch', event => {
-  const url = event.request.url;
+  const originalUrl = event.request.url;
+  const normalizedUrl = normalizeUrl(originalUrl);
   
   // Para datos.json: Network First
-  if (url.includes('datos/datos.json')) {
+  if (originalUrl.includes('datos/datos.json')) {
     event.respondWith(
       fetch(event.request)
         .then(response => {
           const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          caches.open(CACHE_NAME).then(cache => cache.put(normalizedUrl, clone));
           return response;
         })
-        .catch(() => caches.match(event.request))
+        .catch(() => caches.match(normalizedUrl))
     );
     return;
   }
   
-  // Para imágenes y SVGs: Cache First
-  if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/)) {
+  // Para imágenes y SVGs: Cache First usando URL normalizada
+  if (originalUrl.match(/\.(jpg|jpeg|png|gif|webp|svg)$/)) {
     event.respondWith(
-      caches.match(event.request).then(cachedResponse => {
+      caches.match(normalizedUrl).then(cachedResponse => {
         if (cachedResponse) {
+          console.log(`[SW] Servido desde caché: ${normalizedUrl}`);
           return cachedResponse;
         }
         return fetch(event.request).then(response => {
           if (response.ok) {
             const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+            caches.open(CACHE_NAME).then(cache => cache.put(normalizedUrl, clone));
           }
           return response;
         }).catch(() => {
-          if (url.match(/\.svg$/)) {
-            const emptySvg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="#cccccc"/><text x="50" y="50" text-anchor="middle" dy=".3em" fill="#666">SVG no disponible</text></svg>`;
+          if (originalUrl.match(/\.svg$/)) {
+            const emptySvg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="#cccccc"/><text x="50" y="50" text-anchor="middle" dy=".3em" fill="#666">SVG no disponible offline</text></svg>`;
             return new Response(emptySvg, {
               headers: { 'Content-Type': 'image/svg+xml' }
             });
           }
-          return new Response('Imagen no disponible offline', { status: 404, headers: { 'Content-Type': 'text/plain' } });
+          return new Response('Recurso no disponible offline', { status: 404 });
         });
       })
     );
@@ -184,7 +185,7 @@ self.addEventListener('fetch', event => {
   }
   
   // Para HTML, CSS, JS: Cache First
-  if (url.match(/\.(html|css|js)$/) || url.includes('/guia-escalada/')) {
+  if (originalUrl.match(/\.(html|css|js)$/) || originalUrl.includes('/guia-escalada/')) {
     event.respondWith(
       caches.match(event.request).then(cached => cached || fetch(event.request))
     );
