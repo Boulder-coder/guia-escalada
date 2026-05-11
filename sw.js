@@ -1,203 +1,95 @@
-// sw.js - Service Worker para Guía de Boulder (con precaching de fotos)
-const CACHE_NAME = 'boulder-guide-v2';
-const DYNAMIC_CACHE = 'boulder-dynamic-v2';
+// sw.js - Precarga Forzada para Offline Total
+const CACHE_NAME = 'guia-escalada-v1'; // Cambia este número si quieres forzar una recarga completa en el futuro
+const DATA_JSON_URL = '/guia-escalada/datos/datos.json';
 
-// Recursos estáticos a cachear (los esenciales para el primer arranque)
-const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/datos/datos.json',
-  'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css',
-  'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js',
-  'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap',
-  'https://fonts.cdnfonts.com/css/cocogoose'
-];
-
-// Variable para almacenar todas las URLs de fotos una vez cargadas
-let allImageUrls = [];
-
-// Función para obtener todas las URLs de fotos desde datos.json
-async function fetchAllImageUrls() {
+// Esta función obtiene todas las URLs de tus fotos desde el datos.json
+async function getAllImageUrls() {
   try {
-    const response = await fetch('/datos/datos.json');
+    const response = await fetch(DATA_JSON_URL);
     const data = await response.json();
-    const urls = [];
-    
-    // Recorrer todos los sectores, bloques y vías para extraer las fotos
+    const urls = new Set();
+
     data.sectores.forEach(sector => {
-      // Portada del sector
-      if (sector.portada) urls.push(`${sector.portada}.jpg`);
-      
-      // Mapas
-      if (sector.mapa) urls.push(`${sector.mapa}.jpg`);
-      if (sector.mapa_2) urls.push(`${sector.mapa_2}.jpg`);
-      if (sector.mapa_3) urls.push(`${sector.mapa_3}.jpg`);
-      
-      // SVGs de mapas
-      if (sector.mapa) urls.push(`${sector.mapa}.svg`);
-      if (sector.mapa_2) urls.push(`${sector.mapa_2}.svg`);
-      if (sector.mapa_3) urls.push(`${sector.mapa_3}.svg`);
-      
-      // Croquis
+      // Añade la portada
+      if (sector.portada) urls.add(`/guia-escalada/${sector.portada}.jpg`);
+      // Añade los mapas
+      if (sector.mapa) urls.add(`/guia-escalada/${sector.mapa}.jpg`);
+      if (sector.mapa_2) urls.add(`/guia-escalada/${sector.mapa_2}.jpg`);
+      if (sector.mapa_3) urls.add(`/guia-escalada/${sector.mapa_3}.jpg`);
+      // Añade los fondos de los croquis
       if (sector.croquis_list) {
         sector.croquis_list.forEach(croq => {
-          if (croq.imagen) urls.push(`${croq.imagen}.jpg`);
-          if (croq.svg) urls.push(`${croq.svg}.svg`);
+          if (croq.imagen) urls.add(`/guia-escalada/${croq.imagen}.jpg`);
         });
       }
-      
-      // Bloques y sus fotos
+      // AÑADE LAS FOTOS DE TODOS LOS BLOQUES (¡Esta es la clave!)
       sector.bloques.forEach(bloque => {
         if (bloque.foto_base) {
-          urls.push(`${bloque.foto_base}.jpg`);
-          urls.push(`${bloque.foto_base}.svg`);
+          urls.add(`/guia-escalada/${bloque.foto_base}.jpg`);
+          // Si también quieres precargar los SVGs de las líneas, descomenta la siguiente línea:
+          // urls.add(`/guia-escalada/${bloque.foto_base}.svg`);
         }
       });
     });
-    
-    // Eliminar duplicados
-    const uniqueUrls = [...new Set(urls)];
-    console.log('[SW] URLs de fotos encontradas para precache:', uniqueUrls.length);
-    return uniqueUrls;
+    return Array.from(urls);
   } catch (error) {
-    console.error('[SW] Error al obtener URLs de fotos:', error);
+    console.error('Error al obtener las URLs de las fotos:', error);
     return [];
   }
 }
 
-// Instalación: cachear recursos estáticos y todas las fotos
+// Evento 'install': Aquí es donde ocurre la magia de la precarga
 self.addEventListener('install', event => {
-  console.log('[SW] Instalando...');
+  console.log('[SW] Instalando y precargando contenido...');
   event.waitUntil(
     (async () => {
-      // Primero cachear recursos estáticos
-      const staticCache = await caches.open(CACHE_NAME);
-      await staticCache.addAll(STATIC_ASSETS);
-      console.log('[SW] Recursos estáticos cacheados');
+      const cache = await caches.open(CACHE_NAME);
+      // 1. Añade a la caché la página principal y el JSON (esenciales)
+      await cache.addAll([
+        '/guia-escalada/',
+        '/guia-escalada/index.html',
+        DATA_JSON_URL,
+      ]);
       
-      // Luego obtener y cachear todas las fotos
-      allImageUrls = await fetchAllImageUrls();
-      if (allImageUrls.length > 0) {
-        const imageCache = await caches.open(DYNAMIC_CACHE);
-        // Cachear las fotos en lotes para no saturar
-        for (let i = 0; i < allImageUrls.length; i += 10) {
-          const batch = allImageUrls.slice(i, i + 10);
-          await Promise.all(
-            batch.map(url => 
-              fetch(url, { mode: 'cors' })
-                .then(response => {
-                  if (response.ok) imageCache.put(url, response);
-                })
-                .catch(err => console.warn('[SW] No se pudo cachear:', url, err))
-            )
-          );
-          console.log(`[SW] Lote ${Math.floor(i/10)+1} completado`);
+      // 2. Obtén la lista de todas las fotos
+      const allImageUrls = await getAllImageUrls();
+      console.log(`[SW] Se van a precargar ${allImageUrls.length} imágenes.`);
+
+      // 3. Descarga y guarda cada foto en la caché
+      // Esto es lo que causará la pantalla de carga prolongada, pero necesaria.
+      for (const url of allImageUrls) {
+        try {
+          const response = await fetch(url);
+          if (response.ok) {
+            await cache.put(url, response);
+          } else {
+            console.warn(`[SW] No se pudo precargar (HTTP ${response.status}): ${url}`);
+          }
+        } catch (error) {
+          console.warn(`[SW] Error de red al precargar: ${url}`, error);
         }
-        console.log('[SW] Todas las fotos cacheadas');
       }
-      await self.skipWaiting();
+      console.log('[SW] Precarga completada.');
+      await self.skipWaiting(); // Fuerza a que el SW nuevo tome el control inmediatamente
     })()
   );
 });
 
-// Activación: limpiar cachés antiguas
-self.addEventListener('activate', event => {
-  console.log('[SW] Activando...');
-  event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.filter(key => key !== CACHE_NAME && key !== DYNAMIC_CACHE)
-          .map(key => {
-            console.log('[SW] Eliminando caché antigua:', key);
-            return caches.delete(key);
-          })
-      );
-    }).then(() => self.clients.claim())
+// Evento 'fetch': Para servir los archivos desde la caché cuando estés offline
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => response || fetch(event.request))
+      .catch(() => new Response('Recurso no encontrado offline', { status: 404 }))
   );
 });
 
-// Estrategia: Cache First con respaldo de red
-self.addEventListener('fetch', event => {
-  const url = event.request.url;
-  
-  // Para datos.json: Network First (siempre intenta red, luego caché)
-  if (url.includes('/datos/datos.json')) {
-    event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          const clonedResponse = response.clone();
-          caches.open(DYNAMIC_CACHE).then(cache => {
-            cache.put(event.request, clonedResponse);
-          });
-          return response;
-        })
-        .catch(() => {
-          return caches.match(event.request);
-        })
-    );
-    return;
-  }
-  
-  // Para imágenes y SVGs: Cache First (si está en caché, sírvela; si no, intenta red)
-  if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/)) {
-    event.respondWith(
-      caches.match(event.request).then(cachedResponse => {
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        // Si no está en caché, intentar obtener de la red
-        return fetch(event.request).then(response => {
-          return caches.open(DYNAMIC_CACHE).then(cache => {
-            cache.put(event.request, response.clone());
-            return response;
-          });
-        }).catch(() => {
-          // Fallback: imagen por defecto si existe
-          return caches.match('/fotos/placeholder.jpg');
-        });
-      })
-    );
-    return;
-  }
-  
-  // Para HTML, CSS, JS: Cache First
-  if (url.match(/\.(html|css|js)$/) || url.includes('index.html')) {
-    event.respondWith(
-      caches.match(event.request).then(cachedResponse => {
-        if (cachedResponse) {
-          // Actualizar en segundo plano
-          fetch(event.request).then(response => {
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, response);
-            });
-          }).catch(() => {});
-          return cachedResponse;
-        }
-        return fetch(event.request).then(response => {
-          return caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, response.clone());
-            return response;
-          });
-        });
-      })
-    );
-    return;
-  }
-  
-  // Estrategia por defecto: Network First, fallback a caché
-  event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        if (event.request.method === 'GET') {
-          const responseToCache = response.clone();
-          caches.open(DYNAMIC_CACHE).then(cache => {
-            cache.put(event.request, responseToCache);
-          });
-        }
-        return response;
-      })
-      .catch(() => {
-        return caches.match(event.request);
-      })
+// Evento 'activate': Limpia cachés antiguas y toma el control
+self.addEventListener('activate', event => {
+  console.log('[SW] Activado y limpiando cachés antiguas...');
+  event.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+    )).then(() => self.clients.claim())
   );
 });
