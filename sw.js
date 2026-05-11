@@ -89,11 +89,9 @@ self.addEventListener('install', event => {
             successCount++;
           } else {
             failCount++;
-            // Solo mostrar warning si no es 404 (para no saturar la consola)
             if (response.status !== 404) {
               console.warn(`[SW] Falló (HTTP ${response.status}): ${url}`);
             } else {
-              // Para 404, solo guardamos en array para el log final
               failedUrls.push(url);
             }
           }
@@ -102,7 +100,6 @@ self.addEventListener('install', event => {
           console.warn(`[SW] Error de red: ${url}`, error);
         }
         
-        // Log de progreso cada 20 assets
         if ((successCount + failCount) % 20 === 0 || i === allAssetUrls.length - 1) {
           console.log(`[SW] Progreso: ${successCount + failCount}/${allAssetUrls.length} (Éxitos: ${successCount}, Fallos: ${failCount})`);
         }
@@ -110,7 +107,7 @@ self.addEventListener('install', event => {
       
       console.log(`[SW] Precarga completada.`);
       console.log(`[SW] ✅ Éxitos: ${successCount}`);
-      console.log(`[SW] ❌ Fallos: ${failCount} (archivos no encontrados o errores de red)`);
+      console.log(`[SW] ❌ Fallos: ${failCount}`);
       if (failedUrls.length > 0 && failedUrls.length <= 10) {
         console.log(`[SW] Archivos no encontrados (404):`, failedUrls);
       } else if (failedUrls.length > 10) {
@@ -141,11 +138,11 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch: estrategia Cache First para todo (con fallbacks elegantes)
+// Fetch: estrategia Cache First para todo
 self.addEventListener('fetch', event => {
   const url = event.request.url;
   
-  // Para datos.json: Network First (permite actualizaciones)
+  // Para datos.json: Network First
   if (url.includes('datos/datos.json')) {
     event.respondWith(
       fetch(event.request)
@@ -159,14 +156,13 @@ self.addEventListener('fetch', event => {
     return;
   }
   
-  // Para imágenes JPG y SVGs: Cache First
+  // Para imágenes y SVGs: Cache First
   if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/)) {
     event.respondWith(
       caches.match(event.request).then(cachedResponse => {
         if (cachedResponse) {
           return cachedResponse;
         }
-        // Si no está en caché, intentar red y guardar
         return fetch(event.request).then(response => {
           if (response.ok) {
             const clone = response.clone();
@@ -174,6 +170,29 @@ self.addEventListener('fetch', event => {
           }
           return response;
         }).catch(() => {
-          // Fallback para SVGs que no existen
           if (url.match(/\.svg$/)) {
-            const emptySvg = `
+            const emptySvg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="#cccccc"/><text x="50" y="50" text-anchor="middle" dy=".3em" fill="#666">SVG no disponible</text></svg>`;
+            return new Response(emptySvg, {
+              headers: { 'Content-Type': 'image/svg+xml' }
+            });
+          }
+          return new Response('Imagen no disponible offline', { status: 404, headers: { 'Content-Type': 'text/plain' } });
+        });
+      })
+    );
+    return;
+  }
+  
+  // Para HTML, CSS, JS: Cache First
+  if (url.match(/\.(html|css|js)$/) || url.includes('/guia-escalada/')) {
+    event.respondWith(
+      caches.match(event.request).then(cached => cached || fetch(event.request))
+    );
+    return;
+  }
+  
+  // Por defecto: Network First
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
+  );
+});
