@@ -1038,7 +1038,7 @@
                     
                     // Función para comprobar si ya hay contenido en caché
                     const isContentCached = async () => {
-                        const cache = await caches.open('guia-escalada-v1');
+                        const cache = await caches.open('guia-escalada-v5');
                         const jsonCached = await cache.match('/guia-escalada/datos/datos.json');
                         return !!jsonCached;
                     };
