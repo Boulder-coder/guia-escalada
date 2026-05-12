@@ -1,14 +1,15 @@
-// sw.js - Precarga completa para offline total (v7)
-const CACHE_NAME = 'guia-escalada-v7';
+// sw.js - v8: Precarga completa con soporte offline para SVGs con timestamp
+const CACHE_NAME = 'guia-escalada-v8';
 const DATA_JSON_URL = '/guia-escalada/datos/datos.json';
 
-// Normaliza URLs eliminando parámetros de timestamp para el cacheo
+// Normaliza URLs eliminando parámetros de timestamp
 function normalizeUrl(url) {
     try {
-        const urlObj = new URL(url);
+        const urlObj = new URL(url, location.origin);
         // Eliminar el parámetro 'v' (timestamp) y otros parámetros dinámicos
         urlObj.searchParams.delete('v');
         urlObj.searchParams.delete('timestamp');
+        urlObj.searchParams.delete('_');
         return urlObj.toString();
     } catch (e) {
         return url;
@@ -24,7 +25,10 @@ async function getAllAssetUrls() {
         const baseUrl = '/guia-escalada/';
         
         data.sectores.forEach(sector => {
+            // Portadas JPG
             if (sector.portada) urls.add(`${baseUrl}${sector.portada}.jpg`);
+            
+            // Mapas (JPG y SVG)
             if (sector.mapa) {
                 urls.add(`${baseUrl}${sector.mapa}.jpg`);
                 urls.add(`${baseUrl}${sector.mapa}.svg`);
@@ -37,12 +41,16 @@ async function getAllAssetUrls() {
                 urls.add(`${baseUrl}${sector.mapa_3}.jpg`);
                 urls.add(`${baseUrl}${sector.mapa_3}.svg`);
             }
+            
+            // Croquis (JPG y SVG)
             if (sector.croquis_list) {
                 sector.croquis_list.forEach(croq => {
                     if (croq.imagen) urls.add(`${baseUrl}${croq.imagen}.jpg`);
                     if (croq.svg) urls.add(`${baseUrl}${croq.svg}.svg`);
                 });
             }
+            
+            // Bloques (JPG y SVG)
             if (sector.bloques) {
                 sector.bloques.forEach(bloque => {
                     if (bloque.foto_base) {
@@ -62,16 +70,19 @@ async function getAllAssetUrls() {
 
 // Instalación: precarga de todos los assets
 self.addEventListener('install', event => {
-    console.log('[SW] Instalando v7...');
+    console.log('[SW] Instalando v8...');
     event.waitUntil(
         (async () => {
             const cache = await caches.open(CACHE_NAME);
+            
+            // Recursos críticos
             await cache.addAll([
                 '/guia-escalada/',
                 '/guia-escalada/index.html',
                 DATA_JSON_URL,
             ]);
             
+            // Precargar todos los assets
             const allUrls = await getAllAssetUrls();
             console.log(`[SW] Precargando ${allUrls.length} assets...`);
             
@@ -84,6 +95,9 @@ self.addEventListener('install', event => {
                         success++;
                     } else {
                         fail++;
+                        if (response.status !== 404) {
+                            console.warn(`[SW] Falló (${response.status}): ${url}`);
+                        }
                     }
                 } catch (err) {
                     fail++;
@@ -102,16 +116,24 @@ self.addEventListener('activate', event => {
         caches.keys().then(keys => {
             return Promise.all(
                 keys.filter(key => key !== CACHE_NAME)
-                    .map(key => caches.delete(key))
+                    .map(key => {
+                        console.log(`[SW] Eliminando caché antigua: ${key}`);
+                        return caches.delete(key);
+                    })
             );
         }).then(() => self.clients.claim())
     );
 });
 
-// Fetch: manejo inteligente
+// Fetch: estrategia inteligente con normalización de URLs
 self.addEventListener('fetch', event => {
     const originalUrl = event.request.url;
     const normalizedUrl = normalizeUrl(originalUrl);
+    
+    // Excluir peticiones a otros dominios
+    if (!originalUrl.includes('/guia-escalada/') && !originalUrl.includes('cdn.jsdelivr.net') && !originalUrl.includes('fonts.googleapis.com') && !originalUrl.includes('fonts.cdnfonts.com')) {
+        return;
+    }
     
     // datos.json: Network First
     if (originalUrl.includes('datos/datos.json')) {
@@ -127,13 +149,15 @@ self.addEventListener('fetch', event => {
         return;
     }
     
-    // Para imágenes y SVGs: Cache First usando URL normalizada
+    // Para imágenes y SVGs: Cache First (usando URL normalizada)
     if (originalUrl.match(/\.(jpg|jpeg|png|gif|webp|svg)$/)) {
         event.respondWith(
             caches.match(normalizedUrl).then(cachedResponse => {
                 if (cachedResponse) {
+                    // Si está en caché, lo devolvemos
                     return cachedResponse;
                 }
+                // Si no está en caché, vamos a la red
                 return fetch(event.request).then(response => {
                     if (response.ok) {
                         const clone = response.clone();
@@ -141,11 +165,14 @@ self.addEventListener('fetch', event => {
                     }
                     return response;
                 }).catch(() => {
+                    // Fallback para SVGs que no existen
                     if (originalUrl.match(/\.svg$/)) {
-                        const emptySvg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="#cccccc"/><text x="50" y="50" text-anchor="middle" dy=".3em" fill="#666">SVG no disponible</text></svg>`;
-                        return new Response(emptySvg, { headers: { 'Content-Type': 'image/svg+xml' } });
+                        const emptySvg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="#cccccc"/><text x="50" y="50" text-anchor="middle" dy=".3em" fill="#666">SVG no disponible offline</text></svg>`;
+                        return new Response(emptySvg, {
+                            headers: { 'Content-Type': 'image/svg+xml' }
+                        });
                     }
-                    return new Response('Imagen no disponible', { status: 404, headers: { 'Content-Type': 'text/plain' } });
+                    return new Response('Imagen no disponible', { status: 404 });
                 });
             })
         );
@@ -153,9 +180,18 @@ self.addEventListener('fetch', event => {
     }
     
     // Para HTML, CSS, JS: Cache First
-    if (originalUrl.match(/\.(html|css|js)$/) || originalUrl.includes('/guia-escalada/')) {
+    if (originalUrl.match(/\.(html|css|js)$/)) {
         event.respondWith(
-            caches.match(event.request).then(cached => cached || fetch(event.request))
+            caches.match(originalUrl).then(cached => {
+                if (cached) return cached;
+                return fetch(event.request).then(response => {
+                    if (response.ok) {
+                        const clone = response.clone();
+                        caches.open(CACHE_NAME).then(cache => cache.put(originalUrl, clone));
+                    }
+                    return response;
+                });
+            })
         );
         return;
     }
