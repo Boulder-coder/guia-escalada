@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
-        /* ===== ESTILOS (mismos que antes, por brevedad no los repito pero están en tu versión actual) ===== */
+        /* ===== ESTILOS (completos, mismos que en tu versión) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
@@ -33,10 +33,7 @@
             opacity: 0;
             transition: visibility 0.2s, opacity 0.2s;
         }
-        .drawer-overlay.open {
-            visibility: visible;
-            opacity: 1;
-        }
+        .drawer-overlay.open { visibility: visible; opacity: 1; }
         .drawer {
             position: fixed;
             top: 0;
@@ -50,15 +47,8 @@
             flex-direction: column;
             box-shadow: 2px 0 10px rgba(0,0,0,0.3);
         }
-        .drawer.open {
-            left: 0;
-        }
-        .drawer-header {
-            padding: 20px;
-            border-bottom: 1px solid #444;
-            color: #FFDE66;
-            font-size: 1.2rem;
-        }
+        .drawer.open { left: 0; }
+        .drawer-header { padding: 20px; border-bottom: 1px solid #444; color: #FFDE66; font-size: 1.2rem; }
         .drawer-nav {
             flex: 1;
             overflow-y: auto;
@@ -66,9 +56,7 @@
             display: flex;
             flex-direction: column;
         }
-        .drawer-sectores-list {
-            flex: 1;
-        }
+        .drawer-sectores-list { flex: 1; }
         .drawer-bottom-links {
             margin-top: auto;
             padding-bottom: 20px;
@@ -81,9 +69,7 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .drawer-section-title.sectores {
-            color: #FFDE66;
-        }
+        .drawer-section-title.sectores { color: #FFDE66; }
         .drawer-bottom-link {
             display: block;
             padding: 12px 20px;
@@ -95,9 +81,7 @@
             color: #ffffff;
         }
         .drawer-section-title:hover, .drawer-section-title:active,
-        .drawer-bottom-link:hover, .drawer-bottom-link:active {
-            background: #6674FF;
-        }
+        .drawer-bottom-link:hover, .drawer-bottom-link:active { background: #6674FF; }
         .drawer-nav a {
             display: block;
             padding: 12px 20px;
@@ -106,19 +90,9 @@
             font-size: 1rem;
             transition: background 0.2s;
         }
-        .drawer-nav a:hover, .drawer-nav a:active {
-            background: #6674FF;
-        }
-        .drawer-nav .sector-item {
-            padding-left: 30px;
-            font-family: 'Roboto', sans-serif;
-            font-weight: 400;
-        }
-        .drawer-divider {
-            height: 1px;
-            background-color: #444;
-            margin: 12px 20px;
-        }
+        .drawer-nav a:hover, .drawer-nav a:active { background: #6674FF; }
+        .drawer-nav .sector-item { padding-left: 30px; font-family: 'Roboto', sans-serif; font-weight: 400; }
+        .drawer-divider { height: 1px; background-color: #444; margin: 12px 20px; }
         .sector-card { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
         .sector-card img { width: 100%; height: 160px; object-fit: cover; }
         .sector-info { padding: 12px; background: #d4d4d4; }
@@ -134,7 +108,6 @@
         .condiciones-content strong, .proteccion-content strong { color: #6674FF; }
         .condiciones-content p, .proteccion-content p { margin-bottom: 12px; line-height: 1.4; text-align: left; }
         .condiciones-content ul, .proteccion-content ul { margin: 8px 0 12px 25px; }
-        .condiciones-content li, .proteccion-content li { margin-bottom: 4px; line-height: 1.4; }
         .croquis-list { margin-bottom: 20px; }
         .croquis-list-title { margin: 15px 0 10px; font-weight: 600; color: #6674FF; }
         .croquis-thumbnails { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 5px; }
@@ -335,6 +308,10 @@
             font-family: 'Cocogoose', sans-serif;
             text-align: center;
             transition: opacity 0.5s;
+            display: none;
+        }
+        .loading-screen.visible {
+            display: flex;
         }
         .loading-screen.hidden {
             opacity: 0;
@@ -361,11 +338,12 @@
 </head>
 <body>
 
+    <!-- Pantalla de carga (oculta inicialmente) -->
     <div id="loadingScreen" class="loading-screen">
         <div class="loading-spinner"></div>
-        <div id="loadingMessage">Cargando guía por primera vez...</div>
+        <div id="loadingMessage">Descargando contenido para uso offline...</div>
         <div id="loadingProgress" class="loading-progress"></div>
-        <div style="font-size: 12px; margin-top: 20px;">Descargando todas las fotos para uso offline.<br>Puede tardar unos minutos en la primera ejecución.</div>
+        <div style="font-size: 12px; margin-top: 20px;">Esto puede tardar unos minutos la primera vez.<br>No cierres la aplicación.</div>
     </div>
 
     <div id="passwordOverlay" class="password-overlay">
@@ -387,23 +365,20 @@
                 <strong>1. Ámbito de aplicación</strong><br>
                 Esta aplicación (en adelante, «la Guía») es un instrumento digital de uso exclusivo para los socios del club Grupo Espeleo Carcalín. El acceso y la utilización de la Guía implican la aceptación íntegra de las presentes condiciones.<br><br>
                 <strong>2. Acceso y renovación</strong><br>
-                El acceso está protegido mediante una contraseña que se renovará anualmente. La nueva contraseña será comunicada exclusivamente a los socios a través del canal oficial del club (grupo de WhatsApp). El usuario se compromete a no difundir la contraseña a terceros no autorizados.<br><br>
+                El acceso está protegido mediante una contraseña que se renovará anualmente. La nueva contraseña será comunicada exclusivamente a los socios a través del canal oficial del club (grupo de WhatsApp).<br><br>
                 <strong>3. Exención de responsabilidad por daños y accidentes</strong><br>
-                La Guía se proporciona únicamente con fines informativos y deportivos. El escalador asume toda la responsabilidad sobre su seguridad y sus actos durante el uso de la guía.<br><br>
+                La Guía se proporciona únicamente con fines informativos y deportivos. El escalador asume toda la responsabilidad sobre su seguridad.<br><br>
                 <strong>4. Advertencia sobre el estado de los bloques</strong><br>
-                El usuario es informado de que algunos bloques se encuentran poco escalados, por lo que determinadas presas o cantos pueden desprenderse inesperadamente. Es responsabilidad del usuario inspeccionar visualmente la roca antes de escalar y proceder con la prudencia que dicte su propia experiencia y criterio.<br><br>
+                Algunos bloques se encuentran poco escalados, por lo que determinadas presas pueden desprenderse. Es responsabilidad del usuario inspeccionar la roca.<br><br>
                 <strong>5. Uso responsable y conservación del entorno</strong><br>
-                Se exige al usuario un comportamiento cívico y responsable durante el uso de la Guía. En particular, deberá:<br>
-                • Respetar los accesos, caminos y zonas de aparcamiento.<br>
-                • No alterar el entorno natural ni los bloques (no tallar presas artificiales, no dejar residuos, etc.).<br>
-                • Abstenerse de escalar en condiciones climáticas adversas o cuando el terreno esté húmedo, para evitar daños a la roca y accidentes.<br><br>
+                Se exige al usuario un comportamiento cívico y responsable: respetar accesos, no alterar el entorno, no dejar residuos, y no escalar en condiciones adversas.<br><br>
                 <strong>6. Actualización de la información</strong><br>
-                El contenido de la Guía se actualizará periódicamente conforme se abran nuevos bloques o sectores. No obstante, pueden existir desviaciones o información no actualizada. El club se reserva el derecho de modificar, suspender o interrumpir el servicio en cualquier momento.<br><br>
+                El contenido se actualizará periódicamente. Pueden existir desviaciones o información no actualizada.<br><br>
                 <strong>7. Grados y comunidad</strong><br>
-                La graduación de los bloques es orientativa, igual que la indicación de las manos de inicio y el trazado de la línea. Nada te impide escalar como quieras. Si estás disconforme con el grado, abres nuevas líneas o desbloqueas algún proyecto, comunícalo a través del grupo de WhatsApp y evaluaremos introducir los cambios.<br><br>
+                La graduación es orientativa. Si estás disconforme o abres nuevas líneas, comunícalo al club.<br><br>
                 <strong>8. Aceptación</strong><br>
-                El simple uso de esta aplicación implica la total aceptación de las presentes condiciones. Si el usuario no está de acuerdo con alguna de ellas, deberá abstenerse de utilizar la Guía.<br><br>
-                <strong>Finalmente, el club anima a los socios a disfrutar de la escalada en roca con responsabilidad, respeto hacia el medio ambiente y compañerismo. ¡Felices bloques!</strong>
+                El simple uso de esta aplicación implica la total aceptación de las presentes condiciones.<br><br>
+                <strong>¡Felices bloques!</strong>
             </div>
         </div>
         <div class="legal-buttons">
@@ -452,46 +427,10 @@
 
     <div class="app-content">
         <div id="screen-portada" class="screen active"><h2>🏔️ Sectores</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
-        <div id="screen-condiciones" class="screen">
-            <div class="condiciones-content">
-                <strong>CONDICIONES DE USO Y AVISO LEGAL</strong><br><br>
-                <strong>1. Ámbito de aplicación</strong><br>
-                Esta aplicación (en adelante, «la Guía») es un instrumento digital de uso exclusivo para los socios del club Grupo Espeleo Carcalín. El acceso y la utilización de la Guía implican la aceptación íntegra de las presentes condiciones.<br><br>
-                <strong>2. Acceso y renovación</strong><br>
-                El acceso está protegido mediante una contraseña que se renovará anualmente. La nueva contraseña será comunicada exclusivamente a los socios a través del canal oficial del club (grupo de WhatsApp). El usuario se compromete a no difundir la contraseña a terceros no autorizados.<br><br>
-                <strong>3. Exención de responsabilidad por daños y accidentes</strong><br>
-                La Guía se proporciona únicamente con fines informativos y deportivos. El escalador asume toda la responsabilidad sobre su seguridad y sus actos durante el uso de la guía.<br><br>
-                <strong>4. Advertencia sobre el estado de los bloques</strong><br>
-                El usuario es informado de que algunos bloques se encuentran poco escalados, por lo que determinadas presas o cantos pueden desprenderse inesperadamente. Es responsabilidad del usuario inspeccionar visualmente la roca antes de escalar y proceder con la prudencia que dicte su propia experiencia y criterio.<br><br>
-                <strong>5. Uso responsable y conservación del entorno</strong><br>
-                Se exige al usuario un comportamiento cívico y responsable durante el uso de la Guía. En particular, deberá:<br>
-                • Respetar los accesos, caminos y zonas de aparcamiento.<br>
-                • No alterar el entorno natural ni los bloques (no tallar presas artificiales, no dejar residuos, etc.).<br>
-                • Abstenerse de escalar en condiciones climáticas adversas o cuando el terreno esté húmedo, para evitar daños a la roca y accidentes.<br><br>
-                <strong>6. Actualización de la información</strong><br>
-                El contenido de la Guía se actualizará periódicamente conforme se abran nuevos bloques o sectores. No obstante, pueden existir desviaciones o información no actualizada. El club se reserva el derecho de modificar, suspender o interrumpir el servicio en cualquier momento.<br><br>
-                <strong>7. Grados y comunidad</strong><br>
-                La graduación de los bloques es orientativa, igual que la indicación de las manos de inicio y el trazado de la línea. Nada te impide escalar como quieras. Si estás disconforme con el grado, abres nuevas líneas o desbloqueas algún proyecto, comunícalo a través del grupo de WhatsApp y evaluaremos introducir los cambios.<br><br>
-                <strong>8. Aceptación</strong><br>
-                El simple uso de esta aplicación implica la total aceptación de las presentes condiciones. Si el usuario no está de acuerdo con alguna de ellas, deberá abstenerse de utilizar la Guía.<br><br>
-                <strong>Finalmente, el club anima a los socios a disfrutar de la escalada en roca con responsabilidad, respeto hacia el medio ambiente y compañerismo. ¡Felices bloques!</strong>
-            </div>
-        </div>
-        <div id="screen-proteccion" class="screen">
-            <div class="proteccion-content">
-                <strong>PROTECCIÓN DE DATOS</strong><br><br>
-                Esta aplicación no recopila ni almacena ningún dato personal (como nombre, correo electrónico o dirección IP). Únicamente guarda en tu dispositivo tus marcadores de progreso (Flash, Red point, Proyecto) para recordar tu historial de escalada.<br><br>
-                Por este mismo motivo, si cambias de dispositivo, formateas o borras el caché de la Guía, perderás tu historial de escalada.<br><br>
-                Estos datos no son accesibles por terceros ni se transmiten a ningún servidor. El uso de la app implica tu consentimiento para esta funcionalidad local.
-            </div>
-        </div>
-        <div id="screen-sector-detalle" class="screen">
-            <div id="sector-detalle-content"></div>
-        </div>
-        <div id="screen-ficha-bloque" class="screen">
-            <div id="ficha-bloque-content"></div>
-            <div class="back-hint">← Botón atrás del móvil para volver</div>
-        </div>
+        <div id="screen-condiciones" class="screen"><div class="condiciones-content">...</div></div>
+        <div id="screen-proteccion" class="screen"><div class="proteccion-content">...</div></div>
+        <div id="screen-sector-detalle" class="screen"><div id="sector-detalle-content"></div></div>
+        <div id="screen-ficha-bloque" class="screen"><div id="ficha-bloque-content"></div><div class="back-hint">← Botón atrás del móvil para volver</div></div>
     </div>
 
     <div id="globalBottomTabs" class="sector-bottom-tabs" style="display: none;">
@@ -605,7 +544,67 @@
             }
         }
 
+        // Esta función ahora también registra el Service Worker
         function initAppAfterLegal() {
+            // Mostrar pantalla de carga
+            const loadingScreen = document.getElementById('loadingScreen');
+            loadingScreen.classList.add('visible');
+            
+            // Registrar Service Worker y luego cargar datos
+            registerServiceWorkerAndStart();
+        }
+        
+        async function registerServiceWorkerAndStart() {
+            const loadingMessage = document.getElementById('loadingMessage');
+            const loadingProgress = document.getElementById('loadingProgress');
+            
+            if ('serviceWorker' in navigator) {
+                try {
+                    loadingMessage.textContent = 'Registrando servicio offline...';
+                    
+                    const registration = await navigator.serviceWorker.register('/guia-escalada/sw.js');
+                    console.log('[App] Service Worker registrado');
+                    
+                    // Escuchar mensajes de progreso del SW
+                    if (navigator.serviceWorker.controller) {
+                        navigator.serviceWorker.controller.postMessage({ type: 'GET_PROGRESS' });
+                    }
+                    
+                    navigator.serviceWorker.addEventListener('message', (event) => {
+                        if (event.data.type === 'CACHE_PROGRESS') {
+                            const percent = Math.round((event.data.completed / event.data.total) * 100);
+                            loadingProgress.textContent = `${percent}% (${event.data.completed}/${event.data.total})`;
+                            loadingMessage.textContent = 'Descargando contenido...';
+                        }
+                    });
+                    
+                    // Esperar a que el SW esté activado
+                    if (registration.installing) {
+                        loadingMessage.textContent = 'Instalando servicio offline...';
+                        await new Promise((resolve) => {
+                            registration.installing.addEventListener('statechange', (e) => {
+                                if (e.target.state === 'activated') {
+                                    console.log('[App] SW activado');
+                                    resolve();
+                                }
+                            });
+                        });
+                    }
+                    
+                    // Pequeña pausa para asegurar la caché
+                    loadingMessage.textContent = 'Finalizando preparación...';
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                } catch (error) {
+                    console.error('[App] Error al registrar SW:', error);
+                }
+            }
+            
+            // Ocultar pantalla de carga y cargar la app
+            const loadingScreen = document.getElementById('loadingScreen');
+            loadingScreen.classList.remove('visible');
+            
+            // Iniciar la aplicación
             cargarDatos();
             initMenu();
             navigateToScreen('screen-portada');
@@ -1005,7 +1004,6 @@
                     mediaContainer.appendChild(svgElement);
                 })
                 .catch(err => {
-                    // SVG no disponible - la foto JPG ya se ve, no hacemos nada
                     console.log(`SVG no disponible para ${bloque.id}`);
                 });
         }
@@ -1068,49 +1066,7 @@
             document.getElementById('drawerProteccionBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-proteccion'); currentSector = null; isInFichaBloque = false; });
         }
 
-        // Registrar Service Worker
-        window.addEventListener('load', async () => {
-            const loadingScreen = document.getElementById('loadingScreen');
-            if ('serviceWorker' in navigator) {
-                try {
-                    const registration = await navigator.serviceWorker.register('/guia-escalada/sw.js');
-                    console.log('[App] Service Worker registrado');
-                    const isContentCached = async () => {
-                        const cache = await caches.open('guia-escalada-v8');
-                        const jsonCached = await cache.match('/guia-escalada/datos/datos.json');
-                        return !!jsonCached;
-                    };
-                    if (registration.installing || (registration.active && !(await isContentCached()))) {
-                        const sw = registration.installing || registration.active;
-                        if (sw) {
-                            sw.addEventListener('statechange', (e) => {
-                                if (e.target.state === 'activated') {
-                                    console.log('[App] SW activado y contenido cacheado');
-                                    setTimeout(() => {
-                                        loadingScreen.classList.add('hidden');
-                                        setTimeout(() => loadingScreen.style.display = 'none', 500);
-                                    }, 1000);
-                                }
-                            });
-                        } else {
-                            loadingScreen.style.display = 'none';
-                        }
-                    } else {
-                        setTimeout(() => {
-                            loadingScreen.classList.add('hidden');
-                            setTimeout(() => loadingScreen.style.display = 'none', 500);
-                        }, 500);
-                    }
-                } catch (error) {
-                    console.error('[App] Error al registrar SW:', error);
-                    loadingScreen.style.display = 'none';
-                }
-            } else {
-                loadingScreen.style.display = 'none';
-            }
-        });
-
-        // Inicio de la app
+        // Inicio de la app - SOLO autenticación, sin SW todavía
         (async () => {
             const passwordOk = await checkAndShowPassword();
             if (passwordOk) proceedToLegal();
