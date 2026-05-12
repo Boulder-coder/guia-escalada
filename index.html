@@ -515,7 +515,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        const PASSWORD_VERSION = "2025";
+        const PASSWORD_VERSION = "2026";
         const VALID_PASSWORD_HASH = "7a9a19e3cf1bcd6721812a9c23f98a4ab4fb5c5f88670dbe1cddf4407cc82857";
         
         const STORAGE_PWD_VERSION = 'boulder_password_version';
@@ -775,50 +775,41 @@
             html += `<object id="mapaObject_${containerId}" data="${svgMapaUrl}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
             if (incluirFooter && sector.parking && sector.parking.length > 0) html += `<div class="mapa-footer">📍 Toca sobre los aparcamientos (P1, P2, P3...) para ver su ubicación en Google Maps</div>`;
             html += `</div>`;
-            
-            // Asignar eventos después de que el SVG cargue (funciona online y offline)
-            setTimeout(() => {
-                const objectTag = document.getElementById(`mapaObject_${containerId}`);
-                if (objectTag) {
-                    const asignarEventos = () => {
-                        const svgDoc = objectTag.contentDocument;
-                        if (svgDoc && svgDoc.documentElement) {
-                            const svgElement = svgDoc.documentElement;
-                            const allEl = svgElement.querySelectorAll('*');
-                            allEl.forEach(el => {
-                                if (el.tagName !== 'svg') {
-                                    el.setAttribute('fill', 'transparent');
-                                    el.setAttribute('stroke', 'transparent');
-                                    el.setAttribute('fill-opacity', '0');
-                                    el.setAttribute('stroke-opacity', '0');
-                                    if (el.style) el.style.opacity = '0';
-                                }
-                            });
-                            if (incluirFooter && sector.parking && sector.parking.length > 0) {
-                                const parkings = sector.parking;
-                                for (let i = 0; i < parkings.length; i++) {
-                                    const parkingLabel = `parking_${i+1}`;
-                                    const elementos = encontrarElementosPorLabel(svgDoc, parkingLabel);
-                                    elementos.forEach(el => {
-                                        el.style.cursor = 'pointer';
-                                        el.addEventListener('click', (e) => {
-                                            e.stopPropagation();
-                                            window.open(parkings[i], '_blank');
-                                        });
-                                    });
-                                }
-                            }
-                        }
-                    };
-                    
-                    if (objectTag.contentDocument && objectTag.contentDocument.readyState === 'complete') {
-                        asignarEventos();
-                    } else {
-                        objectTag.addEventListener('load', asignarEventos);
-                        setTimeout(asignarEventos, 500);
+            setTimeout(() => { 
+                const objectTag = document.getElementById(`mapaObject_${containerId}`); 
+                if (objectTag && objectTag.contentDocument) { 
+                    const svgDoc = objectTag.contentDocument; 
+                    if (svgDoc) {
+                        const svgElement = svgDoc.documentElement; 
+                        if (svgElement) { 
+                            const allEl = svgElement.querySelectorAll('*'); 
+                            allEl.forEach(el => { 
+                                if (el.tagName !== 'svg') { 
+                                    el.setAttribute('fill', 'transparent'); 
+                                    el.setAttribute('stroke', 'transparent'); 
+                                    el.setAttribute('fill-opacity', '0'); 
+                                    el.setAttribute('stroke-opacity', '0'); 
+                                    if (el.style) el.style.opacity = '0'; 
+                                } 
+                            }); 
+                            if (incluirFooter && sector.parking && sector.parking.length > 0) { 
+                                const parkings = sector.parking; 
+                                for (let i = 0; i < parkings.length; i++) { 
+                                    const parkingLabel = `parking_${i+1}`; 
+                                    const elementos = encontrarElementosPorLabel(svgDoc, parkingLabel); 
+                                    elementos.forEach(el => { 
+                                        el.style.cursor = 'pointer'; 
+                                        el.addEventListener('click', (e) => { 
+                                            e.stopPropagation(); 
+                                            window.open(parkings[i], '_blank'); 
+                                        }); 
+                                    }); 
+                                } 
+                            } 
+                        } 
                     }
-                }
-            }, 100);
+                } 
+            }, 500);
             return html;
         }
 
@@ -834,69 +825,7 @@
             html += `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg?v=${timestamp}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
-            
-            setTimeout(() => {
-                const objectTag = document.getElementById(`croquisObject_${containerId}`);
-                if (objectTag) {
-                    const asignarEventos = () => {
-                        const svgDoc = objectTag.contentDocument;
-                        if (svgDoc && svgDoc.documentElement) {
-                            const svgElement = svgDoc.documentElement;
-                            const allEl = svgElement.querySelectorAll('*');
-                            allEl.forEach(el => {
-                                if (el.tagName !== 'svg') {
-                                    el.setAttribute('fill', 'transparent');
-                                    el.setAttribute('stroke', 'transparent');
-                                    el.setAttribute('fill-opacity', '0');
-                                    el.setAttribute('stroke-opacity', '0');
-                                    if (el.style) el.style.opacity = '0';
-                                }
-                            });
-                            const elementosConLabel = svgDoc.querySelectorAll('*');
-                            elementosConLabel.forEach(el => {
-                                let label = el.getAttribute('inkscape:label');
-                                if (!label && el.attributes) {
-                                    for (let attr of el.attributes) {
-                                        if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) {
-                                            label = attr.value;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (label && !isNaN(parseInt(label))) {
-                                    el.style.cursor = 'pointer';
-                                    el.addEventListener('click', (e) => {
-                                        e.stopPropagation();
-                                        const bloqueBase = label;
-                                        const bloqueEncontrado = sector.bloques.find(b => {
-                                            if (b.id === bloqueBase) return true;
-                                            if (b.id.startsWith(`${bloqueBase}_`)) return true;
-                                            return false;
-                                        });
-                                        if (bloqueEncontrado) {
-                                            const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
-                                            if (indice !== -1) {
-                                                currentTab = 'bloques';
-                                                isInFichaBloque = true;
-                                                actualizarBotonActivo('bloques');
-                                                cargarFichaBloque(indice);
-                                                navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice });
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    };
-                    
-                    if (objectTag.contentDocument && objectTag.contentDocument.readyState === 'complete') {
-                        asignarEventos();
-                    } else {
-                        objectTag.addEventListener('load', asignarEventos);
-                        setTimeout(asignarEventos, 500);
-                    }
-                }
-            }, 100);
+            setTimeout(() => { const objectTag = document.getElementById(`croquisObject_${containerId}`); if (objectTag && objectTag.contentDocument) { const svgDoc = objectTag.contentDocument; const svgElement = svgDoc.documentElement; if (svgElement) { const allEl = svgElement.querySelectorAll('*'); allEl.forEach(el => { if (el.tagName !== 'svg') { el.setAttribute('fill', 'transparent'); el.setAttribute('stroke', 'transparent'); el.setAttribute('fill-opacity', '0'); el.setAttribute('stroke-opacity', '0'); if (el.style) el.style.opacity = '0'; } }); const elementosConLabel = svgDoc.querySelectorAll('*'); elementosConLabel.forEach(el => { let label = null; label = el.getAttribute('inkscape:label'); if (!label && el.attributes) { for (let attr of el.attributes) { if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) { label = attr.value; break; } } } if (label && !isNaN(parseInt(label))) { el.style.cursor = 'pointer'; el.addEventListener('click', (e) => { e.stopPropagation(); const bloqueBase = label; const bloqueEncontrado = sector.bloques.find(b => { if (b.id === bloqueBase) return true; if (b.id.startsWith(`${bloqueBase}_`)) return true; return false; }); if (bloqueEncontrado) { const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id); if (indice !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(indice); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice }); } } }); } }); } } }, 500);
             return html;
         }
 
@@ -1049,12 +978,18 @@
             if (!mediaContainer) return;
             
             fetch(svgUrl)
-                .then(response => response.ok ? response.text() : Promise.reject('SVG no encontrado'))
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    }
+                    throw new Error('SVG no encontrado');
+                })
                 .then(svgText => {
                     const parser = new DOMParser();
                     const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
                     const svgElement = svgDoc.documentElement;
                     if (!svgElement) return;
+                    
                     aplicarColoresSVG(svgDoc, bloque, vias);
                     svgElement.setAttribute('preserveAspectRatio', 'none');
                     svgElement.style.width = '100%';
@@ -1064,11 +999,15 @@
                     svgElement.style.left = '0';
                     svgElement.style.pointerEvents = 'none';
                     svgElement.style.zIndex = '20';
+                    
                     const oldSvg = mediaContainer.querySelector('svg');
                     if (oldSvg) oldSvg.remove();
                     mediaContainer.appendChild(svgElement);
                 })
-                .catch(() => console.log(`SVG no disponible para ${bloque.id}`));
+                .catch(err => {
+                    // SVG no disponible - la foto JPG ya se ve, no hacemos nada
+                    console.log(`SVG no disponible para ${bloque.id}`);
+                });
         }
 
         function getStatusIndicator(status) { if (status === 'flash') return '<span class="status-indicator status-flash">⚡</span>'; if (status === 'redpoint') return '<span class="status-indicator status-redpoint"></span>'; if (status === 'proyecto') return '<span class="status-indicator status-proyecto">P</span>'; return ''; }
