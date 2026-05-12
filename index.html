@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
+        /* ===== ESTILOS (mismos que antes, por brevedad no los repito pero están en tu versión actual) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
@@ -1004,6 +1005,7 @@
                     mediaContainer.appendChild(svgElement);
                 })
                 .catch(err => {
+                    // SVG no disponible - la foto JPG ya se ve, no hacemos nada
                     console.log(`SVG no disponible para ${bloque.id}`);
                 });
         }
@@ -1074,7 +1076,7 @@
                     const registration = await navigator.serviceWorker.register('/guia-escalada/sw.js');
                     console.log('[App] Service Worker registrado');
                     const isContentCached = async () => {
-                        const cache = await caches.open('guia-escalada-v7');
+                        const cache = await caches.open('guia-escalada-v8');
                         const jsonCached = await cache.match('/guia-escalada/datos/datos.json');
                         return !!jsonCached;
                     };
