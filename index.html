@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
-        /* ===== ESTILOS (completos, mismos que en tu versión) ===== */
+        /* ===== ESTILOS (completos) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
@@ -427,10 +427,51 @@
 
     <div class="app-content">
         <div id="screen-portada" class="screen active"><h2>🏔️ Sectores</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
-        <div id="screen-condiciones" class="screen"><div class="condiciones-content">...</div></div>
-        <div id="screen-proteccion" class="screen"><div class="proteccion-content">...</div></div>
-        <div id="screen-sector-detalle" class="screen"><div id="sector-detalle-content"></div></div>
-        <div id="screen-ficha-bloque" class="screen"><div id="ficha-bloque-content"></div><div class="back-hint">← Botón atrás del móvil para volver</div></div>
+        
+        <!-- Pantalla de CONDICIONES para consulta (sin botones) -->
+        <div id="screen-condiciones" class="screen">
+            <div class="condiciones-content">
+                <strong>CONDICIONES DE USO Y AVISO LEGAL</strong><br><br>
+                <strong>1. Ámbito de aplicación</strong><br>
+                Esta aplicación (en adelante, «la Guía») es un instrumento digital de uso exclusivo para los socios del club Grupo Espeleo Carcalín. El acceso y la utilización de la Guía implican la aceptación íntegra de las presentes condiciones.<br><br>
+                <strong>2. Acceso y renovación</strong><br>
+                El acceso está protegido mediante una contraseña que se renovará anualmente. La nueva contraseña será comunicada exclusivamente a los socios a través del canal oficial del club (grupo de WhatsApp). El usuario se compromete a no difundir la contraseña a terceros no autorizados.<br><br>
+                <strong>3. Exención de responsabilidad por daños y accidentes</strong><br>
+                La Guía se proporciona únicamente con fines informativos y deportivos. El escalador asume toda la responsabilidad sobre su seguridad y sus actos durante el uso de la guía.<br><br>
+                <strong>4. Advertencia sobre el estado de los bloques</strong><br>
+                El usuario es informado de que algunos bloques se encuentran poco escalados, por lo que determinadas presas o cantos pueden desprenderse inesperadamente. Es responsabilidad del usuario inspeccionar visualmente la roca antes de escalar y proceder con la prudencia que dicte su propia experiencia y criterio.<br><br>
+                <strong>5. Uso responsable y conservación del entorno</strong><br>
+                Se exige al usuario un comportamiento cívico y responsable durante el uso de la Guía. En particular, deberá:<br>
+                • Respetar los accesos, caminos y zonas de aparcamiento.<br>
+                • No alterar el entorno natural ni los bloques (no tallar presas artificiales, no dejar residuos, etc.).<br>
+                • Abstenerse de escalar en condiciones climáticas adversas o cuando el terreno esté húmedo, para evitar daños a la roca y accidentes.<br><br>
+                <strong>6. Actualización de la información</strong><br>
+                El contenido de la Guía se actualizará periódicamente conforme se abran nuevos bloques o sectores. No obstante, pueden existir desviaciones o información no actualizada. El club se reserva el derecho de modificar, suspender o interrumpir el servicio en cualquier momento.<br><br>
+                <strong>7. Grados y comunidad</strong><br>
+                La graduación de los bloques es orientativa, igual que la indicación de las manos de inicio y el trazado de la línea. Nada te impide escalar como quieras. Si estás disconforme con el grado, abres nuevas líneas o desbloqueas algún proyecto, comunícalo a través del grupo de WhatsApp y evaluaremos introducir los cambios.<br><br>
+                <strong>8. Aceptación</strong><br>
+                El simple uso de esta aplicación implica la total aceptación de las presentes condiciones. Si el usuario no está de acuerdo con alguna de ellas, deberá abstenerse de utilizar la Guía.<br><br>
+                <strong>Finalmente, el club anima a los socios a disfrutar de la escalada en roca con responsabilidad, respeto hacia el medio ambiente y compañerismo. ¡Felices bloques!</strong>
+            </div>
+        </div>
+        
+        <!-- Pantalla de PROTECCIÓN DE DATOS para consulta (sin botones) -->
+        <div id="screen-proteccion" class="screen">
+            <div class="proteccion-content">
+                <strong>PROTECCIÓN DE DATOS</strong><br><br>
+                Esta aplicación no recopila ni almacena ningún dato personal (como nombre, correo electrónico o dirección IP). Únicamente guarda en tu dispositivo tus marcadores de progreso (Flash, Red point, Proyecto) para recordar tu historial de escalada.<br><br>
+                Por este mismo motivo, si cambias de dispositivo, formateas o borras el caché de la Guía, perderás tu historial de escalada.<br><br>
+                Estos datos no son accesibles por terceros ni se transmiten a ningún servidor. El uso de la app implica tu consentimiento para esta funcionalidad local.
+            </div>
+        </div>
+        
+        <div id="screen-sector-detalle" class="screen">
+            <div id="sector-detalle-content"></div>
+        </div>
+        <div id="screen-ficha-bloque" class="screen">
+            <div id="ficha-bloque-content"></div>
+            <div class="back-hint">← Botón atrás del móvil para volver</div>
+        </div>
     </div>
 
     <div id="globalBottomTabs" class="sector-bottom-tabs" style="display: none;">
@@ -454,7 +495,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        const PASSWORD_VERSION = "2026";
+        const PASSWORD_VERSION = "2026.1";
         const VALID_PASSWORD_HASH = "7a9a19e3cf1bcd6721812a9c23f98a4ab4fb5c5f88670dbe1cddf4407cc82857";
         
         const STORAGE_PWD_VERSION = 'boulder_password_version';
