@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
-        /* ===== Estilos generales ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
@@ -21,8 +20,6 @@
         .app-content { margin-top: 70px; height: calc(100vh - 70px); overflow-y: auto; padding: 15px; padding-bottom: 70px; }
         .screen { display: none; }
         .screen.active { display: block; }
-        
-        /* Drawer (menú lateral) */
         .drawer-overlay {
             position: fixed;
             top: 0;
@@ -121,19 +118,6 @@
             background-color: #444;
             margin: 12px 20px;
         }
-        .drawer-footer {
-            padding: 20px;
-            border-top: none;
-        }
-        .drawer-footer a {
-            color: #ffffff;
-            text-decoration: none;
-            display: block;
-            padding: 8px 0;
-            font-size: 0.9rem;
-        }
-        
-        /* Resto de estilos */
         .sector-card { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
         .sector-card img { width: 100%; height: 160px; object-fit: cover; }
         .sector-info { padding: 12px; background: #d4d4d4; }
@@ -268,7 +252,6 @@
         .back-hint { text-align: center; padding: 8px; font-size: 0.65rem; color: #888; border-top: 1px solid #ddd; margin-top: 8px; }
         h2, h3, h4 { color: #6674FF; letter-spacing: 0.5px; }
 
-        /* ===== Estilos para pantallas de aceptación obligatoria ===== */
         .legal-overlay, .password-overlay {
             position: fixed;
             top: 0;
@@ -335,7 +318,6 @@
             font-weight: bold;
         }
         
-        /* ===== Estilos pantalla de carga ===== */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -378,7 +360,6 @@
 </head>
 <body>
 
-    <!-- Pantalla de carga inicial -->
     <div id="loadingScreen" class="loading-screen">
         <div class="loading-spinner"></div>
         <div id="loadingMessage">Cargando guía por primera vez...</div>
@@ -386,7 +367,6 @@
         <div style="font-size: 12px; margin-top: 20px;">Descargando todas las fotos para uso offline.<br>Puede tardar unos minutos en la primera ejecución.</div>
     </div>
 
-    <!-- Pantalla de CONTRASEÑA -->
     <div id="passwordOverlay" class="password-overlay">
         <div class="password-content">
             <h2 style="text-align:center; color:#6674FF;">🔐 ACCESO RESTRINGIDO</h2>
@@ -399,7 +379,6 @@
         </div>
     </div>
 
-    <!-- Pantalla de Condiciones obligatorias -->
     <div id="legalCondiciones" class="legal-overlay">
         <div class="legal-content">
             <div class="condiciones-content" style="margin:0; padding:0;">
@@ -432,7 +411,6 @@
         </div>
     </div>
 
-    <!-- Pantalla de Protección de Datos obligatoria -->
     <div id="legalProteccion" class="legal-overlay">
         <div class="legal-content">
             <div class="proteccion-content" style="margin:0; padding:0;">
@@ -448,7 +426,6 @@
         </div>
     </div>
 
-    <!-- El resto de la aplicación -->
     <div class="app-header">
         <div class="header-top">
             <button class="menu-toggle" id="menuToggle">☰</button>
@@ -537,9 +514,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // ===== CONFIGURACIÓN DE CONTRASEÑA =====
-        const PASSWORD_VERSION = "2026";
-        const VALID_PASSWORD_HASH = "7a9a19e3cf1bcd6721812a9c23f98a4ab4fb5c5f88670dbe1cddf4407cc82857";
+        const PASSWORD_VERSION = "2025";
+        const VALID_PASSWORD_HASH = "e5c6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7";
         
         const STORAGE_PWD_VERSION = 'boulder_password_version';
         const STORAGE_TERMS = 'boulder_terms_accepted';
@@ -635,7 +611,6 @@
             history.pushState({}, '');
         }
 
-        // ===== FUNCIONES ORIGINALES DE LA APP (con SVGs sin timestamp y carga no bloqueante) =====
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, swiperBloques = null;
         let currentLineaKey = null;
@@ -791,14 +766,49 @@
         function cargarMapaIndividual(sector, mapaBase, incluirFooter = false) {
             if (!mapaBase) return '';
             const mapaUrl = `${mapaBase}.jpg`;
-            const svgMapaUrl = `${mapaBase}.svg`;
-            const containerId = `mapaContainer_${Date.now()}_${Math.random()}`;
+            const timestamp = Date.now();
+            const svgMapaUrl = `${mapaBase}.svg?v=${timestamp}`;
+            const containerId = `mapaContainer_${timestamp}_${Math.random()}`;
             let html = `<div class="mapa-single"><div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${mapaUrl}" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `<object id="mapaObject_${containerId}" data="${svgMapaUrl}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
-            if (incluirFooter) html += `<div class="mapa-footer">📍 Toca sobre los aparcamientos (P1, P2, P3...) para ver su ubicación en Google Maps</div>`;
+            if (incluirFooter && sector.parking && sector.parking.length > 0) html += `<div class="mapa-footer">📍 Toca sobre los aparcamientos (P1, P2, P3...) para ver su ubicación en Google Maps</div>`;
             html += `</div>`;
-            setTimeout(() => { const objectTag = document.getElementById(`mapaObject_${containerId}`); if (objectTag && objectTag.contentDocument) { const svgDoc = objectTag.contentDocument; const svgElement = svgDoc.documentElement; if (svgElement) { const allEl = svgElement.querySelectorAll('*'); allEl.forEach(el => { if (el.tagName !== 'svg') { el.setAttribute('fill', 'transparent'); el.setAttribute('stroke', 'transparent'); el.setAttribute('fill-opacity', '0'); el.setAttribute('stroke-opacity', '0'); if (el.style) el.style.opacity = '0'; } }); if (sector.info && sector.info.parking && incluirFooter) { const parkings = sector.info.parking; for (let i = 0; i < parkings.length; i++) { const parkingLabel = `parking_${i+1}`; const elementos = encontrarElementosPorLabel(svgDoc, parkingLabel); elementos.forEach(el => { el.style.cursor = 'pointer'; el.addEventListener('click', (e) => { e.stopPropagation(); window.open(parkings[i], '_blank'); }); }); } } } } }, 500);
+            setTimeout(() => { 
+                const objectTag = document.getElementById(`mapaObject_${containerId}`); 
+                if (objectTag && objectTag.contentDocument) { 
+                    const svgDoc = objectTag.contentDocument; 
+                    if (svgDoc) {
+                        const svgElement = svgDoc.documentElement; 
+                        if (svgElement) { 
+                            const allEl = svgElement.querySelectorAll('*'); 
+                            allEl.forEach(el => { 
+                                if (el.tagName !== 'svg') { 
+                                    el.setAttribute('fill', 'transparent'); 
+                                    el.setAttribute('stroke', 'transparent'); 
+                                    el.setAttribute('fill-opacity', '0'); 
+                                    el.setAttribute('stroke-opacity', '0'); 
+                                    if (el.style) el.style.opacity = '0'; 
+                                } 
+                            }); 
+                            if (incluirFooter && sector.parking && sector.parking.length > 0) { 
+                                const parkings = sector.parking; 
+                                for (let i = 0; i < parkings.length; i++) { 
+                                    const parkingLabel = `parking_${i+1}`; 
+                                    const elementos = encontrarElementosPorLabel(svgDoc, parkingLabel); 
+                                    elementos.forEach(el => { 
+                                        el.style.cursor = 'pointer'; 
+                                        el.addEventListener('click', (e) => { 
+                                            e.stopPropagation(); 
+                                            window.open(parkings[i], '_blank'); 
+                                        }); 
+                                    }); 
+                                } 
+                            } 
+                        } 
+                    }
+                } 
+            }, 500);
             return html;
         }
 
@@ -807,12 +817,13 @@
         function cargarCroquisInteractivo(sector, croquisIndex) {
             const croquis = sector.croquis_list[croquisIndex];
             if (!croquis) return '<div class="info-sector"><p>Croquis no disponible</p></div>';
-            const containerId = `croquisViewer_${Date.now()}`;
+            const timestamp = Date.now();
+            const containerId = `croquisViewer_${timestamp}`;
             const titulo = croquis.nombre || `Croquis ${croquisIndex + 1}`;
             let html = `<div class="croquis-titulo">${titulo}</div>`;
             html += `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
-            html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
+            html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg?v=${timestamp}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
             setTimeout(() => { const objectTag = document.getElementById(`croquisObject_${containerId}`); if (objectTag && objectTag.contentDocument) { const svgDoc = objectTag.contentDocument; const svgElement = svgDoc.documentElement; if (svgElement) { const allEl = svgElement.querySelectorAll('*'); allEl.forEach(el => { if (el.tagName !== 'svg') { el.setAttribute('fill', 'transparent'); el.setAttribute('stroke', 'transparent'); el.setAttribute('fill-opacity', '0'); el.setAttribute('stroke-opacity', '0'); if (el.style) el.style.opacity = '0'; } }); const elementosConLabel = svgDoc.querySelectorAll('*'); elementosConLabel.forEach(el => { let label = null; label = el.getAttribute('inkscape:label'); if (!label && el.attributes) { for (let attr of el.attributes) { if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) { label = attr.value; break; } } } if (label && !isNaN(parseInt(label))) { el.style.cursor = 'pointer'; el.addEventListener('click', (e) => { e.stopPropagation(); const bloqueBase = label; const bloqueEncontrado = sector.bloques.find(b => { if (b.id === bloqueBase) return true; if (b.id.startsWith(`${bloqueBase}_`)) return true; return false; }); if (bloqueEncontrado) { const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id); if (indice !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(indice); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice }); } } }); } }); } } }, 500);
             return html;
         }
@@ -960,13 +971,11 @@
 
         function getTextoManos(via) { if (via.manos_juntas && via.manos_juntas.trim() !== "") return `Manos juntas: ${via.manos_juntas}`; let partes = []; if (via.mano_izq && via.mano_izq.trim() !== "") partes.push(`Izq: ${via.mano_izq}`); if (via.mano_der && via.mano_der.trim() !== "") partes.push(`Der: ${via.mano_der}`); return partes.length > 0 ? partes.join(" · ") : ""; }
 
-        // FUNCIÓN CORREGIDA: carga SVG sin bloquear la foto JPG
         function cargarYColorearSVGBloque(bloque, slideIndex, vias) {
             const svgUrl = `${bloque.foto_base}.svg`;
             const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
             if (!mediaContainer) return;
             
-            // Intentar cargar el SVG, pero no bloquear si falla
             fetch(svgUrl)
                 .then(response => {
                     if (response.ok) {
@@ -995,8 +1004,7 @@
                     mediaContainer.appendChild(svgElement);
                 })
                 .catch(err => {
-                    // El SVG no existe - no hacemos nada, la foto JPG ya se ve
-                    console.log(`SVG no disponible para ${bloque.id}:`, err.message);
+                    console.log(`SVG no disponible para ${bloque.id}`);
                 });
         }
 
@@ -1011,7 +1019,6 @@
         function generarResumenContent() { const resumenContainer = document.getElementById('tab-resumen'); if (!resumenContainer) return; let resumenHtml = ''; const grupos = {}; currentSector.bloques.forEach((bloque, idx) => { const numBase = parseInt(bloque.id, 10); if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] }; grupos[numBase].bloques.push({ ...bloque, idx }); }); Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => { resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`; grupo.bloques.forEach(bloqueInfo => { bloqueInfo.vias.forEach(via => { const gradoColor = getColorByGrado(via.grado); const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id); const statusIndicator = getLineaStatusIndicator(status); resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}"><span class="linea-nombre">${via.linea_id} · ${via.nombre}</span><div class="linea-right">${statusIndicator ? `<span class="linea-status-indicator ${statusIndicator.class}">${statusIndicator.text}</span>` : ''}${via.grado ? `<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}</div></div>`; }); }); resumenHtml += `</div></div>`; }); resumenContainer.innerHTML = resumenHtml; document.querySelectorAll('#tab-resumen .linea-item').forEach(item => { item.addEventListener('click', () => { const bloqueId = item.dataset.bloqueId; const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId); if (bloqueIndex !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(bloqueIndex); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }); } }); }); }
         function actualizarBotonActivo(tabName) { const btns = document.querySelectorAll('#globalBottomTabs .bottom-tab-btn'); btns.forEach(btn => { if (btn.dataset.tab === tabName) btn.classList.add('active'); else btn.classList.remove('active'); }); }
 
-        // cargarFichaBloque con imagen JPG siempre visible
         function cargarFichaBloque(bloqueIndex, keepSlide = false) {
             if (!currentSector) return;
             isInFichaBloque = true; actualizarBotonActivo('bloques'); currentTab = 'bloques';
@@ -1020,7 +1027,6 @@
             const wrapper = document.getElementById('bloquesSwiperWrapper');
             currentSector.bloques.forEach((b, idx) => {
                 const slide = document.createElement('div'); slide.className = 'swiper-slide';
-                // La imagen JPG se carga siempre con un fallback en caso de error
                 slide.innerHTML = `<div class="ficha-bloque"><div class="media-container" id="mediaContainer-${idx}" style="position: relative;"><img src="${b.foto_base}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'"></div><div class="ficha-footer"><span>Bloque ${parseInt(b.id, 10)}</span><span>${currentSector.nombre}</span></div><div class="ficha-vias" id="vias-${idx}"></div></div>`;
                 wrapper.appendChild(slide);
                 const viasDiv = document.getElementById(`vias-${idx}`);
@@ -1060,21 +1066,18 @@
             document.getElementById('drawerProteccionBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-proteccion'); currentSector = null; isInFichaBloque = false; });
         }
 
-        // ===== REGISTRO DEL SERVICE WORKER Y CONTROL DE CARGA =====
+        // Registrar Service Worker
         window.addEventListener('load', async () => {
             const loadingScreen = document.getElementById('loadingScreen');
-            
             if ('serviceWorker' in navigator) {
                 try {
                     const registration = await navigator.serviceWorker.register('/guia-escalada/sw.js');
                     console.log('[App] Service Worker registrado');
-                    
                     const isContentCached = async () => {
-                        const cache = await caches.open('guia-escalada-v6');
+                        const cache = await caches.open('guia-escalada-v7');
                         const jsonCached = await cache.match('/guia-escalada/datos/datos.json');
                         return !!jsonCached;
                     };
-                    
                     if (registration.installing || (registration.active && !(await isContentCached()))) {
                         const sw = registration.installing || registration.active;
                         if (sw) {
@@ -1083,9 +1086,7 @@
                                     console.log('[App] SW activado y contenido cacheado');
                                     setTimeout(() => {
                                         loadingScreen.classList.add('hidden');
-                                        setTimeout(() => {
-                                            loadingScreen.style.display = 'none';
-                                        }, 500);
+                                        setTimeout(() => loadingScreen.style.display = 'none', 500);
                                     }, 1000);
                                 }
                             });
@@ -1095,9 +1096,7 @@
                     } else {
                         setTimeout(() => {
                             loadingScreen.classList.add('hidden');
-                            setTimeout(() => {
-                                loadingScreen.style.display = 'none';
-                            }, 500);
+                            setTimeout(() => loadingScreen.style.display = 'none', 500);
                         }, 500);
                     }
                 } catch (error) {
@@ -1105,24 +1104,18 @@
                     loadingScreen.style.display = 'none';
                 }
             } else {
-                console.warn('[App] Service Workers no soportados');
                 loadingScreen.style.display = 'none';
             }
         });
 
-        // ===== INICIO DE LA APP =====
+        // Inicio de la app
         (async () => {
             const passwordOk = await checkAndShowPassword();
-            if (passwordOk) {
-                proceedToLegal();
-            }
+            if (passwordOk) proceedToLegal();
         })();
 
         document.getElementById('submitPassword').addEventListener('click', verifyPassword);
-        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') verifyPassword();
-        });
-
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') verifyPassword(); });
         document.getElementById('acceptCondiciones').addEventListener('click', acceptTerms);
         document.getElementById('declineCondiciones').addEventListener('click', decline);
         document.getElementById('acceptProteccion').addEventListener('click', acceptPrivacy);
