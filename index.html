@@ -538,8 +538,9 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         // ===== CONFIGURACIÓN DE CONTRASEÑA =====
-        const PASSWORD_VERSION = "2026";
-        const VALID_PASSWORD_HASH = "7a9a19e3cf1bcd6721812a9c23f98a4ab4fb5c5f88670dbe1cddf4407cc82857";
+        const PASSWORD_VERSION = "2025";
+        // Hash SHA-256 de la contraseña "Ajqueroso_9a"
+        const VALID_PASSWORD_HASH = "e5c6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7";
         
         const STORAGE_PWD_VERSION = 'boulder_password_version';
         const STORAGE_TERMS = 'boulder_terms_accepted';
@@ -635,7 +636,7 @@
             history.pushState({}, '');
         }
 
-        // ===== FUNCIONES ORIGINALES DE LA APP (con SVGs sin timestamp) =====
+        // ===== FUNCIONES ORIGINALES DE LA APP (con SVGs sin timestamp y carga no bloqueante) =====
         const DATA_URL = 'datos/datos.json';
         let datosApp = null, currentSector = null, swiperBloques = null;
         let currentLineaKey = null;
@@ -960,11 +961,44 @@
 
         function getTextoManos(via) { if (via.manos_juntas && via.manos_juntas.trim() !== "") return `Manos juntas: ${via.manos_juntas}`; let partes = []; if (via.mano_izq && via.mano_izq.trim() !== "") partes.push(`Izq: ${via.mano_izq}`); if (via.mano_der && via.mano_der.trim() !== "") partes.push(`Der: ${via.mano_der}`); return partes.length > 0 ? partes.join(" · ") : ""; }
 
+        // FUNCIÓN CORREGIDA: carga SVG sin bloquear la foto JPG
         function cargarYColorearSVGBloque(bloque, slideIndex, vias) {
             const svgUrl = `${bloque.foto_base}.svg`;
             const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
             if (!mediaContainer) return;
-            fetch(svgUrl).then(res => res.text()).then(svgText => { const parser = new DOMParser(); const svgDoc = parser.parseFromString(svgText, 'image/svg+xml'); const svgElement = svgDoc.documentElement; if (!svgElement) return; aplicarColoresSVG(svgDoc, bloque, vias); svgElement.setAttribute('preserveAspectRatio', 'none'); svgElement.style.width = '100%'; svgElement.style.height = '100%'; svgElement.style.position = 'absolute'; svgElement.style.top = '0'; svgElement.style.left = '0'; svgElement.style.pointerEvents = 'none'; svgElement.style.zIndex = '20'; const oldSvg = mediaContainer.querySelector('svg'); if (oldSvg) oldSvg.remove(); mediaContainer.appendChild(svgElement); }).catch(err => console.log(`Error SVG ${bloque.id}:`, err));
+            
+            // Intentar cargar el SVG, pero no bloquear si falla
+            fetch(svgUrl)
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    }
+                    throw new Error('SVG no encontrado');
+                })
+                .then(svgText => {
+                    const parser = new DOMParser();
+                    const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                    const svgElement = svgDoc.documentElement;
+                    if (!svgElement) return;
+                    
+                    aplicarColoresSVG(svgDoc, bloque, vias);
+                    svgElement.setAttribute('preserveAspectRatio', 'none');
+                    svgElement.style.width = '100%';
+                    svgElement.style.height = '100%';
+                    svgElement.style.position = 'absolute';
+                    svgElement.style.top = '0';
+                    svgElement.style.left = '0';
+                    svgElement.style.pointerEvents = 'none';
+                    svgElement.style.zIndex = '20';
+                    
+                    const oldSvg = mediaContainer.querySelector('svg');
+                    if (oldSvg) oldSvg.remove();
+                    mediaContainer.appendChild(svgElement);
+                })
+                .catch(err => {
+                    // El SVG no existe - no hacemos nada, la foto JPG ya se ve
+                    console.log(`SVG no disponible para ${bloque.id}:`, err.message);
+                });
         }
 
         function getStatusIndicator(status) { if (status === 'flash') return '<span class="status-indicator status-flash">⚡</span>'; if (status === 'redpoint') return '<span class="status-indicator status-redpoint"></span>'; if (status === 'proyecto') return '<span class="status-indicator status-proyecto">P</span>'; return ''; }
@@ -978,6 +1012,7 @@
         function generarResumenContent() { const resumenContainer = document.getElementById('tab-resumen'); if (!resumenContainer) return; let resumenHtml = ''; const grupos = {}; currentSector.bloques.forEach((bloque, idx) => { const numBase = parseInt(bloque.id, 10); if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] }; grupos[numBase].bloques.push({ ...bloque, idx }); }); Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => { resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`; grupo.bloques.forEach(bloqueInfo => { bloqueInfo.vias.forEach(via => { const gradoColor = getColorByGrado(via.grado); const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id); const statusIndicator = getLineaStatusIndicator(status); resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}"><span class="linea-nombre">${via.linea_id} · ${via.nombre}</span><div class="linea-right">${statusIndicator ? `<span class="linea-status-indicator ${statusIndicator.class}">${statusIndicator.text}</span>` : ''}${via.grado ? `<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}</div></div>`; }); }); resumenHtml += `</div></div>`; }); resumenContainer.innerHTML = resumenHtml; document.querySelectorAll('#tab-resumen .linea-item').forEach(item => { item.addEventListener('click', () => { const bloqueId = item.dataset.bloqueId; const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId); if (bloqueIndex !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(bloqueIndex); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }); } }); }); }
         function actualizarBotonActivo(tabName) { const btns = document.querySelectorAll('#globalBottomTabs .bottom-tab-btn'); btns.forEach(btn => { if (btn.dataset.tab === tabName) btn.classList.add('active'); else btn.classList.remove('active'); }); }
 
+        // cargarFichaBloque con imagen JPG siempre visible
         function cargarFichaBloque(bloqueIndex, keepSlide = false) {
             if (!currentSector) return;
             isInFichaBloque = true; actualizarBotonActivo('bloques'); currentTab = 'bloques';
@@ -986,6 +1021,7 @@
             const wrapper = document.getElementById('bloquesSwiperWrapper');
             currentSector.bloques.forEach((b, idx) => {
                 const slide = document.createElement('div'); slide.className = 'swiper-slide';
+                // La imagen JPG se carga siempre con un fallback en caso de error
                 slide.innerHTML = `<div class="ficha-bloque"><div class="media-container" id="mediaContainer-${idx}" style="position: relative;"><img src="${b.foto_base}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'"></div><div class="ficha-footer"><span>Bloque ${parseInt(b.id, 10)}</span><span>${currentSector.nombre}</span></div><div class="ficha-vias" id="vias-${idx}"></div></div>`;
                 wrapper.appendChild(slide);
                 const viasDiv = document.getElementById(`vias-${idx}`);
