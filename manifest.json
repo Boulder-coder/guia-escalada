@@ -1,0 +1,21 @@
+{
+  "name": "Guía de Boulder",
+  "short_name": "Boulder Guide",
+  "description": "Guía de escalada en bloque para el club Grupo Espeleo Carcalín.",
+  "start_url": "/guia-escalada/",
+  "display": "standalone",
+  "theme_color": "#6674FF",
+  "background_color": "#6674FF",
+  "icons": [
+    {
+      "src": "https://boulder-coder.github.io/guia-escalada/fotos/PORTADA.jpg",
+      "sizes": "192x192",
+      "type": "image/jpg"
+    },
+    {
+      "src": "https://boulder-coder.github.io/guia-escalada/fotos/PORTADA.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg"
+    }
+  ]
+}
