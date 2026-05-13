@@ -4,46 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <title>Guía de Boulder</title>
+    <link rel="manifest" href="/guia-escalada/manifest.json">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
-        /* Ajustes para pantalla completa en móviles */
-        body {
-            /* Añade espacio arriba para la barra de estado (hora, batería) */
+        /* ===== AJUSTES PARA PANTALLA COMPLETA (Safe Area) ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* Ajustes globales para respetar las barras del sistema */
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background: #e8e8e8; 
+            height: 100vh; 
+            overflow: hidden;
+            /* Safe area insets */
             padding-top: env(safe-area-inset-top);
-            /* Añade espacio abajo para la barra de navegación (botones) */
             padding-bottom: env(safe-area-inset-bottom);
-            /* Añade espacio a los lados si es necesario */
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
         }
         
-        /* Específico para el header fijo */
-        .app-header {
+        /* Header fijo con safe area */
+        .app-header { 
+            position: fixed; 
             top: env(safe-area-inset-top);
+            left: 0; 
+            right: 0; 
+            background: #2c2c2c; 
+            color: #ffffff; 
+            z-index: 1000; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
         }
         
-        /* Para el contenido principal */
-        .app-content {
-            /* Ajusta el margen superior considerando el header y el safe area */
+        /* Contenido principal ajustado */
+        .app-content { 
             margin-top: calc(70px + env(safe-area-inset-top));
-            height: calc(100vh - 70px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+            height: calc(100vh - 70px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); 
+            overflow-y: auto; 
+            padding: 15px; 
             padding-bottom: calc(70px + env(safe-area-inset-bottom));
         }
-        /* ===== ESTILOS (completos) ===== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* Faldón inferior (tabs) ajustado */
+        .sector-bottom-tabs {
+            position: fixed;
+            bottom: env(safe-area-inset-bottom);
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 100;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        /* ===== RESTO DE ESTILOS ORIGINALES ===== */
         .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
         }
-        body { font-family: 'Roboto', sans-serif; background: #e8e8e8; height: 100vh; overflow: hidden; }
-        .app-header { position: fixed; top: 0; left: 0; right: 0; background: #2c2c2c; color: #ffffff; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .header-top { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         .app-header h1 { color: #FFDE66; }
         .menu-toggle { background: none; border: none; color: #FFDE66; font-size: 1.8rem; cursor: pointer; font-family: 'Roboto', sans-serif; margin-right: auto; }
-        .app-content { margin-top: 70px; height: calc(100vh - 70px); overflow-y: auto; padding: 15px; padding-bottom: 70px; }
         .screen { display: none; }
         .screen.active { display: block; }
+        
+        /* Drawer (menú lateral) */
         .drawer-overlay {
             position: fixed;
             top: 0;
@@ -116,21 +144,29 @@
         .drawer-nav a:hover, .drawer-nav a:active { background: #6674FF; }
         .drawer-nav .sector-item { padding-left: 30px; font-family: 'Roboto', sans-serif; font-weight: 400; }
         .drawer-divider { height: 1px; background-color: #444; margin: 12px 20px; }
+        
+        /* Tarjetas de sectores */
         .sector-card { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
         .sector-card img { width: 100%; height: 160px; object-fit: cover; }
         .sector-info { padding: 12px; background: #d4d4d4; }
         .sector-header { margin-bottom: 8px; }
         .sector-nombre { font-size: 1.1rem; color: #2c2c2c; text-align: left; }
         .sector-stats { font-size: 0.85rem; color: #555; text-align: left; }
+        
+        /* Gráfica */
         .grafica-container { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .grafica-titulo { text-align: left; margin-bottom: 15px; color: #6674FF; font-size: 1.1rem; }
         canvas { width: 100%; max-width: 100%; height: auto; background: transparent; display: block; }
+        
+        /* Contenido informativo */
         .info-sector, .condiciones-content, .proteccion-content { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
         .info-sector p { text-align: justify; margin-bottom: 12px; line-height: 1.4; }
         .info-sector strong, .info-sector b { font-weight: 700; color: #2c2c2c; }
         .condiciones-content strong, .proteccion-content strong { color: #6674FF; }
         .condiciones-content p, .proteccion-content p { margin-bottom: 12px; line-height: 1.4; text-align: left; }
         .condiciones-content ul, .proteccion-content ul { margin: 8px 0 12px 25px; }
+        
+        /* Croquis */
         .croquis-list { margin-bottom: 20px; }
         .croquis-list-title { margin: 15px 0 10px; font-weight: 600; color: #6674FF; }
         .croquis-thumbnails { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 5px; }
@@ -156,6 +192,8 @@
         .croquis-viewer { position: relative; background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
         .croquis-viewer img { width: 100%; height: auto; display: block; }
         .croquis-viewer object { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto; }
+        
+        /* Bloques y vías */
         .bloque-group { background: #ffffff; border-radius: 12px; margin-bottom: 20px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .bloque-group:last-child { margin-bottom: 20px; }
         .bloque-group h3 { background: #d4d4d4; padding: 12px 16px; font-size: 1rem; color: #2c2c2c; margin: 0; }
@@ -169,6 +207,8 @@
         .linea-status-flash { background-color: #e74c3c; color: white; }
         .linea-status-redpoint { background-color: #e74c3c; }
         .linea-status-proyecto { background-color: #2c2c2c; color: white; }
+        
+        /* Ficha de bloque */
         .ficha-bloque { background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 0; }
         .media-container { position: relative; background: #d4d4d4; min-height: 200px; }
         .media-container img { width: 100%; height: auto; display: block; }
@@ -191,41 +231,16 @@
         .status-flash { background-color: #e74c3c; color: white; }
         .status-redpoint { background-color: #e74c3c; }
         .status-proyecto { background-color: #2c2c2c; color: white; }
-        .sector-bottom-tabs {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #ffffff;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            z-index: 100;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            border-top: 1px solid #e0e0e0;
-        }
-        .bottom-tab-btn {
-            background: none;
-            border: none;
-            color: #2c2c2c;
-            font-size: 0.75rem;
-            padding: 6px 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            letter-spacing: 0.3px;
-            border-radius: 30px;
-            white-space: nowrap;
-        }
-        .bottom-tab-btn.active {
-            color: #6674FF;
-            background: #FFDE66;
-        }
+        
+        /* Utilidades */
         .sector-content-wrapper { padding-bottom: 30px; }
         .info-section-spacing { margin-bottom: 12px; }
         .info-section-spacing:last-child { margin-bottom: 0; }
         .mapa-footer { font-size: 0.7rem; color: #6674FF; margin-top: 4px; text-align: center; font-style: italic; }
         .mapa-single { margin-bottom: 12px; }
         .mapa-single:last-child { margin-bottom: 0; }
+        
+        /* Modales */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 2000;
             display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: 0.2s;
@@ -242,13 +257,16 @@
         .btn-redpoint { background-color: #e74c3c; color: white; }
         .btn-proyecto { background-color: #2c2c2c; color: white; }
         .btn-clear { background-color: #7f8c8d; color: white; margin-top: 8px; }
+        
+        /* Swiper */
         .swiper-button-next, .swiper-button-prev { color: #6674FF !important; background: rgba(255,255,255,0.8); border-radius: 50%; width: 32px; height: 32px; }
         .swiper-button-next:after, .swiper-button-prev:after { font-size: 14px; }
         .swiper-pagination-bullet-active { background: #6674FF !important; }
         .loader { text-align: center; padding: 40px; color: #666; }
         .back-hint { text-align: center; padding: 8px; font-size: 0.65rem; color: #888; border-top: 1px solid #ddd; margin-top: 8px; }
         h2, h3, h4 { color: #6674FF; letter-spacing: 0.5px; }
-
+        
+        /* Pantallas legales y contraseña */
         .legal-overlay, .password-overlay {
             position: fixed;
             top: 0;
@@ -263,13 +281,8 @@
             padding: 20px;
             box-sizing: border-box;
         }
-        .legal-overlay.active, .password-overlay.active {
-            display: flex;
-        }
-        .legal-content, .password-content {
-            flex: 1;
-            margin-bottom: 20px;
-        }
+        .legal-overlay.active, .password-overlay.active { display: flex; }
+        .legal-content, .password-content { flex: 1; margin-bottom: 20px; }
         .legal-buttons, .password-buttons {
             display: flex;
             justify-content: space-around;
@@ -288,17 +301,9 @@
             cursor: pointer;
             transition: transform 0.1s;
         }
-        .legal-btn:active, .password-btn:active {
-            transform: scale(0.97);
-        }
-        .btn-accept {
-            background-color: #6674FF;
-            color: white;
-        }
-        .btn-decline {
-            background-color: #e74c3c;
-            color: white;
-        }
+        .legal-btn:active, .password-btn:active { transform: scale(0.97); }
+        .btn-accept { background-color: #6674FF; color: white; }
+        .btn-decline { background-color: #e74c3c; color: white; }
         .password-input {
             width: 100%;
             padding: 14px;
@@ -308,13 +313,9 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        .error-msg {
-            color: #e74c3c;
-            text-align: center;
-            margin-top: 10px;
-            font-weight: bold;
-        }
+        .error-msg { color: #e74c3c; text-align: center; margin-top: 10px; font-weight: bold; }
         
+        /* Pantalla de carga */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -333,13 +334,8 @@
             transition: opacity 0.5s;
             display: none;
         }
-        .loading-screen.visible {
-            display: flex;
-        }
-        .loading-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+        .loading-screen.visible { display: flex; }
+        .loading-screen.hidden { opacity: 0; pointer-events: none; }
         .loading-spinner {
             width: 50px;
             height: 50px;
@@ -349,14 +345,8 @@
             animation: spin 1s linear infinite;
             margin-bottom: 20px;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .loading-progress {
-            font-size: 14px;
-            margin-top: 10px;
-            color: #ffffff;
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-progress { font-size: 14px; margin-top: 10px; color: #ffffff; }
     </style>
 </head>
 <body>
@@ -388,20 +378,23 @@
                 <strong>1. Ámbito de aplicación</strong><br>
                 Esta aplicación (en adelante, «la Guía») es un instrumento digital de uso exclusivo para los socios del club Grupo Espeleo Carcalín. El acceso y la utilización de la Guía implican la aceptación íntegra de las presentes condiciones.<br><br>
                 <strong>2. Acceso y renovación</strong><br>
-                El acceso está protegido mediante una contraseña que se renovará anualmente. La nueva contraseña será comunicada exclusivamente a los socios a través del canal oficial del club (grupo de WhatsApp).<br><br>
+                El acceso está protegido mediante una contraseña que se renovará anualmente. La nueva contraseña será comunicada exclusivamente a los socios a través del canal oficial del club (grupo de WhatsApp). El usuario se compromete a no difundir la contraseña a terceros no autorizados.<br><br>
                 <strong>3. Exención de responsabilidad por daños y accidentes</strong><br>
-                La Guía se proporciona únicamente con fines informativos y deportivos. El escalador asume toda la responsabilidad sobre su seguridad.<br><br>
+                La Guía se proporciona únicamente con fines informativos y deportivos. El escalador asume toda la responsabilidad sobre su seguridad y sus actos durante el uso de la guía.<br><br>
                 <strong>4. Advertencia sobre el estado de los bloques</strong><br>
-                Algunos bloques se encuentran poco escalados, por lo que determinadas presas pueden desprenderse. Es responsabilidad del usuario inspeccionar la roca.<br><br>
+                El usuario es informado de que algunos bloques se encuentran poco escalados, por lo que determinadas presas o cantos pueden desprenderse inesperadamente. Es responsabilidad del usuario inspeccionar visualmente la roca antes de escalar y proceder con la prudencia que dicte su propia experiencia y criterio.<br><br>
                 <strong>5. Uso responsable y conservación del entorno</strong><br>
-                Se exige al usuario un comportamiento cívico y responsable: respetar accesos, no alterar el entorno, no dejar residuos, y no escalar en condiciones adversas.<br><br>
+                Se exige al usuario un comportamiento cívico y responsable durante el uso de la Guía. En particular, deberá:<br>
+                • Respetar los accesos, caminos y zonas de aparcamiento.<br>
+                • No alterar el entorno natural ni los bloques (no tallar presas artificiales, no dejar residuos, etc.).<br>
+                • Abstenerse de escalar en condiciones climáticas adversas o cuando el terreno esté húmedo, para evitar daños a la roca y accidentes.<br><br>
                 <strong>6. Actualización de la información</strong><br>
-                El contenido se actualizará periódicamente. Pueden existir desviaciones o información no actualizada.<br><br>
+                El contenido de la Guía se actualizará periódicamente conforme se abran nuevos bloques o sectores. No obstante, pueden existir desviaciones o información no actualizada. El club se reserva el derecho de modificar, suspender o interrumpir el servicio en cualquier momento.<br><br>
                 <strong>7. Grados y comunidad</strong><br>
-                La graduación es orientativa. Si estás disconforme o abres nuevas líneas, comunícalo al club.<br><br>
+                La graduación de los bloques es orientativa, igual que la indicación de las manos de inicio y el trazado de la línea. Nada te impide escalar como quieras. Si estás disconforme con el grado, abres nuevas líneas o desbloqueas algún proyecto, comunícalo a través del grupo de WhatsApp y evaluaremos introducir los cambios.<br><br>
                 <strong>8. Aceptación</strong><br>
-                El simple uso de esta aplicación implica la total aceptación de las presentes condiciones.<br><br>
-                <strong>¡Felices bloques!</strong>
+                El simple uso de esta aplicación implica la total aceptación de las presentes condiciones. Si el usuario no está de acuerdo con alguna de ellas, deberá abstenerse de utilizar la Guía.<br><br>
+                <strong>Finalmente, el club anima a los socios a disfrutar de la escalada en roca con responsabilidad, respeto hacia el medio ambiente y compañerismo. ¡Felices bloques!</strong>
             </div>
         </div>
         <div class="legal-buttons">
@@ -414,7 +407,7 @@
         <div class="legal-content">
             <div class="proteccion-content" style="margin:0; padding:0;">
                 <strong>PROTECCIÓN DE DATOS</strong><br><br>
-                Esta aplicación no recopila ni almacena ningún dato personal (como nombre, correo electrónico o dirección IP). Únicamente guarda en tu dispositivo tus marcadores de progreso (Flash, Red point, Proyecto) para recordar tu historial de escalada.<br><br>
+                Esta aplicación no recopila ni almacena ningún dato personal (como nombre, correo electrónico o dirección IP). Únicamente guarda en tu dispositivo tus marcadores de progreso (Flash, RedPoint, Proyecto) para recordar tu historial de escalada.<br><br>
                 Por este mismo motivo, si cambias de dispositivo, formateas o borras el caché de la Guía, perderás tu historial de escalada.<br><br>
                 Estos datos no son accesibles por terceros ni se transmiten a ningún servidor. El uso de la app implica tu consentimiento para esta funcionalidad local.
             </div>
@@ -482,7 +475,7 @@
         <div id="screen-proteccion" class="screen">
             <div class="proteccion-content">
                 <strong>PROTECCIÓN DE DATOS</strong><br><br>
-                Esta aplicación no recopila ni almacena ningún dato personal (como nombre, correo electrónico o dirección IP). Únicamente guarda en tu dispositivo tus marcadores de progreso (Flash, Red point, Proyecto) para recordar tu historial de escalada.<br><br>
+                Esta aplicación no recopila ni almacena ningún dato personal (como nombre, correo electrónico o dirección IP). Únicamente guarda en tu dispositivo tus marcadores de progreso (Flash, RedPoint, Proyecto) para recordar tu historial de escalada.<br><br>
                 Por este mismo motivo, si cambias de dispositivo, formateas o borras el caché de la Guía, perderás tu historial de escalada.<br><br>
                 Estos datos no son accesibles por terceros ni se transmiten a ningún servidor. El uso de la app implica tu consentimiento para esta funcionalidad local.
             </div>
@@ -509,7 +502,7 @@
             <h4>¿Cómo escalaste esta línea?</h4>
             <div class="modal-buttons">
                 <button class="modal-btn btn-flash" data-value="flash">⚡ Flash</button>
-                <button class="modal-btn btn-redpoint" data-value="redpoint">🔴 Red point</button>
+                <button class="modal-btn btn-redpoint" data-value="redpoint">🔴 RedPoint</button>
                 <button class="modal-btn btn-proyecto" data-value="proyecto">⚪ Proyecto</button>
                 <button class="modal-btn btn-clear" data-value="clear">🗑️ Limpiar</button>
             </div>
@@ -608,13 +601,9 @@
             }
         }
 
-        // Esta función ahora también registra el Service Worker
         function initAppAfterLegal() {
-            // Mostrar pantalla de carga
             const loadingScreen = document.getElementById('loadingScreen');
             loadingScreen.classList.add('visible');
-            
-            // Registrar Service Worker y luego cargar datos
             registerServiceWorkerAndStart();
         }
         
@@ -625,11 +614,9 @@
             if ('serviceWorker' in navigator) {
                 try {
                     loadingMessage.textContent = 'Registrando servicio offline...';
-                    
                     const registration = await navigator.serviceWorker.register('/guia-escalada/sw.js');
                     console.log('[App] Service Worker registrado');
                     
-                    // Escuchar mensajes de progreso del SW
                     if (navigator.serviceWorker.controller) {
                         navigator.serviceWorker.controller.postMessage({ type: 'GET_PROGRESS' });
                     }
@@ -642,7 +629,6 @@
                         }
                     });
                     
-                    // Esperar a que el SW esté activado
                     if (registration.installing) {
                         loadingMessage.textContent = 'Instalando servicio offline...';
                         await new Promise((resolve) => {
@@ -655,7 +641,6 @@
                         });
                     }
                     
-                    // Pequeña pausa para asegurar la caché
                     loadingMessage.textContent = 'Finalizando preparación...';
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     
@@ -664,11 +649,9 @@
                 }
             }
             
-            // Ocultar pantalla de carga y cargar la app
             const loadingScreen = document.getElementById('loadingScreen');
             loadingScreen.classList.remove('visible');
             
-            // Iniciar la aplicación
             cargarDatos();
             initMenu();
             navigateToScreen('screen-portada');
@@ -1130,7 +1113,6 @@
             document.getElementById('drawerProteccionBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-proteccion'); currentSector = null; isInFichaBloque = false; });
         }
 
-        // Inicio de la app - SOLO autenticación, sin SW todavía
         (async () => {
             const passwordOk = await checkAndShowPassword();
             if (passwordOk) proceedToLegal();
