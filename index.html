@@ -8,6 +8,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
+        /* Ajustes para pantalla completa en móviles */
+        body {
+            /* Añade espacio arriba para la barra de estado (hora, batería) */
+            padding-top: env(safe-area-inset-top);
+            /* Añade espacio abajo para la barra de navegación (botones) */
+            padding-bottom: env(safe-area-inset-bottom);
+            /* Añade espacio a los lados si es necesario */
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+        
+        /* Específico para el header fijo */
+        .app-header {
+            top: env(safe-area-inset-top);
+        }
+        
+        /* Para el contenido principal */
+        .app-content {
+            /* Ajusta el margen superior considerando el header y el safe area */
+            margin-top: calc(70px + env(safe-area-inset-top));
+            height: calc(100vh - 70px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+            padding-bottom: calc(70px + env(safe-area-inset-bottom));
+        }
         /* ===== ESTILOS (completos) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title {
@@ -652,7 +675,7 @@
             history.pushState({}, '');
         }
 
-        const DATA_URL = 'datos/datos.json';
+        const DATA_URL = 'https://boulder-coder.github.io/guia-escalada/datos/datos.json';
         let datosApp = null, currentSector = null, swiperBloques = null;
         let currentLineaKey = null;
         let currentSwiperIndex = 0;
