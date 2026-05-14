@@ -43,7 +43,7 @@
             left: 0;
             right: 0;
             height: env(safe-area-inset-bottom);
-            background-color: #2c2c2c;
+            background-color: #d4d4d4;
             z-index: 9999;
         }
         
@@ -68,24 +68,24 @@
             padding-bottom: calc(56px + env(safe-area-inset-bottom));
         }
         
-        /* Faldón inferior (tabs) - NUEVO COLOR #2c2c2c */
+        /* Faldón inferior (tabs) - COLOR GRIS CLARO */
         .sector-bottom-tabs {
             position: fixed;
             bottom: env(safe-area-inset-bottom);
             left: 0;
             right: 0;
-            background: #2c2c2c;
+            background: #d4d4d4;
             display: flex;
             justify-content: space-around;
             padding: 6px 0;
             z-index: 100;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            border-top: 1px solid #444;
+            border-top: 1px solid #c0c0c0;
         }
         
-        /* Botones de la barra inferior con color blanco */
+        /* Botones de la barra inferior */
         .sector-bottom-tabs .bottom-tab-btn {
-            color: #ffffff;
+            color: #2c2c2c;
             font-size: 0.65rem;
             padding: 5px 10px;
         }
@@ -183,7 +183,7 @@
             overflow-y: auto;
             display: none;
             flex-direction: column;
-            padding: calc(env(safe-area-inset-top) + 20px) 20px calc(env(safe-area-inset-bottom) + 10px) 20px;
+            padding: calc(env(safe-area-inset-top) + 20px) 20px calc(env(safe-area-inset-bottom) + 20px) 20px;
             box-sizing: border-box;
         }
         .legal-overlay.active {
@@ -197,13 +197,10 @@
             display: flex;
             justify-content: center;
             gap: 20px;
-            padding: 15px 0 5px 0;
+            padding: 20px 0 10px 0;
             border-top: 1px solid #ddd;
             background: white;
-            position: sticky;
-            bottom: env(safe-area-inset-bottom);
-            margin-top: auto;
-            width: 100%;
+            margin-top: 20px;
         }
         .legal-btn {
             flex: 1;
