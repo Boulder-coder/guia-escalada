@@ -43,7 +43,7 @@
             left: 0;
             right: 0;
             height: env(safe-area-inset-bottom);
-            background-color: #d4d4d4;
+            background-color: #e8e8e8;
             z-index: 9999;
         }
         
@@ -68,7 +68,7 @@
             padding-bottom: calc(56px + env(safe-area-inset-bottom));
         }
         
-        /* Faldón inferior (tabs) - COLOR GRIS CLARO */
+        /* Faldón inferior (tabs) - COLOR #e8e8e8 */
         .sector-bottom-tabs {
             position: fixed;
             bottom: env(safe-area-inset-bottom);
@@ -77,23 +77,29 @@
             background: #e8e8e8;
             display: flex;
             justify-content: space-around;
-            padding: 6px 0;
+            padding: 8px 0;
             z-index: 100;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            border-top: 1px solid #c0c0c0;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+            border-top: 1px solid #d4d4d4;
         }
         
         /* Botones de la barra inferior */
         .sector-bottom-tabs .bottom-tab-btn {
+            background: none;
+            border: none;
             color: #2c2c2c;
-            font-size: 0.65rem;
-            padding: 5px 10px;
+            font-size: 0.7rem;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+            border-radius: 30px;
+            white-space: nowrap;
         }
         
         .sector-bottom-tabs .bottom-tab-btn.active {
             color: #6674FF;
             background: #FFDE66;
-            border-radius: 30px;
         }
         
         /* ===== PANTALLA DE CONTRASEÑA CENTRADA VERTICALMENTE ===== */
@@ -510,23 +516,20 @@
                 <strong>1. Ámbito de aplicación</strong><br>
                 Esta aplicación (en adelante, «la Guía») es un instrumento digital de uso exclusivo para los socios del club Grupo Espeleo Carcalín. El acceso y la utilización de la Guía implican la aceptación íntegra de las presentes condiciones.<br><br>
                 <strong>2. Acceso y renovación</strong><br>
-                El acceso está protegido mediante una contraseña que se renovará anualmente. La nueva contraseña será comunicada exclusivamente a los socios a través del canal oficial del club (grupo de WhatsApp). El usuario se compromete a no difundir la contraseña a terceros no autorizados.<br><br>
+                El acceso está protegido mediante una contraseña que se renovará anualmente. La nueva contraseña será comunicada exclusivamente a los socios a través del canal oficial del club (grupo de WhatsApp).<br><br>
                 <strong>3. Exención de responsabilidad por daños y accidentes</strong><br>
-                La Guía se proporciona únicamente con fines informativos y deportivos. El escalador asume toda la responsabilidad sobre su seguridad y sus actos durante el uso de la guía.<br><br>
+                La Guía se proporciona únicamente con fines informativos y deportivos. El escalador asume toda la responsabilidad sobre su seguridad.<br><br>
                 <strong>4. Advertencia sobre el estado de los bloques</strong><br>
-                El usuario es informado de que algunos bloques se encuentran poco escalados, por lo que determinadas presas o cantos pueden desprenderse inesperadamente. Es responsabilidad del usuario inspeccionar visualmente la roca antes de escalar y proceder con la prudencia que dicte su propia experiencia y criterio.<br><br>
+                Algunos bloques se encuentran poco escalados, por lo que determinadas presas pueden desprenderse. Es responsabilidad del usuario inspeccionar la roca.<br><br>
                 <strong>5. Uso responsable y conservación del entorno</strong><br>
-                Se exige al usuario un comportamiento cívico y responsable durante el uso de la Guía. En particular, deberá:<br>
-                • Respetar los accesos, caminos y zonas de aparcamiento.<br>
-                • No alterar el entorno natural ni los bloques (no tallar presas artificiales, no dejar residuos, etc.).<br>
-                • Abstenerse de escalar en condiciones climáticas adversas o cuando el terreno esté húmedo, para evitar daños a la roca y accidentes.<br><br>
+                Se exige al usuario un comportamiento cívico y responsable: respetar accesos, no alterar el entorno, no dejar residuos, y no escalar en condiciones adversas.<br><br>
                 <strong>6. Actualización de la información</strong><br>
-                El contenido de la Guía se actualizará periódicamente conforme se abran nuevos bloques o sectores. No obstante, pueden existir desviaciones o información no actualizada. El club se reserva el derecho de modificar, suspender o interrumpir el servicio en cualquier momento.<br><br>
+                El contenido se actualizará periódicamente. Pueden existir desviaciones o información no actualizada.<br><br>
                 <strong>7. Grados y comunidad</strong><br>
-                La graduación de los bloques es orientativa, igual que la indicación de las manos de inicio y el trazado de la línea. Nada te impide escalar como quieras. Si estás disconforme con el grado, abres nuevas líneas o desbloqueas algún proyecto, comunícalo a través del grupo de WhatsApp y evaluaremos introducir los cambios.<br><br>
+                La graduación es orientativa. Si estás disconforme o abres nuevas líneas, comunícalo al club.<br><br>
                 <strong>8. Aceptación</strong><br>
-                El simple uso de esta aplicación implica la total aceptación de las presentes condiciones. Si el usuario no está de acuerdo con alguna de ellas, deberá abstenerse de utilizar la Guía.<br><br>
-                <strong>Finalmente, el club anima a los socios a disfrutar de la escalada en roca con responsabilidad, respeto hacia el medio ambiente y compañerismo. ¡Felices bloques!</strong>
+                El simple uso de esta aplicación implica la total aceptación de las presentes condiciones.<br><br>
+                <strong>¡Felices bloques!</strong>
             </div>
         </div>
         <div class="legal-buttons">
