@@ -15,7 +15,7 @@
         /* Ajustes globales para respetar las barras del sistema */
         body { 
             font-family: 'Roboto', sans-serif; 
-            background: #e8e8e8; 
+            background: #2c2c2c; 
             height: 100vh; 
             overflow: hidden;
             padding-top: env(safe-area-inset-top);
@@ -66,6 +66,7 @@
             overflow-y: auto; 
             padding: 8px 15px 15px 15px;
             padding-bottom: calc(56px + env(safe-area-inset-bottom));
+            background: #e8e8e8;
         }
         
         /* Faldón inferior (tabs) - COLOR #e8e8e8 */
@@ -516,20 +517,23 @@
                 <strong>1. Ámbito de aplicación</strong><br>
                 Esta aplicación (en adelante, «la Guía») es un instrumento digital de uso exclusivo para los socios del club Grupo Espeleo Carcalín. El acceso y la utilización de la Guía implican la aceptación íntegra de las presentes condiciones.<br><br>
                 <strong>2. Acceso y renovación</strong><br>
-                El acceso está protegido mediante una contraseña que se renovará anualmente. La nueva contraseña será comunicada exclusivamente a los socios a través del canal oficial del club (grupo de WhatsApp).<br><br>
+                El acceso está protegido mediante una contraseña que se renovará anualmente. La nueva contraseña será comunicada exclusivamente a los socios a través del canal oficial del club (grupo de WhatsApp). El usuario se compromete a no difundir la contraseña a terceros no autorizados.<br><br>
                 <strong>3. Exención de responsabilidad por daños y accidentes</strong><br>
-                La Guía se proporciona únicamente con fines informativos y deportivos. El escalador asume toda la responsabilidad sobre su seguridad.<br><br>
+                La Guía se proporciona únicamente con fines informativos y deportivos. El escalador asume toda la responsabilidad sobre su seguridad y sus actos durante el uso de la guía.<br><br>
                 <strong>4. Advertencia sobre el estado de los bloques</strong><br>
-                Algunos bloques se encuentran poco escalados, por lo que determinadas presas pueden desprenderse. Es responsabilidad del usuario inspeccionar la roca.<br><br>
+                El usuario es informado de que algunos bloques se encuentran poco escalados, por lo que determinadas presas o cantos pueden desprenderse inesperadamente. Es responsabilidad del usuario inspeccionar visualmente la roca antes de escalar y proceder con la prudencia que dicte su propia experiencia y criterio.<br><br>
                 <strong>5. Uso responsable y conservación del entorno</strong><br>
-                Se exige al usuario un comportamiento cívico y responsable: respetar accesos, no alterar el entorno, no dejar residuos, y no escalar en condiciones adversas.<br><br>
+                Se exige al usuario un comportamiento cívico y responsable durante el uso de la Guía. En particular, deberá:<br>
+                • Respetar los accesos, caminos y zonas de aparcamiento.<br>
+                • No alterar el entorno natural ni los bloques (no tallar presas artificiales, no dejar residuos, etc.).<br>
+                • Abstenerse de escalar en condiciones climáticas adversas o cuando el terreno esté húmedo, para evitar daños a la roca y accidentes.<br><br>
                 <strong>6. Actualización de la información</strong><br>
-                El contenido se actualizará periódicamente. Pueden existir desviaciones o información no actualizada.<br><br>
+                El contenido de la Guía se actualizará periódicamente conforme se abran nuevos bloques o sectores. No obstante, pueden existir desviaciones o información no actualizada. El club se reserva el derecho de modificar, suspender o interrumpir el servicio en cualquier momento.<br><br>
                 <strong>7. Grados y comunidad</strong><br>
-                La graduación es orientativa. Si estás disconforme o abres nuevas líneas, comunícalo al club.<br><br>
+                La graduación de los bloques es orientativa, igual que la indicación de las manos de inicio y el trazado de la línea. Nada te impide escalar como quieras. Si estás disconforme con el grado, abres nuevas líneas o desbloqueas algún proyecto, comunícalo a través del grupo de WhatsApp y evaluaremos introducir los cambios.<br><br>
                 <strong>8. Aceptación</strong><br>
-                El simple uso de esta aplicación implica la total aceptación de las presentes condiciones.<br><br>
-                <strong>¡Felices bloques!</strong>
+                El simple uso de esta aplicación implica la total aceptación de las presentes condiciones. Si el usuario no está de acuerdo con alguna de ellas, deberá abstenerse de utilizar la Guía.<br><br>
+                <strong>Finalmente, el club anima a los socios a disfrutar de la escalada en roca con responsabilidad, respeto hacia el medio ambiente y compañerismo. ¡Felices bloques!</strong>
             </div>
         </div>
         <div class="legal-buttons">
@@ -736,7 +740,65 @@
             }
         }
 
+        // ===== PROTECCIÓN DE CAPTURAS DE PANTALLA =====
+        async function enableScreenProtection() {
+            if (window.Capacitor && Capacitor.isNativePlatform()) {
+                try {
+                    const { PrivacyScreen } = Capacitor.Plugins;
+                    await PrivacyScreen.enable();
+                    console.log('[App] Protección de capturas activada');
+                } catch (error) {
+                    console.log('[App] Error al activar protección:', error);
+                }
+            }
+        }
+
+        // ===== MANEJADOR DEL BOTÓN ATRÁS =====
+        function setupBackButtonHandler() {
+            if (window.Capacitor && Capacitor.isNativePlatform()) {
+                document.addEventListener('backbutton', (e) => {
+                    // Si hay overlay de contraseña activo, no hacer nada (obligatorio)
+                    if (document.getElementById('passwordOverlay').classList.contains('active')) {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    // Si hay overlay de condiciones activo, no hacer nada (obligatorio)
+                    if (document.getElementById('legalCondiciones').classList.contains('active')) {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    // Si hay overlay de protección de datos activo, no hacer nada (obligatorio)
+                    if (document.getElementById('legalProteccion').classList.contains('active')) {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    // Si estamos en la pantalla de ficha de bloque, volver al sector
+                    if (isInFichaBloque) {
+                        e.preventDefault();
+                        goBack();
+                        return;
+                    }
+                    
+                    // Si estamos dentro de un sector, volver a la portada
+                    if (currentSector !== null && !isInFichaBloque) {
+                        e.preventDefault();
+                        navigateToScreen('screen-portada');
+                        currentSector = null;
+                        isInFichaBloque = false;
+                        return;
+                    }
+                    
+                    // Si estamos en la portada, permitir salir (no prevenimos el evento)
+                }, false);
+            }
+        }
+
         function initAppAfterLegal() {
+            enableScreenProtection();
+            setupBackButtonHandler();
             const loadingScreen = document.getElementById('loadingScreen');
             loadingScreen.classList.add('visible');
             registerServiceWorkerAndStart();
