@@ -452,7 +452,6 @@
         .swiper-button-next:after, .swiper-button-prev:after { font-size: 12px; }
         .swiper-pagination-bullet-active { background: #6674FF !important; }
         .loader { text-align: center; padding: 30px; color: #666; }
-        .back-hint { text-align: center; padding: 8px; font-size: 0.6rem; color: #888; border-top: 1px solid #ddd; margin-top: 8px; }
         h2, h3, h4 { color: #6674FF; letter-spacing: 0.5px; font-size: 1.1rem; margin-bottom: 8px; }
         
         /* Pantalla de carga */
@@ -883,7 +882,10 @@
         }
 
         function getColorByGrado(grado) {
-            if (!grado) return '#FF93DB';
+            // Si el grado es "*" o está vacío, devolver #FF93DB
+            if (!grado || grado === '*' || grado.trim() === '') {
+                return '#FF93DB';
+            }
             const g = grado.toUpperCase().trim();
             if (g === 'PR') return '#212121';
             const match = g.match(/(\d+)([A-Z]?)(\+?)/);
