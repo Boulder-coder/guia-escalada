@@ -152,7 +152,7 @@
             {
               "linea_id": "G.2",
               "nombre": "El juego del cascanueces",
-              "grado": "",
+              "grado": "*",
               "entrada": "De Pie",
               "salida": "T",
               "mano_izq": "",
