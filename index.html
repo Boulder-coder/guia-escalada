@@ -451,6 +451,8 @@
         .swiper-button-next:after, .swiper-button-prev:after { font-size: 12px; }
         .swiper-pagination-bullet-active { background: #6674FF !important; }
         .loader { text-align: center; padding: 30px; color: #666; }
+        .back-hint { text-align: center; padding: 8px; font-size: 0.6rem; color: #888; border-top: 1px solid #ddd; margin-top: 8px; }
+        h2, h3, h4 { color: #6674FF; letter-spacing: 0.5px; font-size: 1.1rem; margin-bottom: 8px; }
         
         /* Pantalla de carga */
         .loading-screen {
@@ -620,6 +622,7 @@
         </div>
         <div id="screen-ficha-bloque" class="screen">
             <div id="ficha-bloque-content"></div>
+            <div class="back-hint">← Botón atrás del móvil para volver</div>
         </div>
     </div>
 
@@ -747,8 +750,52 @@
             }
         }
 
+        // ===== MANEJADOR DEL BOTÓN ATRÁS =====
+        function setupBackButtonHandler() {
+            if (window.Capacitor && Capacitor.isNativePlatform()) {
+                document.addEventListener('backbutton', (e) => {
+                    // Si hay overlay de contraseña activo, no hacer nada (obligatorio)
+                    if (document.getElementById('passwordOverlay').classList.contains('active')) {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    // Si hay overlay de condiciones activo, no hacer nada (obligatorio)
+                    if (document.getElementById('legalCondiciones').classList.contains('active')) {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    // Si hay overlay de protección de datos activo, no hacer nada (obligatorio)
+                    if (document.getElementById('legalProteccion').classList.contains('active')) {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    // Si estamos en la pantalla de ficha de bloque, volver al sector
+                    if (isInFichaBloque) {
+                        e.preventDefault();
+                        goBack();
+                        return;
+                    }
+                    
+                    // Si estamos dentro de un sector, volver a la portada
+                    if (currentSector !== null && !isInFichaBloque) {
+                        e.preventDefault();
+                        navigateToScreen('screen-portada');
+                        currentSector = null;
+                        isInFichaBloque = false;
+                        return;
+                    }
+                    
+                    // Si estamos en la portada, permitir salir (no prevenimos el evento)
+                }, false);
+            }
+        }
+
         function initAppAfterLegal() {
             enableScreenProtection();
+            setupBackButtonHandler();
             const loadingScreen = document.getElementById('loadingScreen');
             loadingScreen.classList.add('visible');
             registerServiceWorkerAndStart();
