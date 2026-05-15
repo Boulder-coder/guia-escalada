@@ -1121,6 +1121,8 @@
             currentSector = datosApp.sectores.find(s => s.nombre === sectorNombre);
             if (!currentSector) return;
             isInFichaBloque = false;
+            // FORZAR la pestaña "Info" al abrir cualquier sector
+            currentTab = 'info';
             const container = document.getElementById('sector-detalle-content');
             const mapasHtml = cargarTodosLosMapas(currentSector);
             let croquisHtml = '';
@@ -1152,14 +1154,14 @@
                 resumenHtml += `</div></div>`;
             });
             container.innerHTML = `<div class="sector-content-wrapper"><h2>${currentSector.nombre}</h2>
-                <div id="tab-info" class="tab-pane" style="display: ${currentTab === 'info' ? 'block' : 'none'}">
+                <div id="tab-info" class="tab-pane" style="display: block">
                     <div class="info-sector info-section-spacing">${descripcionHtml || '<p>Sin descripción disponible.</p>'}</div>
                     <div class="grafica-container info-section-spacing"><div class="grafica-titulo">📊 Distribución de grados</div><canvas id="grafica-sector"></canvas></div>
                     <div class="info-sector info-section-spacing" id="mapasContainer">${mapasHtml}</div>
                 </div>
-                <div id="tab-croquis" class="tab-pane" style="display: ${currentTab === 'croquis' ? 'block' : 'none'}">${croquisHtml}</div>
-                <div id="tab-resumen" class="tab-pane" style="display: ${currentTab === 'resumen' ? 'block' : 'none'}">${resumenHtml}</div>
-                <div id="tab-bloques" class="tab-pane" style="display: ${currentTab === 'bloques' ? 'block' : 'none'}"></div>
+                <div id="tab-croquis" class="tab-pane" style="display: none">${croquisHtml}</div>
+                <div id="tab-resumen" class="tab-pane" style="display: none">${resumenHtml}</div>
+                <div id="tab-bloques" class="tab-pane" style="display: none"></div>
             </div>`;
             const bottomTabs = document.getElementById('globalBottomTabs');
             const btns = bottomTabs.querySelectorAll('.bottom-tab-btn');
