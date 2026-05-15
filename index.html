@@ -59,14 +59,20 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
         }
         
-        /* Contenido principal */
+        /* Contenido principal - SIN fondo propio */
         .app-content { 
             margin-top: calc(56px + env(safe-area-inset-top));
             height: calc(100vh - 56px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); 
             overflow-y: auto; 
-            padding: 8px 15px 15px 15px;
-            padding-bottom: calc(56px + env(safe-area-inset-bottom));
+            padding: 0;
+            background: transparent;
+        }
+        
+        /* Las pantallas tienen su propio fondo */
+        #screen-portada, #screen-sector-detalle, #screen-ficha-bloque {
             background: #e8e8e8;
+            min-height: 100%;
+            padding: 8px 15px 15px 15px;
         }
         
         /* Faldón inferior (tabs) - COLOR #e8e8e8 */
@@ -328,9 +334,23 @@
         .screen { display: none; }
         .screen.active { display: block; }
         
+        /* Ajustes para las pantallas principales */
+        #screen-portada {
+            padding: 8px 15px 15px 15px;
+        }
+        #screen-sector-detalle {
+            padding: 8px 15px 15px 15px;
+        }
+        #screen-ficha-bloque {
+            padding: 0;
+        }
+        
         /* Pantallas de consulta de condiciones y protección (sin botones) */
         #screen-condiciones, #screen-proteccion {
             padding-bottom: 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            margin: 8px 15px 15px 15px;
         }
         
         /* Tarjetas de sectores */
