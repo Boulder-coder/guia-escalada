@@ -152,7 +152,7 @@
             {
               "linea_id": "G.2",
               "nombre": "El juego del cascanueces",
-              "grado": "*",
+              "grado": "",
               "entrada": "De Pie",
               "salida": "T",
               "mano_izq": "",
@@ -230,7 +230,7 @@
               "mano_izq": "Agujero horizontal",
               "mano_der": "Agujero horizontal",
               "manos_juntas": "",
-              "definicion": "Sale hacia la izquieda",
+              "definicion": "Sale hacia la izquierda",
               "expuesta": ""
             }
           ]
@@ -278,7 +278,7 @@
               "mano_izq": "",
               "mano_der": "",
               "manos_juntas": "Presa grande",
-              "definicion": "Sale hacia la izquieda cogiendo la regleta lateral cruzando con mano derecha",
+              "definicion": "Sale hacia la izquierda cogiendo la regleta lateral cruzando con mano derecha",
               "expuesta": "Caída en desnivel"
             },
             {
@@ -290,7 +290,7 @@
               "mano_izq": "",
               "mano_der": "",
               "manos_juntas": "Presa grande",
-              "definicion": "Misma entrada que A, sale recto cogiendo la regleta lateral con izquieda",
+              "definicion": "Misma entrada que A, sale recto cogiendo la regleta lateral con izquierda",
               "expuesta": ""
             },
             {
@@ -548,7 +548,7 @@
               "mano_izq": "Presa lateral",
               "mano_der": "Galleta blanca lateral",
               "manos_juntas": "",
-              "definicion": "Sale recto hacia la izquieda",
+              "definicion": "Sale recto hacia la izquierda",
               "expuesta": ""
             },
             {
@@ -724,7 +724,7 @@
       "mapa": "fotos/BG_MAPA",
       "mapa_2": "fotos/BG_MAPA_2",
       "mapa_3": "fotos/BG_MAPA_3",
-      "descripcion": "<strong>Barranco Grande</strong> es un sector chivano ubicado entre la urbanización de Las Pedrizas y el Kartódromo. Dado que sus bloques se encuentran en el cauce del barranco, su orografía puede cambiar en riadas afectando al grado de los mismos. El cauce del barranco acostumbra a ser débil, y los pies de bloques no suelen encharcarse, a excepción de los bloques B6-7. En los meses calurosos abundan las avispas, que anidan entre las piedras del cauce. ¡Fijaos bien dónde pisáis! // El sector dispone de dos zonas: // ● Barranco arriba, <strong>El Salto de la Zorra (B1-9)</strong>, con bloques bajos de piedra caliza compacta y agarres pulidos por la erosión fluvial. Esta zona se encuentra muy expuesta al sol. // ● Barranco abajo, <strong>Tollo de Pedreguer (B10-15)</strong>, encontramos un caos de bloques de piedra caliza muy pulida (el B12 presenta picados artificiales de origen desconocido); y una cueva de conglomerado con buena adherencia (B14-15). Esta zona es húmeda y fresca, perfecta para meses calurosos, tanto para escaladores como para mosquitos. ¡Cuidado en la cueva conglomerada, su bóveda desprende piedras ocasionalmente!",
+      "descripcion": "<strong>Barranco Grande</strong> es un sector chivano ubicado entre la urbanización de Las Pedrizas y el Kartódromo. Dado que sus bloques se encuentran en el cauce del barranco, su orografía puede cambiar en riadas afectando al grado de los mismos. El cauce del barranco acostumbra a ser débil, y los pies de bloques no suelen encharcarse, a excepción de los bloques B7-8. En los meses calurosos abundan las avispas, que anidan entre las piedras del cauce. ¡Fijaos bien dónde pisáis! // El sector dispone de dos zonas: // ● Barranco arriba, <strong>El Salto de la Zorra (B1-10)</strong>, con bloques bajos de piedra caliza compacta y agarres pulidos por la erosión fluvial. Esta zona se encuentra muy expuesta al sol. // ● Barranco abajo, <strong>Tollo de Pedreguer (B11-18)</strong>, encontramos un caos de bloques de piedra caliza muy pulida (el B14 presenta picados artificiales de origen desconocido); y una cueva de conglomerado con buena adherencia (B17-18). Esta zona es húmeda y fresca, perfecta para meses calurosos, tanto para escaladores como para mosquitos. ¡Cuidado en la cueva conglomerada, su bóveda desprende piedras ocasionalmente!",
       "parking": [
         "https://maps.app.goo.gl/c55iyQZggkbpnEKJA"
       ],
@@ -925,7 +925,19 @@
           "foto_base": "fotos/BG_B6_1",
           "vias": [
             {
-              "linea_id": "A.1",
+              "linea_id": "A",
+              "nombre": "Piedro",
+              "grado": "6A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "No recuerdo",
+              "mano_der": "No recuerdo",
+              "manos_juntas": "",
+              "definicion": "Entra en el diedro, sale por la grieta",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B.1",
               "nombre": "Choco",
               "grado": "6C",
               "entrada": "Sit",
@@ -937,7 +949,7 @@
               "expuesta": ""
             },
             {
-              "linea_id": "A.2",
+              "linea_id": "B.2",
               "nombre": "Chocolala",
               "grado": "6B",
               "entrada": "De Pie",
@@ -949,7 +961,7 @@
               "expuesta": ""
             },
             {
-              "linea_id": "B",
+              "linea_id": "C",
               "nombre": "Chocotete",
               "grado": "6C+",
               "entrada": "Sit",
@@ -967,7 +979,7 @@
           "foto_base": "fotos/BG_B6_2",
           "vias": [
             {
-              "linea_id": "C",
+              "linea_id": "D",
               "nombre": "Terror de azúcar",
               "grado": "5",
               "entrada": "Semi-Sit",
@@ -1697,7 +1709,7 @@
       "mapa": "fotos/CB_MAPA",
       "mapa_2": "",
       "mapa_3": "",
-      "descripcion": "La <strong>Cueva del Buey del Arroz</strong> es un pequeño sector ubicado muy cerquita del Barrio los Condes de Yátova. La aproximación al sector son a penas 250 metros. La orientación es Oeste con amplias vistas al Motrotón y el Retoret, y la temperatura es fresca al tratarse de una cueva abierta. // Los bloques, aunque escasos, dan bastante juego. La piedra oscila entre caliza compacta y arenosa, disponiendo de agarres diferentes: agujeros confortables, romos peleones y regletas asesinas, entre otros.",
+      "descripcion": "La <strong>Cueva del Buey del Arroz</strong> es un pequeño sector ubicado muy cerquita del Barrio los Condes de Yátova. La aproximación al sector son a penas 250 metros. La orientación es Oeste con amplias vistas al Motrotón y el Retoret, y la temperatura es fresca al tratarse de una cueva abierta. // Los bloques, aunque escasos, dan bastante juego. La piedra oscila entre caliza compacta y arenosa, disponiendo de agarres diferentes: agujeros grandes, romos peleones y regletas asesinas, entre otros.",
       "parking": [
         "https://maps.app.goo.gl/ruszNEAx3nNmGo9x9"
       ],
