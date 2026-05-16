@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg1"
+   width="712"
+   height="768"
+   viewBox="0 0 712 768"
+   sodipodi:docname="BG_B1.svg"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.75038024"
+     inkscape:cx="453.76994"
+     inkscape:cy="416.45553"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g1" />
+  <g
+     inkscape:groupmode="layer"
+     inkscape:label="Image"
+     id="g1">
+    <path
+       style="opacity:1;fill:none;stroke:#000000;stroke-width:4;stroke-linejoin:round;paint-order:markers fill stroke;stroke-opacity:1;stroke-dasharray:none"
+       d="m 598.38037,554.0908 c -9.43609,-74.92701 -78.2135,-112.25847 -78.2135,-209.19755"
+       id="path1"
+       inkscape:label="A_linea" />
+    <path
+       style="opacity:1;fill:none;stroke:#000000;stroke-width:4;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       d="m 563.7142,551.72028 c -15.65734,-38.49921 -63.65224,-78.9778 -98.61667,-113.94223 -29.51543,-29.51544 -51.86078,-62.76923 -85.95642,-89.28806 -10.37448,-8.06904 -51.13577,-14.98246 -55.30529,-23.32151 -7.19946,-14.39893 -0.42519,-40.5604 -3.99797,-56.63796"
+       id="path2"
+       inkscape:label="B.1_linea" />
+    <path
+       style="opacity:1;fill:none;stroke:#000000;stroke-width:4;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       d="m 188.57106,478.42411 c -2.65283,-16.02278 -1.33265,-32.97189 -1.33265,-49.30833 0,-41.66499 1.10212,-83.82794 -2.66532,-125.26983 -2.93836,-32.32193 -15.62385,-62.61566 -11.99392,-95.28502"
+       id="path3"
+       inkscape:label="C_linea" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.00051;stroke-opacity:1"
+       id="path7"
+       cx="600.06403"
+       cy="553.61987"
+       r="17.5"
+       inkscape:label="A_entrada" />
+    <circle
+       style="display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.00051;stroke-opacity:1"
+       id="circle7"
+       cx="562.92389"
+       cy="553.86566"
+       r="17.5"
+       inkscape:label="B.1_entrada" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.428789;stroke-opacity:1"
+       id="circle18"
+       cx="563.27515"
+       cy="582.00275"
+       r="7.5"
+       inkscape:label="B.2_entrada" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.00051;stroke-opacity:1"
+       id="circle8"
+       cx="188.47141"
+       cy="481.08246"
+       r="17.5"
+       inkscape:label="C_entrada" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.714648;stroke-opacity:1"
+       id="circle10"
+       cx="520.54156"
+       cy="343.83685"
+       inkscape:label="A_salida"
+       r="12.5" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.714648;stroke-opacity:1"
+       id="circle11"
+       cx="321.06714"
+       cy="264.87329"
+       r="12.5"
+       inkscape:label="B.1_salida"
+       inkscape:transform-center-x="-43.347239"
+       inkscape:transform-center-y="57.482209" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.714647;stroke-opacity:1"
+       id="circle12"
+       cx="172.68936"
+       cy="207.7778"
+       r="12.5"
+       inkscape:label="C_salida" />
+  </g>
+</svg>
