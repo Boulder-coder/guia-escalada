@@ -753,32 +753,23 @@
         function setupBackButtonHandler() {
             if (window.Capacitor && Capacitor.isNativePlatform()) {
                 document.addEventListener('backbutton', (e) => {
-                    // Si hay overlay de contraseña activo, no hacer nada (obligatorio)
                     if (document.getElementById('passwordOverlay').classList.contains('active')) {
                         e.preventDefault();
                         return;
                     }
-                    
-                    // Si hay overlay de condiciones activo, no hacer nada (obligatorio)
                     if (document.getElementById('legalCondiciones').classList.contains('active')) {
                         e.preventDefault();
                         return;
                     }
-                    
-                    // Si hay overlay de protección de datos activo, no hacer nada (obligatorio)
                     if (document.getElementById('legalProteccion').classList.contains('active')) {
                         e.preventDefault();
                         return;
                     }
-                    
-                    // Si estamos en la pantalla de ficha de bloque, volver al sector
                     if (isInFichaBloque) {
                         e.preventDefault();
                         goBack();
                         return;
                     }
-                    
-                    // Si estamos dentro de un sector, volver a la portada
                     if (currentSector !== null && !isInFichaBloque) {
                         e.preventDefault();
                         navigateToScreen('screen-portada');
@@ -786,8 +777,6 @@
                         isInFichaBloque = false;
                         return;
                     }
-                    
-                    // Si estamos en la portada, permitir salir (no prevenimos el evento)
                 }, false);
             }
         }
@@ -882,9 +871,7 @@
         }
 
         function getColorByGrado(grado) {
-            if (!grado || grado === '*' || grado.trim() === '') {
-                return '#FF93DB';
-            }
+            if (!grado || grado === '*' || grado.trim() === '') return '#FF93DB';
             const g = grado.toUpperCase().trim();
             if (g === 'PR') return '#212121';
             const match = g.match(/(\d+)([A-Z]?)(\+?)/);
@@ -987,7 +974,18 @@
                     svgRoot.appendChild(textFill);
                 }
                 if (simbolo && circuloSalida) {
-                    // ... (similar a la versión original, no modificado)
+                    let cx = parseFloat(circuloSalida.getAttribute('cx'));
+                    let cy = parseFloat(circuloSalida.getAttribute('cy'));
+                    let radio = parseFloat(circuloSalida.getAttribute('r')) || 12.5;
+                    if (isNaN(cx) && circuloSalida.hasAttribute('transform')) { const transform = circuloSalida.getAttribute('transform'); const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/); if (translateMatch) { cx = parseFloat(translateMatch[1]); cy = parseFloat(translateMatch[2]); } }
+                    if (isNaN(cx)) cx = 0; if (isNaN(cy)) cy = 0;
+                    const oldSymbol = svgRoot.querySelector(`[data-for="${lineaId}_salida"]`);
+                    if (oldSymbol) oldSymbol.remove();
+                    if (simbolo === 'circle') { const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); innerCircle.setAttribute('data-for', `${lineaId}_salida`); innerCircle.setAttribute('cx', cx); innerCircle.setAttribute('cy', cy); innerCircle.setAttribute('r', radio * 0.5); innerCircle.setAttribute('fill', '#FFFFFF'); svgRoot.appendChild(innerCircle); }
+                    else if (simbolo === '▲') { const fontSize = radio * 1.75; const yOffset = -radio * 0.15; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx); symbolFill.setAttribute('y', cy + yOffset); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); }
+                    else if (simbolo === '▶') { const fontSize = radio * 1.3; const xOffset = radio * 0.15; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx + xOffset); symbolFill.setAttribute('y', cy); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); }
+                    else if (simbolo === '◀') { const fontSize = radio * 1.3; const xOffset = -radio * 0.15; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx + xOffset); symbolFill.setAttribute('y', cy); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); }
+                    else { const fontSize = radio * 1.1; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx); symbolFill.setAttribute('y', cy); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); }
                 }
             });
         }
@@ -1045,7 +1043,7 @@
 
         function cargarTodosLosMapas(sector) { let mapasHtml = ''; if (sector.mapa) mapasHtml += cargarMapaIndividual(sector, sector.mapa, true); if (sector.mapa_2) mapasHtml += cargarMapaIndividual(sector, sector.mapa_2, false); if (sector.mapa_3) mapasHtml += cargarMapaIndividual(sector, sector.mapa_3, false); return mapasHtml; }
 
-        // ========== FUNCIÓN CROQUIS MEJORADA (UNIVERSAL) ==========
+        // ===== FUNCIÓN CROQUIS CORREGIDA (soporta inkscape:label y también id) =====
         function cargarCroquisInteractivo(sector, croquisIndex) {
             const croquis = sector.croquis_list[croquisIndex];
             if (!croquis) return '<div class="info-sector"><p>Croquis no disponible</p></div>';
@@ -1056,91 +1054,64 @@
             html += `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg?v=${timestamp}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
-            
-            setTimeout(() => {
-                const objectTag = document.getElementById(`croquisObject_${containerId}`);
-                if (objectTag) {
-                    const asignarEventos = () => {
-                        const svgDoc = objectTag.contentDocument;
-                        if (!svgDoc) return;
-                        const svgElement = svgDoc.documentElement;
-                        if (!svgElement) return;
-                        
-                        // Recorrer todos los elementos del SVG
-                        const allElements = svgElement.querySelectorAll('*');
-                        allElements.forEach(el => {
-                            // Determinar si el elemento es clickeable (tiene un número como label o id)
-                            let label = el.getAttribute('inkscape:label');
-                            if (!label) label = el.getAttribute('id');
-                            // También podemos buscar cualquier atributo que contenga un número entero (para compatibilidad)
-                            let isNumber = false;
-                            if (label && /^\d+$/.test(label)) isNumber = true;
-                            if (!isNumber) {
-                                // Si no tiene label numérico, lo hacemos transparente
-                                el.setAttribute('fill', 'transparent');
-                                el.setAttribute('stroke', 'transparent');
-                                el.setAttribute('fill-opacity', '0');
-                                el.setAttribute('stroke-opacity', '0');
-                                if (el.style) el.style.opacity = '0';
-                                // Aseguramos que no reciba eventos de ratón
-                                el.style.pointerEvents = 'none';
-                            } else {
-                                // Es un elemento clickeable (número de bloque)
-                                // No modificamos su color ni apariencia, solo aseguramos que sea clickeable
-                                el.style.cursor = 'pointer';
-                                el.style.pointerEvents = 'visible';
-                                // Eliminar eventos duplicados
-                                el.removeEventListener('click', manejarClick);
-                                el.addEventListener('click', manejarClick);
+            setTimeout(() => { 
+                const objectTag = document.getElementById(`croquisObject_${containerId}`); 
+                if (objectTag && objectTag.contentDocument) { 
+                    const svgDoc = objectTag.contentDocument; 
+                    const svgElement = svgDoc.documentElement; 
+                    if (svgElement) { 
+                        const allEl = svgElement.querySelectorAll('*'); 
+                        allEl.forEach(el => { 
+                            if (el.tagName !== 'svg') { 
+                                el.setAttribute('fill', 'transparent'); 
+                                el.setAttribute('stroke', 'transparent'); 
+                                el.setAttribute('fill-opacity', '0'); 
+                                el.setAttribute('stroke-opacity', '0'); 
+                                if (el.style) el.style.opacity = '0'; 
+                            } 
+                        }); 
+                        const elementosConLabel = svgDoc.querySelectorAll('*'); 
+                        elementosConLabel.forEach(el => { 
+                            let label = null; 
+                            label = el.getAttribute('inkscape:label'); 
+                            if (!label && el.attributes) { 
+                                for (let attr of el.attributes) { 
+                                    if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) { 
+                                        label = attr.value; 
+                                        break; 
+                                    } 
+                                } 
                             }
-                        });
-                        
-                        // Opcional: eliminar rectángulos grandes que puedan bloquear interacción
-                        const rects = svgElement.querySelectorAll('rect');
-                        rects.forEach(rect => {
-                            const width = parseFloat(rect.getAttribute('width')) || 0;
-                            const height = parseFloat(rect.getAttribute('height')) || 0;
-                            if (width > 100 && height > 100) {
-                                rect.setAttribute('fill', 'transparent');
-                                rect.setAttribute('fill-opacity', '0');
-                                rect.style.pointerEvents = 'none';
+                            // Si no encontró inkscape:label, intentar con el atributo id
+                            if (!label) {
+                                label = el.getAttribute('id');
                             }
-                        });
-                    };
-                    
-                    const manejarClick = (e) => {
-                        e.stopPropagation();
-                        const el = e.currentTarget;
-                        let label = el.getAttribute('inkscape:label');
-                        if (!label) label = el.getAttribute('id');
-                        if (label) {
-                            const bloqueBase = label;
-                            const bloqueEncontrado = sector.bloques.find(b => {
-                                if (b.id === bloqueBase) return true;
-                                if (b.id.startsWith(`${bloqueBase}_`)) return true;
-                                return false;
-                            });
-                            if (bloqueEncontrado) {
-                                const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
-                                if (indice !== -1) {
-                                    currentTab = 'bloques';
-                                    isInFichaBloque = true;
-                                    actualizarBotonActivo('bloques');
-                                    cargarFichaBloque(indice);
-                                    navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice });
-                                }
-                            }
-                        }
-                    };
-                    
-                    if (objectTag.contentDocument && objectTag.contentDocument.readyState === 'complete') {
-                        asignarEventos();
-                    } else {
-                        objectTag.addEventListener('load', asignarEventos);
-                        setTimeout(asignarEventos, 1000);
-                    }
-                }
-            }, 100);
+                            if (label && !isNaN(parseInt(label))) { 
+                                el.style.cursor = 'pointer'; 
+                                el.addEventListener('click', (e) => { 
+                                    e.stopPropagation(); 
+                                    const bloqueBase = label; 
+                                    const bloqueEncontrado = sector.bloques.find(b => { 
+                                        if (b.id === bloqueBase) return true; 
+                                        if (b.id.startsWith(`${bloqueBase}_`)) return true; 
+                                        return false; 
+                                    }); 
+                                    if (bloqueEncontrado) { 
+                                        const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id); 
+                                        if (indice !== -1) { 
+                                            currentTab = 'bloques'; 
+                                            isInFichaBloque = true; 
+                                            actualizarBotonActivo('bloques'); 
+                                            cargarFichaBloque(indice); 
+                                            navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice }); 
+                                        } 
+                                    } 
+                                }); 
+                            } 
+                        }); 
+                    } 
+                } 
+            }, 500);
             return html;
         }
 
