@@ -782,6 +782,7 @@
         let currentTab = 'info';
         let isInFichaBloque = false;
         let navigationStack = [];
+        let currentCroquisLoadTimeout = null; // Para abortar cargas anteriores
 
         function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
         function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
@@ -980,8 +981,14 @@
 
         function cargarTodosLosMapas(sector) { let mapasHtml = ''; if (sector.mapa) mapasHtml += cargarMapaIndividual(sector, sector.mapa, true); if (sector.mapa_2) mapasHtml += cargarMapaIndividual(sector, sector.mapa_2, false); if (sector.mapa_3) mapasHtml += cargarMapaIndividual(sector, sector.mapa_3, false); return mapasHtml; }
 
-        // Función corregida para cargar croquis interactivo (usando evento load)
-        function cargarCroquisInteractivo(sector, croquisIndex) {
+        // Función mejorada para cargar croquis interactivo (con aborto de carga anterior)
+        function cargarCroquisInteractivo(sector, croquisIndex, areaId = 'croquisViewerArea') {
+            // Si existe un timeout previo, lo cancelamos
+            if (currentCroquisLoadTimeout) {
+                clearTimeout(currentCroquisLoadTimeout);
+                currentCroquisLoadTimeout = null;
+            }
+            
             const croquis = sector.croquis_list[croquisIndex];
             if (!croquis) return '<div class="info-sector"><p>Croquis no disponible</p></div>';
             const timestamp = Date.now();
@@ -992,33 +999,41 @@
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg?v=${timestamp}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
             
-            // Esperar a que el objeto esté en el DOM y luego agregar el evento load
-            setTimeout(() => {
+            // Programar la carga del SVG con reintentos
+            const loadObject = () => {
                 const objectTag = document.getElementById(`croquisObject_${containerId}`);
-                if (objectTag) {
-                    // Función para procesar una vez cargado
-                    const procesarCuandoCargue = () => {
-                        if (objectTag.contentDocument) {
-                            procesarSVGCroquis(objectTag.contentDocument, sector);
-                        } else {
-                            // Si aún no está listo, reintentar después de 100ms
-                            setTimeout(procesarCuandoCargue, 100);
-                        }
-                    };
-                    // Si ya está cargado (puede ocurrir por caché), procesamos directamente
+                if (!objectTag) return;
+                
+                const process = () => {
                     if (objectTag.contentDocument) {
                         procesarSVGCroquis(objectTag.contentDocument, sector);
                     } else {
-                        objectTag.addEventListener('load', () => {
+                        // Reintentar después de 100ms, máximo 20 intentos (2 segundos)
+                        let attempts = 0;
+                        const interval = setInterval(() => {
+                            attempts++;
                             if (objectTag.contentDocument) {
+                                clearInterval(interval);
                                 procesarSVGCroquis(objectTag.contentDocument, sector);
+                            } else if (attempts >= 20) {
+                                clearInterval(interval);
+                                console.warn('No se pudo cargar el SVG del croquis');
                             }
-                        });
-                        // Fallback por si el evento load no se dispara
-                        setTimeout(procesarCuandoCargue, 500);
+                        }, 100);
                     }
+                };
+                
+                if (objectTag.contentDocument) {
+                    process();
+                } else {
+                    objectTag.addEventListener('load', process);
+                    // Fallback por si el evento load no se dispara
+                    setTimeout(process, 500);
                 }
-            }, 50);
+            };
+            
+            // Pequeño retraso para asegurar que el DOM se actualice
+            currentCroquisLoadTimeout = setTimeout(loadObject, 50);
             return html;
         }
 
@@ -1027,7 +1042,7 @@
             const svgElement = svgDoc.documentElement;
             if (!svgElement) return;
             
-            // Evitar procesar dos veces
+            // Evitar reprocesar el mismo SVG
             if (svgElement.getAttribute('data-croquis-procesado') === 'true') return;
             svgElement.setAttribute('data-croquis-procesado', 'true');
             
@@ -1193,7 +1208,20 @@
             actualizarBotonActivo(currentTab);
             setTimeout(() => {
                 document.querySelectorAll('#tab-resumen .linea-item').forEach(item => { item.addEventListener('click', () => { const bloqueId = item.dataset.bloqueId; const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId); if (bloqueIndex !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(bloqueIndex); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }); } }); });
-                if (currentSector.croquis_list && currentSector.croquis_list.length > 1) { document.querySelectorAll('.croquis-thumb').forEach(thumb => { thumb.onclick = () => { const idx = parseInt(thumb.dataset.croquisIdx); cargarCroquisEnArea(idx); document.querySelectorAll('.croquis-thumb').forEach(t => t.classList.remove('active')); thumb.classList.add('active'); }; }); }
+                if (currentSector.croquis_list && currentSector.croquis_list.length > 1) { 
+                    document.querySelectorAll('.croquis-thumb').forEach(thumb => { 
+                        thumb.onclick = () => { 
+                            const idx = parseInt(thumb.dataset.croquisIdx); 
+                            cargarCroquisEnArea(idx); 
+                            document.querySelectorAll('.croquis-thumb').forEach(t => t.classList.remove('active')); 
+                            thumb.classList.add('active'); 
+                        }; 
+                    }); 
+                    // Si hay miniaturas, cargar la primera por defecto
+                    if (currentSector.croquis_list.length > 0 && document.querySelector('.croquis-thumb')) {
+                        document.querySelector('.croquis-thumb').click();
+                    }
+                }
             }, 100);
             if (currentTab === 'croquis' && currentSector.croquis_list?.length > 1) setTimeout(() => cargarCroquisEnArea(0), 100);
             navigateToScreen('screen-sector-detalle', { sectorNombre: currentSector.nombre });
@@ -1203,7 +1231,12 @@
         function cargarCroquisEnArea(idx) { 
             if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return; 
             const area = document.getElementById('croquisViewerArea'); 
-            if (area) area.innerHTML = cargarCroquisInteractivo(currentSector, idx); 
+            if (area) {
+                // Limpiar el contenido anterior y cancelar carga pendiente
+                area.innerHTML = '';
+                // Forzar la carga del nuevo croquis
+                area.innerHTML = cargarCroquisInteractivo(currentSector, idx);
+            }
         }
 
         function dibujarGrafica(sector) {
