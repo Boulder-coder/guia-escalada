@@ -1057,6 +1057,7 @@
 
         function cargarTodosLosMapas(sector) { let mapasHtml = ''; if (sector.mapa) mapasHtml += cargarMapaIndividual(sector, sector.mapa, true); if (sector.mapa_2) mapasHtml += cargarMapaIndividual(sector, sector.mapa_2, false); if (sector.mapa_3) mapasHtml += cargarMapaIndividual(sector, sector.mapa_3, false); return mapasHtml; }
 
+        // ========== FUNCIÓN CROQUIS MEJORADA ==========
         function cargarCroquisInteractivo(sector, croquisIndex) {
             const croquis = sector.croquis_list[croquisIndex];
             if (!croquis) return '<div class="info-sector"><p>Croquis no disponible</p></div>';
@@ -1067,7 +1068,100 @@
             html += `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg?v=${timestamp}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
-            setTimeout(() => { const objectTag = document.getElementById(`croquisObject_${containerId}`); if (objectTag && objectTag.contentDocument) { const svgDoc = objectTag.contentDocument; const svgElement = svgDoc.documentElement; if (svgElement) { const allEl = svgElement.querySelectorAll('*'); allEl.forEach(el => { if (el.tagName !== 'svg') { el.setAttribute('fill', 'transparent'); el.setAttribute('stroke', 'transparent'); el.setAttribute('fill-opacity', '0'); el.setAttribute('stroke-opacity', '0'); if (el.style) el.style.opacity = '0'; } }); const elementosConLabel = svgDoc.querySelectorAll('*'); elementosConLabel.forEach(el => { let label = null; label = el.getAttribute('inkscape:label'); if (!label && el.attributes) { for (let attr of el.attributes) { if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) { label = attr.value; break; } } } if (label && !isNaN(parseInt(label))) { el.style.cursor = 'pointer'; el.addEventListener('click', (e) => { e.stopPropagation(); const bloqueBase = label; const bloqueEncontrado = sector.bloques.find(b => { if (b.id === bloqueBase) return true; if (b.id.startsWith(`${bloqueBase}_`)) return true; return false; }); if (bloqueEncontrado) { const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id); if (indice !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(indice); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice }); } } }); } }); } } }, 500);
+            
+            setTimeout(() => {
+                const objectTag = document.getElementById(`croquisObject_${containerId}`);
+                if (objectTag) {
+                    const asignarEventos = () => {
+                        const svgDoc = objectTag.contentDocument;
+                        if (!svgDoc) return;
+                        const svgElement = svgDoc.documentElement;
+                        if (!svgElement) return;
+                        
+                        // Hacer transparentes todos los elementos excepto aquellos con label numérico
+                        const allElements = svgElement.querySelectorAll('*');
+                        allElements.forEach(el => {
+                            let label = el.getAttribute('inkscape:label');
+                            if (!label && el.attributes) {
+                                for (let attr of el.attributes) {
+                                    if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) {
+                                        label = attr.value;
+                                        break;
+                                    }
+                                }
+                            }
+                            // Si no tiene label numérico, lo hacemos transparente
+                            if (!label || isNaN(parseInt(label))) {
+                                el.setAttribute('fill', 'transparent');
+                                el.setAttribute('stroke', 'transparent');
+                                el.setAttribute('fill-opacity', '0');
+                                el.setAttribute('stroke-opacity', '0');
+                                if (el.style) el.style.opacity = '0';
+                            } else {
+                                // Elemento clickeable
+                                el.setAttribute('fill', '#6674FF');  // Fondo opcional
+                                el.setAttribute('fill-opacity', '0.8');
+                                el.style.cursor = 'pointer';
+                                el.style.pointerEvents = 'visible';
+                                // Eliminar evento anterior para evitar duplicados
+                                el.removeEventListener('click', manejarClick);
+                                el.addEventListener('click', manejarClick);
+                            }
+                        });
+                        
+                        // Eliminar fondos grandes (rectángulos que puedan estar cubriendo)
+                        const rects = svgElement.querySelectorAll('rect');
+                        rects.forEach(rect => {
+                            const width = parseFloat(rect.getAttribute('width')) || 0;
+                            const height = parseFloat(rect.getAttribute('height')) || 0;
+                            if (width > 100 && height > 100) {
+                                rect.setAttribute('fill', 'transparent');
+                                rect.setAttribute('fill-opacity', '0');
+                            }
+                        });
+                    };
+                    
+                    const manejarClick = (e) => {
+                        e.stopPropagation();
+                        const el = e.currentTarget;
+                        let label = el.getAttribute('inkscape:label');
+                        if (!label && el.attributes) {
+                            for (let attr of el.attributes) {
+                                if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) {
+                                    label = attr.value;
+                                    break;
+                                }
+                            }
+                        }
+                        if (label) {
+                            const bloqueBase = label;
+                            const bloqueEncontrado = sector.bloques.find(b => {
+                                if (b.id === bloqueBase) return true;
+                                if (b.id.startsWith(`${bloqueBase}_`)) return true;
+                                return false;
+                            });
+                            if (bloqueEncontrado) {
+                                const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
+                                if (indice !== -1) {
+                                    currentTab = 'bloques';
+                                    isInFichaBloque = true;
+                                    actualizarBotonActivo('bloques');
+                                    cargarFichaBloque(indice);
+                                    navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice });
+                                }
+                            }
+                        }
+                    };
+                    
+                    // Esperar carga completa
+                    if (objectTag.contentDocument && objectTag.contentDocument.readyState === 'complete') {
+                        asignarEventos();
+                    } else {
+                        objectTag.addEventListener('load', asignarEventos);
+                        setTimeout(asignarEventos, 1000);
+                    }
+                }
+            }, 100);
             return html;
         }
 
@@ -1121,7 +1215,7 @@
             currentSector = datosApp.sectores.find(s => s.nombre === sectorNombre);
             if (!currentSector) return;
             isInFichaBloque = false;
-            // FORZAR la pestaña "Info" al abrir cualquier sector
+            // Forzar pestaña "Info" al abrir cualquier sector
             currentTab = 'info';
             const container = document.getElementById('sector-detalle-content');
             const mapasHtml = cargarTodosLosMapas(currentSector);
