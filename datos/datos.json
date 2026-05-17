@@ -5,714 +5,713 @@
       "municipio": "Buñol",
       "portada": "fotos/MLC_PORTADA",
       "mapa": "fotos/MLC_MAPA",
-      "mapa_2": null,
-      "mapa_3": null,
-      "definicion": "El <strong>Monte La Cruz</strong> es un sector ubicado en la cima del característico monte buñolero. Se trata de un sector agradable, con vistas panorámicas del pueblo, donde acostumbra a soplar brisa. Ideal para una tarde de verano o una mañana de invierno. // La mayoría de bloques se encuentran en la cara <strong>Este (B1-9)</strong>, aunque también diponemos de un abanico de piedra pinchosa aún por abrir en su cara <strong>Norte (B10)</strong>, y un bloque solitario entre los <strong>Bancales de la cara sur (B11)</strong>. Son bloques de poca estatura (rondan los 2,50-3,00m), con poco desplome, pero canto pequeño. Abundan los sextos grados: perfecto para iniciarse en roca si ya llevas algo de rodaje en rocódromo.",
+      "mapa_2": "",
+      "mapa_3": "",
+      "descripcion": "El <strong>Monte La Cruz</strong> es un sector ubicado en la cima del característico monte buñolero. Se trata de un sector agradable, con vistas panorámicas del pueblo, donde acostumbra a soplar brisa. Ideal para una tarde de verano o una mañana de invierno. // La mayoría de bloques se encuentran en la cara <strong>Este (B1-9)</strong>, aunque también diponemos de un abanico de piedra pinchosa aún por abrir en su cara <strong>Norte (B10)</strong>, y un bloque solitario entre los <strong>Bancales de la cara sur (B11)</strong>. Son bloques de poca estatura (rondan los 2,50-3,00m), con poco desplome, pero canto pequeño. Abundan los sextos grados: perfecto para iniciarse en roca si ya llevas algo de rodaje en rocódromo.",
       "parking": [
         "https://maps.app.goo.gl/e1SB96eGaXCvjFn47",
         "https://maps.app.goo.gl/hAAkZtQq8DXNwnDH8",
         "https://maps.app.goo.gl/jpi1YvNEa7J1evzz8"
       ],
-      "croquis": [
+      "croquis_list": [
         {
-          "croquis_id": "Este",
-          "croquis_foto": "fotos/MLC_CROQUIS_1",
-          "bloques": [
+          "nombre": "Este",
+          "imagen": "fotos/MLC_CROQUIS_1",
+          "svg": "fotos/MLC_CROQUIS_1"
+        },
+        {
+          "nombre": "Norte",
+          "imagen": "fotos/MLC_CROQUIS_2",
+          "svg": "fotos/MLC_CROQUIS_2"
+        },
+        {
+          "nombre": "Bancal",
+          "imagen": "fotos/MLC_CROQUIS_3",
+          "svg": "fotos/MLC_CROQUIS_3"
+        }
+      ],
+      "bloques": [
+        {
+          "id": "1",
+          "foto_base": "fotos/MLC_B1",
+          "vias": [
             {
-              "bloque_id": "1",
-              "bloque_foto": "fotos/MLC_B1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Cueva culo",
-                  "grado": "Pr",
-                  "entrada": "Sit",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": "Canto al fondo",
-                  "definicion": "Entra al fondo de la cueva, sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "2_1",
-              "bloque_foto": "fotos/MLC_B2_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Perromut",
-                  "grado": "5",
-                  "entrada": "Sit",
-                  "mano_izq": "Regleta",
-                  "mano_der": "Garbanzo plano",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B",
-                  "nombre": "Gusanomut",
-                  "grado": "4",
-                  "entrada": "Sit",
-                  "mano_izq": "Pinza alta buena",
-                  "mano_der": "Agujero",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto por la izquierda",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C",
-                  "nombre": "Escarabajomut",
-                  "grado": "6A",
-                  "entrada": "Sit",
-                  "mano_izq": "Pinza alta buena",
-                  "mano_der": "Agujero",
-                  "manos_juntas": null,
-                  "definicion": "Mismo inicio que B, sale hacia la derecha",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "2_2",
-              "bloque_foto": "fotos/MLC_B2_2",
-              "lineas": [
-                {
-                  "linea_id": "D",
-                  "nombre": "Taluego",
-                  "grado": "6A+",
-                  "entrada": "Sit",
-                  "mano_izq": "Repisita",
-                  "mano_der": "Presa lateral",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "E",
-                  "nombre": "¿Dónde está la bolita?",
-                  "grado": "6A",
-                  "entrada": "Sit",
-                  "mano_izq": "Regleta",
-                  "mano_der": "Presa buena lateral",
-                  "manos_juntas": null,
-                  "definicion": "Travesía hacia la izquierda, sale por A",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "F",
-                  "nombre": "Piedra",
-                  "grado": "5",
-                  "entrada": "Sit",
-                  "mano_izq": "Regleta",
-                  "mano_der": "Presa buena lateral",
-                  "manos_juntas": null,
-                  "definicion": "Mismo inicio que E, sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "2_3",
-              "bloque_foto": "fotos/MLC_B2_3",
-              "lineas": [
-                {
-                  "linea_id": "G.1",
-                  "nombre": "Cascanueces",
-                  "grado": "3",
-                  "entrada": "De Pie",
-                  "mano_izq": "Repisa",
-                  "mano_der": "Presa buena lateral",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "G.2",
-                  "nombre": "El juego del cascanueces",
-                  "grado": "*",
-                  "entrada": "De Pie",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": "Repisa",
-                  "definicion": "¡Eliminatoria! Solo valen las presas en el plano de la repisa. Se hace top de pie sobre la repisa",
-                  "salida": "T",
-                  "expuesta": "¡Cuidado con el árbol!"
-                }
-              ]
-            },
-            {
-              "bloque_id": "3_1",
-              "bloque_foto": "fotos/MLC_B3_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Cardumen",
-                  "grado": "6A",
-                  "entrada": "Sit",
-                  "mano_izq": "Lateral abierta",
-                  "mano_der": "Plano horizontal",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B",
-                  "nombre": "Cardamomo",
-                  "grado": "6A",
-                  "entrada": "Sit",
-                  "mano_izq": "Presa lateral en pinza",
-                  "mano_der": "Rugosidad dentro de la grieta",
-                  "manos_juntas": null,
-                  "definicion": "¡Eliminatorio! No vale bloque derecho",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C",
-                  "nombre": "Cúrcuma",
-                  "grado": "5",
-                  "entrada": "Sit",
-                  "mano_izq": "Presa lateral en pinza",
-                  "mano_der": "Rugosidad dentro de la grieta",
-                  "manos_juntas": null,
-                  "definicion": "Mismo inicio que B, recorre la grieta",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "D",
-                  "nombre": "La flecha blanca",
-                  "grado": "6B",
-                  "entrada": "Sit",
-                  "mano_izq": "Pinza en arista",
-                  "mano_der": "Regleta roma",
-                  "manos_juntas": null,
-                  "definicion": "¡Eliminatorio! No vale grieta ni bloque izquierdo",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "3_2",
-              "bloque_foto": "fotos/MLC_B3_2",
-              "lineas": [
-                {
-                  "linea_id": "E",
-                  "nombre": "Batualmón",
-                  "grado": "7A",
-                  "entrada": "Sit",
-                  "mano_izq": "Agujero horizontal",
-                  "mano_der": "Agujero horizontal",
-                  "manos_juntas": null,
-                  "definicion": "Sale hacia la izquierda",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "3_3",
-              "bloque_foto": "fotos/MLC_B3_3",
-              "lineas": [
-                {
-                  "linea_id": "F",
-                  "nombre": "El deshollinador",
-                  "grado": "6A+",
-                  "entrada": "Sit",
-                  "mano_izq": "Agujero horizontal",
-                  "mano_der": "Presa buena lateral",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto por la fisura",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "G",
-                  "nombre": "Bancal exprés",
-                  "grado": "5",
-                  "entrada": "Semi-Sit",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": "Agujero",
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "4",
-              "bloque_foto": "fotos/MLC_B4",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin nombre",
-                  "grado": "Pr",
-                  "entrada": "De Pie",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": "Presa grande",
-                  "definicion": "Sale hacia la izquierda cogiendo la regleta lateral cruzando con mano derecha",
-                  "salida": "TO",
-                  "expuesta": "Caída en desnivel"
-                },
-                {
-                  "linea_id": "B",
-                  "nombre": "El faro",
-                  "grado": "6B+",
-                  "entrada": "De Pie",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": "Presa grande",
-                  "definicion": "Misma entrada que A, sale recto cogiendo la regleta lateral con izquierda",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C",
-                  "nombre": "Galleta chocopinchos",
-                  "grado": "6C",
-                  "entrada": "De Pie",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": "Presa grande",
-                  "definicion": "Misma entrada que A, sale hacia la derecha. No vale pisar la tierra",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "5_1",
-              "bloque_foto": "fotos/MLC_B5_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Afronta sin frontal",
-                  "grado": "5",
-                  "entrada": "Sit",
-                  "mano_izq": "Triángulo en pinza",
-                  "mano_der": "Al aire",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C.1",
-                  "nombre": "Abrazapiedras Sit",
-                  "grado": "Pr",
-                  "entrada": "Sit",
-                  "mano_izq": "No me acuerdo",
-                  "mano_der": "Presa buena conglomerada",
-                  "manos_juntas": null,
-                  "definicion": "Hacia la derecha",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C.2",
-                  "nombre": "Abrazapiedras",
-                  "grado": "6B",
-                  "entrada": "De Pie",
-                  "mano_izq": "Rugosidad lateral",
-                  "mano_der": "Regleta lateral",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "5_2",
-              "bloque_foto": "fotos/MLC_B5_2",
-              "lineas": [
-                {
-                  "linea_id": "D",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "E",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "F",
-                  "nombre": "Sin nombre",
-                  "grado": "3",
-                  "entrada": "Sit",
-                  "mano_izq": "No me acuerdo",
-                  "mano_der": "No me acuerdo",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "6",
-              "bloque_foto": "fotos/MLC_B6",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "El arca perdida",
-                  "grado": "6B+",
-                  "entrada": "Sit",
-                  "mano_izq": "No me acuerdo",
-                  "mano_der": "No me acuerdo",
-                  "manos_juntas": null,
-                  "definicion": "Sentado desde arista",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "7_1",
-              "bloque_foto": "fotos/MLC_B7_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "7_2",
-              "bloque_foto": "fotos/MLC_B7_2",
-              "lineas": [
-                {
-                  "linea_id": "B",
-                  "nombre": "La hamburguesa",
-                  "grado": "6B",
-                  "entrada": "Sit",
-                  "mano_izq": "Arista izquierda",
-                  "mano_der": "Arista derecha",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "7_3",
-              "bloque_foto": "fotos/MLC_B7_3",
-              "lineas": [
-                {
-                  "linea_id": "C.1",
-                  "nombre": "Gumersinda Raimunda",
-                  "grado": "6B+",
-                  "entrada": "Sit",
-                  "mano_izq": "Arista izquierda",
-                  "mano_der": "Presa buena lateral",
-                  "manos_juntas": null,
-                  "definicion": "¡Morfa! Sale recto",
-                  "salida": "TO",
-                  "expuesta": "Caída delicada"
-                },
-                {
-                  "linea_id": "C.2",
-                  "nombre": "Gumersinda Raimunda",
-                  "grado": "Pr",
-                  "entrada": "Sit",
-                  "mano_izq": "Arista izquierda",
-                  "mano_der": "Presa buena lateral",
-                  "manos_juntas": null,
-                  "definicion": "¡Eliminatoria! Sin la arista derecha. Variante no morfa",
-                  "salida": "TO",
-                  "expuesta": "Caída delicada"
-                }
-              ]
-            },
-            {
-              "bloque_id": "8_1",
-              "bloque_foto": "fotos/MLC_B8_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Langostino Romero",
-                  "grado": "5",
-                  "entrada": "Sit",
-                  "mano_izq": "Arista izquierda",
-                  "mano_der": "Presa lateral alta",
-                  "manos_juntas": null,
-                  "definicion": "Recorre la arista",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B.1",
-                  "nombre": "Dulce deleite",
-                  "grado": "6B+",
-                  "entrada": "Sit",
-                  "mano_izq": "Arista izquierda",
-                  "mano_der": "Presa lateral alta",
-                  "manos_juntas": null,
-                  "definicion": "Misma entrada que A, salida hacia la derecha",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B.2",
-                  "nombre": "Dulce deleite",
-                  "grado": "6C",
-                  "entrada": "Sit",
-                  "mano_izq": "Al aire",
-                  "mano_der": "Presa lateral alta",
-                  "manos_juntas": null,
-                  "definicion": "¡Eliminatoria! No vale la arista izquierda",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B.3",
-                  "nombre": "Boccato di coordinate",
-                  "grado": "Pr",
-                  "entrada": "Sit",
-                  "mano_izq": "Al aire",
-                  "mano_der": "Presa lateral alta",
-                  "manos_juntas": null,
-                  "definicion": "Misma entrada que A, travesía hacia la derecha",
-                  "salida": "TOD",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C.1",
-                  "nombre": "Monty Burns",
-                  "grado": "6A",
-                  "entrada": "De Pie",
-                  "mano_izq": "Presa lateral",
-                  "mano_der": "Galleta blanca lateral",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto hacia la izquierda",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C.2",
-                  "nombre": "Saltamonty Burns",
-                  "grado": "6B",
-                  "entrada": "De Pie",
-                  "mano_izq": "Presa lateral",
-                  "mano_der": "Galleta blanca lateral",
-                  "manos_juntas": null,
-                  "definicion": "¡Eliminatoria! Sin arista. Lance directo",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C.3",
-                  "nombre": "Saltamonty Burns Sit",
-                  "grado": "Pr",
-                  "entrada": "Sit",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": "¡Eliminatoria! Sin arista. Entra sentado con presas por definir",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "D",
-                  "nombre": "Aristogatos",
-                  "grado": "6A+",
-                  "entrada": "Sit",
-                  "mano_izq": "Presa pequeña",
-                  "mano_der": "Regleta en el plano tumbado",
-                  "manos_juntas": null,
-                  "definicion": "Recorre la arista",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "8_2",
-              "bloque_foto": "fotos/MLC_B8_2",
-              "lineas": [
-                {
-                  "linea_id": "E",
-                  "nombre": "Mi primera chamba",
-                  "grado": "4",
-                  "entrada": "Semi-Sit",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": "Plano tumbado",
-                  "definicion": null,
-                  "salida": "TO",
-                  "expuesta": "Caída sin porteo"
-                }
-              ]
-            },
-            {
-              "bloque_id": "9",
-              "bloque_foto": "fotos/MLC_B9",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "A",
+              "nombre": "Cueva culo",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Canto al fondo",
+              "definicion": "Entra al fondo de la cueva, sale recto",
+              "expuesta": ""
             }
           ]
         },
         {
-          "croquis_id": "Norte",
-          "croquis_foto": "fotos/MLC_CROQUIS_2",
-          "bloques": [
+          "id": "2_1",
+          "foto_base": "fotos/MLC_B2_1",
+          "vias": [
             {
-              "bloque_id": "10",
-              "bloque_foto": "fotos/MLC_B10",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "A",
+              "nombre": "Perromut",
+              "grado": "5",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Regleta",
+              "mano_der": "Garbanzo plano",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B",
+              "nombre": "Gusanomut",
+              "grado": "4",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Pinza alta buena",
+              "mano_der": "Agujero",
+              "manos_juntas": "",
+              "definicion": "Sale recto por la izquierda",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Escarabajomut",
+              "grado": "6A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Pinza alta buena",
+              "mano_der": "Agujero",
+              "manos_juntas": "",
+              "definicion": "Mismo inicio que B, sale hacia la derecha",
+              "expuesta": ""
             }
           ]
         },
         {
-          "croquis_id": "Bancal",
-          "croquis_foto": "fotos/MLC_CROQUIS_3",
-          "bloques": [
+          "id": "2_2",
+          "foto_base": "fotos/MLC_B2_2",
+          "vias": [
             {
-              "bloque_id": "11_1",
-              "bloque_foto": "fotos/MLC_B11_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Tupper de plátano",
-                  "grado": "5",
-                  "entrada": "Sit",
-                  "mano_izq": "Presa lateral",
-                  "mano_der": "Presa buena lateral",
-                  "manos_juntas": null,
-                  "definicion": "Salida directa",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B",
-                  "nombre": "Robocat",
-                  "grado": "5+",
-                  "entrada": "Sit",
-                  "mano_izq": "Presa lateral",
-                  "mano_der": "Presa buena lateral",
-                  "manos_juntas": null,
-                  "definicion": "Mismo inicio que A, recorre la arista y sale por la parte alta",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C.1",
-                  "nombre": "Los cuchillos de Buñol",
-                  "grado": "7A",
-                  "entrada": "Sit",
-                  "mano_izq": "Regleta rugosa",
-                  "mano_der": "Regleta baja",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C.2",
-                  "nombre": "El afilador",
-                  "grado": "6B",
-                  "entrada": "De Pie",
-                  "mano_izq": "Bidedo invertido",
-                  "mano_der": "Tridedo positivo",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "D",
+              "nombre": "Taluego",
+              "grado": "6A+",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Repisita",
+              "mano_der": "Presa lateral",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
             },
             {
-              "bloque_id": "11_2",
-              "bloque_foto": "fotos/MLC_B11_2",
-              "lineas": [
-                {
-                  "linea_id": "D",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "E",
+              "nombre": "¿Dónde está la bolita?",
+              "grado": "6A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Regleta",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "Travesía hacia la izquierda, sale por A",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "F",
+              "nombre": "Piedra",
+              "grado": "5",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Regleta",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "Mismo inicio que E, sale recto",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "2_3",
+          "foto_base": "fotos/MLC_B2_3",
+          "vias": [
+            {
+              "linea_id": "G.1",
+              "nombre": "Cascanueces",
+              "grado": "3",
+              "entrada": "De Pie",
+              "salida": "TO",
+              "mano_izq": "Repisa",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "G.2",
+              "nombre": "El juego del cascanueces",
+              "grado": "",
+              "entrada": "De Pie",
+              "salida": "T",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Repisa",
+              "definicion": "¡Eliminatoria! Solo valen las presas en el plano de la repisa. Se hace top de pie sobre la repisa",
+              "expuesta": "¡Cuidado con el árbol!"
+            }
+          ]
+        },
+        {
+          "id": "3_1",
+          "foto_base": "fotos/MLC_B3_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Cardumen",
+              "grado": "6A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Lateral abierta",
+              "mano_der": "Plano horizontal",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B",
+              "nombre": "Cardamomo",
+              "grado": "6A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Presa lateral en pinza",
+              "mano_der": "Rugosidad dentro de la grieta",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatorio! No vale bloque derecho",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Cúrcuma",
+              "grado": "5",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Presa lateral en pinza",
+              "mano_der": "Rugosidad dentro de la grieta",
+              "manos_juntas": "",
+              "definicion": "Mismo inicio que B, recorre la grieta",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D",
+              "nombre": "La flecha blanca",
+              "grado": "6B",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Pinza en arista",
+              "mano_der": "Regleta roma",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatorio! No vale grieta ni bloque izquierdo",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "3_2",
+          "foto_base": "fotos/MLC_B3_2",
+          "vias": [
+            {
+              "linea_id": "E",
+              "nombre": "Batualmón",
+              "grado": "7A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Agujero horizontal",
+              "mano_der": "Agujero horizontal",
+              "manos_juntas": "",
+              "definicion": "Sale hacia la izquierda",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "3_3",
+          "foto_base": "fotos/MLC_B3_3",
+          "vias": [
+            {
+              "linea_id": "F",
+              "nombre": "El deshollinador",
+              "grado": "6A+",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Agujero horizontal",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "Sale recto por la fisura",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "G",
+              "nombre": "Bancal exprés",
+              "grado": "5",
+              "entrada": "Semi-Sit",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Agujero",
+              "definicion": "Sale recto",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "foto_base": "fotos/MLC_B4",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin nombre",
+              "grado": "Pr",
+              "entrada": "De Pie",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Presa grande",
+              "definicion": "Sale hacia la izquierda cogiendo la regleta lateral cruzando con mano derecha",
+              "expuesta": "Caída en desnivel"
+            },
+            {
+              "linea_id": "B",
+              "nombre": "El faro",
+              "grado": "6B+",
+              "entrada": "De Pie",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Presa grande",
+              "definicion": "Misma entrada que A, sale recto cogiendo la regleta lateral con izquierda",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Galleta chocopinchos",
+              "grado": "6C",
+              "entrada": "De Pie",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Presa grande",
+              "definicion": "Misma entrada que A, sale hacia la derecha. No vale pisar la tierra",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "5_1",
+          "foto_base": "fotos/MLC_B5_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Afronta sin frontal",
+              "grado": "5",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Triángulo en pinza",
+              "mano_der": "Al aire",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C.1",
+              "nombre": "Abrazapiedras",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "No me acuerdo",
+              "mano_der": "Presa buena conglomerada",
+              "manos_juntas": "",
+              "definicion": "Hacia la derecha",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C.2",
+              "nombre": "Abrazapiedras",
+              "grado": "6B",
+              "entrada": "De Pie",
+              "salida": "TO",
+              "mano_izq": "Rugosidad lateral",
+              "mano_der": "Regleta lateral",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "5_2",
+          "foto_base": "fotos/MLC_B5_2",
+          "vias": [
+            {
+              "linea_id": "D",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "E",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "F",
+              "nombre": "Sin nombre",
+              "grado": "3",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "No me acuerdo",
+              "mano_der": "No me acuerdo",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "6",
+          "foto_base": "fotos/MLC_B6",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "El arca perdida",
+              "grado": "6B+",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "No me acuerdo",
+              "mano_der": "No me acuerdo",
+              "manos_juntas": "",
+              "definicion": "Sentado desde arista",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "7_1",
+          "foto_base": "fotos/MLC_B7_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "7_2",
+          "foto_base": "fotos/MLC_B7_2",
+          "vias": [
+            {
+              "linea_id": "B",
+              "nombre": "La hamburguesa",
+              "grado": "6B",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Arista izquierda",
+              "mano_der": "Arista derecha",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "7_3",
+          "foto_base": "fotos/MLC_B7_3",
+          "vias": [
+            {
+              "linea_id": "C.1",
+              "nombre": "Gumersinda Raimunda",
+              "grado": "6B+",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Arista izquierda",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "¡Morfa! Sale recto",
+              "expuesta": "Caída delicada"
+            },
+            {
+              "linea_id": "C.2",
+              "nombre": "Gumersinda Raimunda",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Arista izquierda",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatoria! Sin la arista derecha. Variante no morfa",
+              "expuesta": "Caída delicada"
+            }
+          ]
+        },
+        {
+          "id": "8_1",
+          "foto_base": "fotos/MLC_B8_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Langostino Romero",
+              "grado": "5",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Arista izquierda",
+              "mano_der": "Presa lateral alta",
+              "manos_juntas": "",
+              "definicion": "Recorre la arista",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B.1",
+              "nombre": "Dulce deleite",
+              "grado": "6B+",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Arista izquierda",
+              "mano_der": "Presa lateral alta",
+              "manos_juntas": "",
+              "definicion": "Misma entrada que A, salida hacia la derecha",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B.2",
+              "nombre": "Dulce deleite",
+              "grado": "6C",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Al aire",
+              "mano_der": "Presa lateral alta",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatoria! No vale la arista izquierda",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Boccato di coordinate",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "salida": "TOD",
+              "mano_izq": "Al aire",
+              "mano_der": "Presa lateral alta",
+              "manos_juntas": "",
+              "definicion": "Misma entrada que A, travesía hacia la derecha",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D.1",
+              "nombre": "Monty Burns",
+              "grado": "6A",
+              "entrada": "De Pie",
+              "salida": "TO",
+              "mano_izq": "Presa lateral",
+              "mano_der": "Galleta blanca lateral",
+              "manos_juntas": "",
+              "definicion": "Sale recto hacia la izquierda",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D.2",
+              "nombre": "Saltamonty Burns",
+              "grado": "6B",
+              "entrada": "De Pie",
+              "salida": "TO",
+              "mano_izq": "Presa lateral",
+              "mano_der": "Galleta blanca lateral",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatoria! Sin arista. Lance directo",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D.3",
+              "nombre": "Saltamonty Burns",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatoria! Sin arista. Entra sentado con presas por definir",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "E",
+              "nombre": "Aristogatos",
+              "grado": "6A+",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Presa pequeña",
+              "mano_der": "Regleta en el plano tumbado",
+              "manos_juntas": "",
+              "definicion": "Recorre la arista",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "8_2",
+          "foto_base": "fotos/MLC_B8_2",
+          "vias": [
+            {
+              "linea_id": "F",
+              "nombre": "Mi primera chamba",
+              "grado": "4",
+              "entrada": "Semi-Sit",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Plano tumbado",
+              "definicion": "",
+              "expuesta": "Caída sin porteo"
+            }
+          ]
+        },
+        {
+          "id": "9",
+          "foto_base": "fotos/MLC_B9",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "10",
+          "foto_base": "fotos/MLC_B10",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "11_1",
+          "foto_base": "fotos/MLC_B11_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Tupper de plátano",
+              "grado": "5",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Presa lateral",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "Salida directa",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B",
+              "nombre": "Robocat",
+              "grado": "5+",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Presa lateral",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "Mismo inicio que A, recorre la arista y sale por la parte alta",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C.1",
+              "nombre": "Los cuchillos de Buñol",
+              "grado": "7A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Regleta rugosa",
+              "mano_der": "Regleta baja",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C.2",
+              "nombre": "El afilador",
+              "grado": "6B",
+              "entrada": "De Pie",
+              "salida": "TO",
+              "mano_izq": "Bidedo invertido",
+              "mano_der": "Tridedo positivo",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "11_2",
+          "foto_base": "fotos/MLC_B11_2",
+          "vias": [
+            {
+              "linea_id": "D",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
             }
           ]
         }
@@ -725,980 +724,979 @@
       "mapa": "fotos/BG_MAPA",
       "mapa_2": "fotos/BG_MAPA_2",
       "mapa_3": "fotos/BG_MAPA_3",
-      "definicion": "<strong>Barranco Grande</strong> es un sector chivano ubicado entre la urbanización de Las Pedrizas y el Kartódromo. Dado que sus bloques se encuentran en el cauce del barranco, su orografía puede cambiar en riadas afectando al grado de los mismos. El cauce del barranco acostumbra a ser débil, y los pies de bloques no suelen encharcarse, a excepción de los bloques B7-8. En los meses calurosos abundan las avispas, que anidan entre las piedras del cauce. ¡Fijaos bien dónde pisáis! // El sector dispone de dos zonas: // ● Barranco arriba, <strong>El Salto de la Zorra (B1-10)</strong>, con bloques bajos de piedra caliza compacta y agarres pulidos por la erosión fluvial. Esta zona se encuentra muy expuesta al sol. // ● Barranco abajo, <strong>Tollo de Pedreguer (B11-18)</strong>, encontramos un caos de bloques de piedra caliza muy pulida (el B14 presenta picados artificiales de origen desconocido); y una cueva de conglomerado con buena adherencia (B17-18). Esta zona es húmeda y fresca, perfecta para meses calurosos, tanto para escaladores como para mosquitos. ¡Cuidado en la cueva conglomerada, su bóveda desprende piedras ocasionalmente!",
+      "descripcion": "<strong>Barranco Grande</strong> es un sector chivano ubicado entre la urbanización de Las Pedrizas y el Kartódromo. Dado que sus bloques se encuentran en el cauce del barranco, su orografía puede cambiar en riadas afectando al grado de los mismos. El cauce del barranco acostumbra a ser débil, y los pies de bloques no suelen encharcarse, a excepción de los bloques B7-8. En los meses calurosos abundan las avispas, que anidan entre las piedras del cauce. ¡Fijaos bien dónde pisáis! // El sector dispone de dos zonas: // ● Barranco arriba, <strong>El Salto de la Zorra (B1-10)</strong>, con bloques bajos de piedra caliza compacta y agarres pulidos por la erosión fluvial. Esta zona se encuentra muy expuesta al sol. // ● Barranco abajo, <strong>Tollo de Pedreguer (B11-18)</strong>, encontramos un caos de bloques de piedra caliza muy pulida (el B14 presenta picados artificiales de origen desconocido); y una cueva de conglomerado con buena adherencia (B17-18). Esta zona es húmeda y fresca, perfecta para meses calurosos, tanto para escaladores como para mosquitos. ¡Cuidado en la cueva conglomerada, su bóveda desprende piedras ocasionalmente!",
       "parking": [
         "https://maps.app.goo.gl/c55iyQZggkbpnEKJA"
       ],
-      "croquis": [
+      "croquis_list": [
         {
-          "croquis_id": "El Salto de la Zorra (1)",
-          "croquis_foto": "fotos/BG_CROQUIS_1",
-          "bloques": [
+          "nombre": "El Salto de la Zorra (1)",
+          "imagen": "fotos/BG_CROQUIS_1",
+          "svg": "fotos/BG_CROQUIS_1"
+        },
+        {
+          "nombre": "El Salto de la Zorra (2)",
+          "imagen": "fotos/BG_CROQUIS_2",
+          "svg": "fotos/BG_CROQUIS_2"
+        },
+        {
+          "nombre": "Tollo de Pedreguer",
+          "imagen": "fotos/BG_CROQUIS_3",
+          "svg": "fotos/BG_CROQUIS_3"
+        }
+      ],
+      "bloques": [
+        {
+          "id": "1",
+          "foto_base": "fotos/BG_B1",
+          "vias": [
             {
-              "bloque_id": "1",
-              "bloque_foto": "fotos/BG_B1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Rasca carrasca",
-                  "grado": "5",
-                  "entrada": "Sit",
-                  "mano_izq": "Taco plano",
-                  "mano_der": "Canto lateral",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B.1",
-                  "nombre": "Reptiliano EZ",
-                  "grado": "6C",
-                  "entrada": "Sit",
-                  "mano_izq": "Taco plano",
-                  "mano_der": "Canto lateral",
-                  "manos_juntas": null,
-                  "definicion": "Sale mantelando a mitad arista",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B.2",
-                  "nombre": "Reptiliano",
-                  "grado": "7A",
-                  "entrada": "Sit",
-                  "mano_izq": "Taco plano",
-                  "mano_der": "Canto lateral",
-                  "manos_juntas": null,
-                  "definicion": "¡Eliminatoria! Solo vale la arista diagonal. Sale mantelando",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": "Sit",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "A",
+              "nombre": "Rasca carrasca",
+              "grado": "5",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Taco plano",
+              "mano_der": "Canto lateral",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
             },
             {
-              "bloque_id": "2",
-              "bloque_foto": "fotos/BG_B2",
-              "lineas": [
-                {
-                  "linea_id": "A.1",
-                  "nombre": "Wasp Attack",
-                  "grado": "6B",
-                  "entrada": "Sit",
-                  "mano_izq": "Presa buena",
-                  "mano_der": "Bidedo alto invertido",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "A.2",
-                  "nombre": "Wasp Attack OG",
-                  "grado": "6B+",
-                  "entrada": "Sit",
-                  "mano_izq": "Regleta enana",
-                  "mano_der": "Presa buena",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B",
-                  "nombre": "Hombrosapiens",
-                  "grado": "6C",
-                  "entrada": "Sit",
-                  "mano_izq": "Presa buena",
-                  "mano_der": "Bidedo pequeño",
-                  "manos_juntas": null,
-                  "definicion": "Sale en diagonal a la derecha",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C",
-                  "nombre": "Mazón dimisión",
-                  "grado": "5+",
-                  "entrada": "Sit",
-                  "mano_izq": "Presa buena lateral",
-                  "mano_der": "Presa buena lateral",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "D",
-                  "nombre": "Botas rosas",
-                  "grado": "4",
-                  "entrada": "Sit",
-                  "mano_izq": "Lateral abierta",
-                  "mano_der": "Arista derecha",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "B.1",
+              "nombre": "Reptiliano EZ",
+              "grado": "6C",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Taco plano",
+              "mano_der": "Canto lateral",
+              "manos_juntas": "",
+              "definicion": "Sale mantelando a mitad arista",
+              "expuesta": ""
             },
             {
-              "bloque_id": "3",
-              "bloque_foto": "fotos/BG_B3",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "B.2",
+              "nombre": "Reptiliano",
+              "grado": "7A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Taco plano",
+              "mano_der": "Canto lateral",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatoria! Solo vale la arista diagonal. Sale mantelando",
+              "expuesta": ""
             },
             {
-              "bloque_id": "4",
-              "bloque_foto": "fotos/BG_B4",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "5",
-              "bloque_foto": "fotos/BG_B5",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "6_1",
-              "bloque_foto": "fotos/BG_B6_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Piedro",
-                  "grado": "6A",
-                  "entrada": "Sit",
-                  "mano_izq": "No recuerdo",
-                  "mano_der": "No recuerdo",
-                  "manos_juntas": null,
-                  "definicion": "Entra en el diedro, sale por la grieta",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B.1",
-                  "nombre": "Choco",
-                  "grado": "6C",
-                  "entrada": "Sit",
-                  "mano_izq": "Presa buena baja",
-                  "mano_der": "Invertida abierta",
-                  "manos_juntas": null,
-                  "definicion": "Sale cambiando de plano, por la cara izquierda",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B.2",
-                  "nombre": "Chocolala",
-                  "grado": "6B",
-                  "entrada": "De Pie",
-                  "mano_izq": "Bidedo abierto",
-                  "mano_der": "Patata invertida",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto por la cara izquierda",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B.3",
-                  "nombre": "Chocotete",
-                  "grado": "6C+",
-                  "entrada": "Sit",
-                  "mano_izq": "Presa buena baja",
-                  "mano_der": "Invertida abierta",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto por la arista",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "6_2",
-              "bloque_foto": "fotos/BG_B6_2",
-              "lineas": [
-                {
-                  "linea_id": "C",
-                  "nombre": "Terror de azúcar",
-                  "grado": "5",
-                  "entrada": "Semi-Sit",
-                  "mano_izq": "Canto lateral",
-                  "mano_der": "Al aire",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto por la fisura.",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "C",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
             }
           ]
         },
         {
-          "croquis_id": "El Salto de la Zorra (2)",
-          "croquis_foto": "fotos/BG_CROQUIS_2",
-          "bloques": [
+          "id": "2",
+          "foto_base": "fotos/BG_B2",
+          "vias": [
             {
-              "bloque_id": "7_1",
-              "bloque_foto": "fotos/BG_B7_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Esquinero",
-                  "grado": "Pr",
-                  "entrada": "Sit",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B",
-                  "nombre": "Conejo radioactivo",
-                  "grado": "7A",
-                  "entrada": "Sit",
-                  "mano_izq": "Invertida",
-                  "mano_der": "Presa irregular",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "A.1",
+              "nombre": "Wasp Attack",
+              "grado": "6B",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Presa buena",
+              "mano_der": "Bidedo alto invertido",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
             },
             {
-              "bloque_id": "7_2",
-              "bloque_foto": "fotos/BG_B7_2",
-              "lineas": [
-                {
-                  "linea_id": "D",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "A.2",
+              "nombre": "Wasp Attack OG",
+              "grado": "6B+",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Regleta enana",
+              "mano_der": "Presa buena",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
             },
             {
-              "bloque_id": "8_1",
-              "bloque_foto": "fotos/BG_B8_1",
-              "lineas": [
-                {
-                  "linea_id": "A.1",
-                  "nombre": "Serrucho pachucho",
-                  "grado": "5",
-                  "entrada": "Sit",
-                  "mano_izq": "Lateral roma",
-                  "mano_der": "Regleta lateral",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "A.2",
-                  "nombre": "Serrucho pachucho EZ",
-                  "grado": "3",
-                  "entrada": "Semi-Sit",
-                  "mano_izq": "Lateral roma",
-                  "mano_der": "Canto alto",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B.1",
-                  "nombre": "Galimatías",
-                  "grado": "6B",
-                  "entrada": "Sit",
-                  "mano_izq": "Regleta",
-                  "mano_der": "Monodedo malo",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B.2",
-                  "nombre": "Galimatías EZ",
-                  "grado": "6A",
-                  "entrada": "Sit",
-                  "mano_izq": "Regleta",
-                  "mano_der": "Agujero alto",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C",
-                  "nombre": "Núcelar",
-                  "grado": "6A",
-                  "entrada": "Sit",
-                  "mano_izq": "Bidedo bajo muy abierto",
-                  "mano_der": "Lateral buena",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "B",
+              "nombre": "Hombrosapiens",
+              "grado": "6C",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Presa buena",
+              "mano_der": "Bidedo pequeño",
+              "manos_juntas": "",
+              "definicion": "Sale en diagonal a la derecha",
+              "expuesta": ""
             },
             {
-              "bloque_id": "8_2",
-              "bloque_foto": "fotos/BG_B8_2",
-              "lineas": [
-                {
-                  "linea_id": "D",
-                  "nombre": "Rumi",
-                  "grado": "3",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": "Infantil",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "E",
-                  "nombre": "Mira",
-                  "grado": "3",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": "Infantil",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "F",
-                  "nombre": "Zoey",
-                  "grado": "3",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": "Infantil",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "G",
-                  "nombre": "Sin nombre",
-                  "grado": "5",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "C",
+              "nombre": "Mazón dimisión",
+              "grado": "5+",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Presa buena lateral",
+              "mano_der": "Presa buena lateral",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
             },
             {
-              "bloque_id": "8_3",
-              "bloque_foto": "fotos/BG_B8_3",
-              "lineas": [
-                {
-                  "linea_id": "H",
-                  "nombre": "Sin nombre",
-                  "grado": "6A",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "I",
-                  "nombre": "Sin nombre",
-                  "grado": "6B",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "J",
-                  "nombre": "Sin nombre",
-                  "grado": "7A+",
-                  "entrada": "Sit",
-                  "mano_izq": "Adherencia mínima",
-                  "mano_der": "Regleta pequeña",
-                  "manos_juntas": null,
-                  "definicion": "Un movimiento explosivo buscando el filo superior",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "K",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "8_4",
-              "bloque_foto": "fotos/BG_B8_4",
-              "lineas": [
-                {
-                  "linea_id": "L",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "M",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "N",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "9",
-              "bloque_foto": "fotos/BG_B9",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "10_1",
-              "bloque_foto": "fotos/BG_B10_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin nombre",
-                  "grado": "5",
-                  "entrada": "De Pie",
-                  "mano_izq": "No recuerdo",
-                  "mano_der": "No recuerdo",
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "10_2",
-              "bloque_foto": "fotos/BG_B10_2",
-              "lineas": [
-                {
-                  "linea_id": "B",
-                  "nombre": "Sin nombre",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
-            },
-            {
-              "bloque_id": "10_3",
-              "bloque_foto": "fotos/BG_B10_3",
-              "lineas": [
-                {
-                  "linea_id": "C",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "D",
+              "nombre": "Botas rosas",
+              "grado": "4",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Lateral abierta",
+              "mano_der": "Arista derecha",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
             }
           ]
         },
         {
-          "croquis_id": "Tollo de Pedreguer",
-          "croquis_foto": "fotos/BG_CROQUIS_3",
-          "bloques": [
+          "id": "3",
+          "foto_base": "fotos/BG_B3",
+          "vias": [
             {
-              "bloque_id": "11",
-              "bloque_foto": "fotos/BG_B11",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Morena mía",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "foto_base": "fotos/BG_B4",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "5",
+          "foto_base": "fotos/BG_B5",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "6_1",
+          "foto_base": "fotos/BG_B6_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Piedro",
+              "grado": "6A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "No recuerdo",
+              "mano_der": "No recuerdo",
+              "manos_juntas": "",
+              "definicion": "Entra en el diedro, sale por la grieta",
+              "expuesta": ""
             },
             {
-              "bloque_id": "12",
-              "bloque_foto": "fotos/BG_B12",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "D",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "B.1",
+              "nombre": "Choco",
+              "grado": "6C",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Presa buena baja",
+              "mano_der": "Invertida abierta",
+              "manos_juntas": "",
+              "definicion": "Sale cambiando de plano",
+              "expuesta": ""
             },
             {
-              "bloque_id": "13",
-              "bloque_foto": "fotos/BG_B13",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "El Tobogán",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "B.2",
+              "nombre": "Chocolala",
+              "grado": "6B",
+              "entrada": "De Pie",
+              "salida": "TO",
+              "mano_izq": "Bidedo abierto",
+              "mano_der": "Patata invertida",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
             },
             {
-              "bloque_id": "14_1",
-              "bloque_foto": "fotos/BG_B14_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "C",
+              "nombre": "Chocotete",
+              "grado": "6C+",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Presa buena baja",
+              "mano_der": "Invertida abierta",
+              "manos_juntas": "",
+              "definicion": "Sale recto por la arista",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "6_2",
+          "foto_base": "fotos/BG_B6_2",
+          "vias": [
+            {
+              "linea_id": "D",
+              "nombre": "Terror de azúcar",
+              "grado": "5",
+              "entrada": "Semi-Sit",
+              "salida": "TO",
+              "mano_izq": "Canto lateral",
+              "mano_der": "Al aire",
+              "manos_juntas": "",
+              "definicion": "Sale recto por la fisura.",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "7_1",
+          "foto_base": "fotos/BG_B7_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Esquinero",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
             },
             {
-              "bloque_id": "14_2",
-              "bloque_foto": "fotos/BG_B14_2",
-              "lineas": [
-                {
-                  "linea_id": "D",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "B",
+              "nombre": "Conejo radioactivo",
+              "grado": "7A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Invertida",
+              "mano_der": "Presa irregular",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
             },
             {
-              "bloque_id": "15_1",
-              "bloque_foto": "fotos/BG_B15_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "C",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "7_2",
+          "foto_base": "fotos/BG_B7_2",
+          "vias": [
+            {
+              "linea_id": "D",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "8_1",
+          "foto_base": "fotos/BG_B8_1",
+          "vias": [
+            {
+              "linea_id": "A.1",
+              "nombre": "Serrucho pachucho",
+              "grado": "5",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Lateral roma",
+              "mano_der": "Regleta lateral",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
             },
             {
-              "bloque_id": "15_2",
-              "bloque_foto": "fotos/BG_B15_2",
-              "lineas": [
-                {
-                  "linea_id": "B",
-                  "nombre": "",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "A.2",
+              "nombre": "Serrucho pachucho EZ",
+              "grado": "3",
+              "entrada": "Semi-Sit",
+              "salida": "TO",
+              "mano_izq": "Lateral roma",
+              "mano_der": "Canto alto",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
             },
             {
-              "bloque_id": "16",
-              "bloque_foto": "fotos/BG_B16",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "B.1",
+              "nombre": "Galimatías",
+              "grado": "6B",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Regleta",
+              "mano_der": "Monodedo malo",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
             },
             {
-              "bloque_id": "17_1",
-              "bloque_foto": "fotos/BG_B17_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Calavera",
-                  "grado": "Pr",
-                  "entrada": "Sit",
-                  "mano_izq": "Invertida",
-                  "mano_der": "Agujero bi-tridedo",
-                  "manos_juntas": null,
-                  "definicion": "Sale hacia la izquierda, cogiendo el bidedo alto con derecha",
-                  "salida": "TO",
-                  "expuesta": "¡Cuidado! Bajada saltando"
-                },
-                {
-                  "linea_id": "B",
-                  "nombre": "Collejón Diagon",
-                  "grado": "7B",
-                  "entrada": "Sit",
-                  "mano_izq": "Invertida",
-                  "mano_der": "Agujero bi-tridedo",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto, cogiendo el bidedo alto con izquierda",
-                  "salida": "TO",
-                  "expuesta": "¡Cuidado! Bajada saltando"
-                },
-                {
-                  "linea_id": "C",
-                  "nombre": "Callejón Diagonal",
-                  "grado": "6C",
-                  "entrada": "Sit",
-                  "mano_izq": "Invertida",
-                  "mano_der": "Agujero bi-tridedo",
-                  "manos_juntas": null,
-                  "definicion": "Sale por la fisura diagonal",
-                  "salida": "TO",
-                  "expuesta": "¡Cuidado! Bajada saltando"
-                },
-                {
-                  "linea_id": "D",
-                  "nombre": "Callejón Diagon",
-                  "grado": "6B+",
-                  "entrada": "Sit",
-                  "mano_izq": "Invertida",
-                  "mano_der": "Agujero bi-tridedo",
-                  "manos_juntas": null,
-                  "definicion": "Trave hacia la izquierda, sale por las patatas buenas",
-                  "salida": "TO",
-                  "expuesta": "¡Cuidado! Bajada saltando"
-                }
-              ]
+              "linea_id": "B.2",
+              "nombre": "Galimatías EZ",
+              "grado": "6A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Regleta",
+              "mano_der": "Agujero alto",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
             },
             {
-              "bloque_id": "17_2",
-              "bloque_foto": "fotos/BG_B17_2",
-              "lineas": [
-                {
-                  "linea_id": "E",
-                  "nombre": "Opositor",
-                  "grado": "6A",
-                  "entrada": "Sit",
-                  "mano_izq": "Invertida",
-                  "mano_der": "Lateral alta en grieta",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto mantelando",
-                  "salida": "TO",
-                  "expuesta": "¡Cuidado! Bajada saltando"
-                },
-                {
-                  "linea_id": "F",
-                  "nombre": "Enchufado",
-                  "grado": "6C",
-                  "entrada": "Semi-Sit",
-                  "mano_izq": "Repisa",
-                  "mano_der": "Dedos en enchufe",
-                  "manos_juntas": null,
-                  "definicion": "Lance hacia la izquierda, y salida en mantle",
-                  "salida": "TO",
-                  "expuesta": "¡Cuidado! Bajada saltando"
-                }
-              ]
+              "linea_id": "C",
+              "nombre": "Núcelar",
+              "grado": "6A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Bidedo bajo muy abierto",
+              "mano_der": "Lateral buena",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "8_2",
+          "foto_base": "fotos/BG_B8_2",
+          "vias": [
+            {
+              "linea_id": "D",
+              "nombre": "Rumi",
+              "grado": "3",
+              "entrada": "",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "Infantil",
+              "expuesta": ""
             },
             {
-              "bloque_id": "18_1",
-              "bloque_foto": "fotos/BG_B18_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B",
-                  "nombre": "Sin nombre",
-                  "grado": "6C",
-                  "entrada": "Sit",
-                  "mano_izq": "No recuerdo",
-                  "mano_der": "Canto alto",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": "¡Cuidado! Bajada saltando"
-                },
-                {
-                  "linea_id": "C",
-                  "nombre": "Sin nombre",
-                  "grado": "Pr",
-                  "entrada": "Sit",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": "Sale en diagonal a la izquierda",
-                  "salida": "TO",
-                  "expuesta": "¡Cuidado! Bajada saltando"
-                }
-              ]
+              "linea_id": "E",
+              "nombre": "Mira",
+              "grado": "3",
+              "entrada": "",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "Infantil",
+              "expuesta": ""
             },
             {
-              "bloque_id": "18_2",
-              "bloque_foto": "fotos/BG_B18_2",
-              "lineas": [
-                {
-                  "linea_id": "D",
-                  "nombre": "Cachetada",
-                  "grado": "6B",
-                  "entrada": "Sit",
-                  "mano_izq": "No recuerdo",
-                  "mano_der": "No recuerdo",
-                  "manos_juntas": null,
-                  "definicion": "Transcurre por la arista. Inicia en el plano derecho y luego cambiamos al izquierdo",
-                  "salida": "T",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "E",
-                  "nombre": "La placa chachi",
-                  "grado": "6A+",
-                  "entrada": "Sit",
-                  "mano_izq": "No recuerdo",
-                  "mano_der": "No recuerdo",
-                  "manos_juntas": null,
-                  "definicion": "Recto por la cara del pasillo",
-                  "salida": "T",
-                  "expuesta": "¡Cuidado! Hay que destrepar"
-                }
-              ]
+              "linea_id": "F",
+              "nombre": "Zoey",
+              "grado": "3",
+              "entrada": "",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "Infantil",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "G",
+              "nombre": "Sin nombre",
+              "grado": "5",
+              "entrada": "",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "8_3",
+          "foto_base": "fotos/BG_B8_3",
+          "vias": [
+            {
+              "linea_id": "H",
+              "nombre": "Sin nombre",
+              "grado": "6A",
+              "entrada": "",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "I",
+              "nombre": "Sin nombre",
+              "grado": "6B",
+              "entrada": "",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "J",
+              "nombre": "Sin nombre",
+              "grado": "7A+",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Adherencia mínima",
+              "mano_der": "Regleta pequeña",
+              "manos_juntas": "",
+              "definicion": "Un movimiento explosivo buscando el filo superior",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "K",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "8_4",
+          "foto_base": "fotos/BG_B8_4",
+          "vias": [
+            {
+              "linea_id": "L",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "M",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "N",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "9",
+          "foto_base": "fotos/BG_B9",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "10_1",
+          "foto_base": "fotos/BG_B10_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin nombre",
+              "grado": "5",
+              "entrada": "De Pie",
+              "salida": "",
+              "mano_izq": "No recuerdo",
+              "mano_der": "No recuerdo",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "10_2",
+          "foto_base": "fotos/BG_B10_2",
+          "vias": [
+            {
+              "linea_id": "B",
+              "nombre": "Sin nombre",
+              "grado": "Pr",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "10_3",
+          "foto_base": "fotos/BG_B10_3",
+          "vias": [
+            {
+              "linea_id": "C",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "11",
+          "foto_base": "fotos/BG_B11",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Morena mía",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "12",
+          "foto_base": "fotos/BG_B12",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "13",
+          "foto_base": "fotos/BG_B13",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "El Tobogán",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "14_1",
+          "foto_base": "fotos/BG_B14_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "14_2",
+          "foto_base": "fotos/BG_B14_2",
+          "vias": [
+            {
+              "linea_id": "D",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "15_1",
+          "foto_base": "fotos/BG_B15_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "15_2",
+          "foto_base": "fotos/BG_B15_2",
+          "vias": [
+            {
+              "linea_id": "B",
+              "nombre": "",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "16",
+          "foto_base": "fotos/BG_B16",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "17_1",
+          "foto_base": "fotos/BG_B17_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Calavera",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Invertida",
+              "mano_der": "Agujero bi-tridedo",
+              "manos_juntas": "",
+              "definicion": "Sale hacia la izquierda, cogiendo el bidedo alto con derecha",
+              "expuesta": "¡Cuidado! Bajada saltando"
+            },
+            {
+              "linea_id": "B",
+              "nombre": "Collejón Diagon",
+              "grado": "7B",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Invertida",
+              "mano_der": "Agujero bi-tridedo",
+              "manos_juntas": "",
+              "definicion": "Sale recto, cogiendo el bidedo alto con izquierda",
+              "expuesta": "¡Cuidado! Bajada saltando"
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Callejón Diagonal",
+              "grado": "6C",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Invertida",
+              "mano_der": "Agujero bi-tridedo",
+              "manos_juntas": "",
+              "definicion": "Sale por la fisura diagonal",
+              "expuesta": "¡Cuidado! Bajada saltando"
+            },
+            {
+              "linea_id": "D",
+              "nombre": "Callejón Diagon",
+              "grado": "6B+",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Invertida",
+              "mano_der": "Agujero bi-tridedo",
+              "manos_juntas": "",
+              "definicion": "Trave hacia la izquierda, sale por las patatas buenas",
+              "expuesta": "¡Cuidado! Bajada saltando"
+            }
+          ]
+        },
+        {
+          "id": "17_2",
+          "foto_base": "fotos/BG_B17_2",
+          "vias": [
+            {
+              "linea_id": "E",
+              "nombre": "Opositor",
+              "grado": "6A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Invertida",
+              "mano_der": "Lateral alta en grieta",
+              "manos_juntas": "",
+              "definicion": "Sale recto mantelando",
+              "expuesta": "¡Cuidado! Bajada saltando"
+            },
+            {
+              "linea_id": "F",
+              "nombre": "Enchufado",
+              "grado": "6C",
+              "entrada": "Semi-Sit",
+              "salida": "TO",
+              "mano_izq": "Repisa",
+              "mano_der": "Dedos en enchufe",
+              "manos_juntas": "",
+              "definicion": "Lance hacia la izquierda, y salida en mantle",
+              "expuesta": "¡Cuidado! Bajada saltando"
+            }
+          ]
+        },
+        {
+          "id": "18_1",
+          "foto_base": "fotos/BG_B18_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B",
+              "nombre": "Sin nombre",
+              "grado": "6C",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "No recuerdo",
+              "mano_der": "Canto alto",
+              "manos_juntas": "",
+              "definicion": "Sale recto",
+              "expuesta": "¡Cuidado! Bajada saltando"
+            },
+            {
+              "linea_id": "C",
+              "nombre": "Sin nombre",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "Sale en diagonal a la izquierda",
+              "expuesta": "¡Cuidado! Bajada saltando"
+            }
+          ]
+        },
+        {
+          "id": "18_2",
+          "foto_base": "fotos/BG_B18_2",
+          "vias": [
+            {
+              "linea_id": "D",
+              "nombre": "Cachetada",
+              "grado": "6B",
+              "entrada": "Sit",
+              "salida": "T",
+              "mano_izq": "No recuerdo",
+              "mano_der": "No recuerdo",
+              "manos_juntas": "",
+              "definicion": "Transcurre por la arista. Inicia en el plano derecho y luego cambiamos al izquierdo",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "E",
+              "nombre": "La placa chachi",
+              "grado": "6A+",
+              "entrada": "Sit",
+              "salida": "T",
+              "mano_izq": "No recuerdo",
+              "mano_der": "No recuerdo",
+              "manos_juntas": "",
+              "definicion": "Recto por la cara del pasillo",
+              "expuesta": "¡Cuidado! Hay que destrepar"
             }
           ]
         }
@@ -1709,154 +1707,155 @@
       "municipio": "Yátova",
       "portada": "fotos/CB_PORTADA",
       "mapa": "fotos/CB_MAPA",
-      "mapa_2": null,
-      "mapa_3": null,
-      "definicion": "La <strong>Cueva del Buey del Arroz</strong> es un pequeño sector ubicado muy cerquita del Barrio los Condes de Yátova. La aproximación al sector son a penas 250 metros. La orientación es Oeste con amplias vistas al Motrotón y el Retoret, y la temperatura es fresca al tratarse de una cueva abierta. // Los bloques, aunque escasos, dan bastante juego. La piedra oscila entre caliza compacta y arenosa, disponiendo de agarres diferentes: agujeros grandes, romos peleones y regletas asesinas, entre otros.",
+      "mapa_2": "",
+      "mapa_3": "",
+      "descripcion": "La <strong>Cueva del Buey del Arroz</strong> es un pequeño sector ubicado muy cerquita del Barrio los Condes de Yátova. La aproximación al sector son a penas 250 metros. La orientación es Oeste con amplias vistas al Motrotón y el Retoret, y la temperatura es fresca al tratarse de una cueva abierta. // Los bloques, aunque escasos, dan bastante juego. La piedra oscila entre caliza compacta y arenosa, disponiendo de agarres diferentes: agujeros grandes, romos peleones y regletas asesinas, entre otros.",
       "parking": [
         "https://maps.app.goo.gl/ruszNEAx3nNmGo9x9"
       ],
-      "croquis": [
+      "croquis_list": [
         {
-          "croquis_id": "Cueva del Buey del Arroz",
-          "croquis_foto": "fotos/CB_CROQUIS",
-          "bloques": [
+          "nombre": "Cueva del Buey del Arroz",
+          "imagen": "fotos/CB_CROQUIS",
+          "svg": "fotos/CB_CROQUIS"
+        }
+      ],
+      "bloques": [
+        {
+          "id": "1",
+          "foto_base": "fotos/CB_B1",
+          "vias": [
             {
-              "bloque_id": "1",
-              "bloque_foto": "fotos/CB_B1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Cueva del hedonismo",
-                  "grado": "5",
-                  "entrada": "Sit",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": "Agujero grande",
-                  "definicion": "Sale recto",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "B",
-                  "nombre": "Consumido",
-                  "grado": "6A",
-                  "entrada": "Sit",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": "Agujero grande",
-                  "definicion": "Ligera travesía a la derecha",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "C",
-                  "nombre": "Consumado",
-                  "grado": "6C",
-                  "entrada": "Sit",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": "Agujero grande",
-                  "definicion": "Travesía a la derecha, sale por la proa",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "D.1",
-                  "nombre": "Adamendra",
-                  "grado": "7A",
-                  "entrada": "Sit",
-                  "mano_izq": "Roma positiva",
-                  "mano_der": "Regleta alta",
-                  "manos_juntas": null,
-                  "definicion": "Sale recto por la proa",
-                  "salida": "TO",
-                  "expuesta": null
-                },
-                {
-                  "linea_id": "D.2",
-                  "nombre": "Adamendra Bajo",
-                  "grado": "Pr",
-                  "entrada": "Sit",
-                  "mano_izq": "Roma positiva",
-                  "mano_der": "Canto plano bajo",
-                  "manos_juntas": null,
-                  "definicion": "Igual que D, pero inicio con manos bajas",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "A",
+              "nombre": "Cueva del hedonismo",
+              "grado": "5",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Agujero grande",
+              "definicion": "Sale recto",
+              "expuesta": ""
             },
             {
-              "bloque_id": "2",
-              "bloque_foto": "fotos/CB_B2",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Murciélago a caballo",
-                  "grado": "Pr",
-                  "entrada": "Semi-Sit",
-                  "mano_izq": "Regleta",
-                  "mano_der": "Bidedo",
-                  "manos_juntas": null,
-                  "definicion": "Inicia bajo la piedra flotante",
-                  "salida": "TO",
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "B",
+              "nombre": "Consumido",
+              "grado": "6A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Agujero grande",
+              "definicion": "Ligera tavesía a la derecha",
+              "expuesta": ""
             },
             {
-              "bloque_id": "3_1",
-              "bloque_foto": "fotos/CB_B3_1",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Cuidado con la cabeza",
-                  "grado": "6B+",
-                  "entrada": "Sit",
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": "Chorrera",
-                  "definicion": "Sale por la arista izquierda",
-                  "salida": "TOD",
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "C",
+              "nombre": "Consumado",
+              "grado": "6C",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Agujero grande",
+              "definicion": "Travesía a la derecha, sale por la proa",
+              "expuesta": ""
             },
             {
-              "bloque_id": "3_2",
-              "bloque_foto": "fotos/CB_B3_2",
-              "lineas": [
-                {
-                  "linea_id": "B",
-                  "nombre": "Ajqueroso",
-                  "grado": "6C",
-                  "entrada": "Sit",
-                  "mano_izq": "No recuerdo",
-                  "mano_der": "No recuerdo",
-                  "manos_juntas": null,
-                  "definicion": "Travesía hacia la izquierda, hace top en presa a definir",
-                  "salida": "T",
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "D.1",
+              "nombre": "Adamendra",
+              "grado": "7A",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Roma positiva",
+              "mano_der": "Regleta alta",
+              "manos_juntas": "",
+              "definicion": "Sale recto por la proa",
+              "expuesta": ""
             },
             {
-              "bloque_id": "4",
-              "bloque_foto": "fotos/CB_B4",
-              "lineas": [
-                {
-                  "linea_id": "A",
-                  "nombre": "Sin abrir",
-                  "grado": "Pr",
-                  "entrada": null,
-                  "mano_izq": null,
-                  "mano_der": null,
-                  "manos_juntas": null,
-                  "definicion": null,
-                  "salida": null,
-                  "expuesta": null
-                }
-              ]
+              "linea_id": "D.2",
+              "nombre": "Adamendra Bajo",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Roma positiva",
+              "mano_der": "Canto plano bajo",
+              "manos_juntas": "",
+              "definicion": "Igual que D, pero inicio con manos bajas",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "foto_base": "fotos/CB_B2",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Murciélago a caballo",
+              "grado": "Pr",
+              "entrada": "Semi-Sit",
+              "salida": "TO",
+              "mano_izq": "Regleta",
+              "mano_der": "Bidedo",
+              "manos_juntas": "",
+              "definicion": "Inicia bajo la piedra flotante",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "3_1",
+          "foto_base": "fotos/CB_B3_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Cuidado con la cabeza",
+              "grado": "6B+",
+              "entrada": "Sit",
+              "salida": "TOD",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Chorrera",
+              "definicion": "Sale por la arista izquierda",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "3_2",
+          "foto_base": "fotos/CB_B3_2",
+          "vias": [
+            {
+              "linea_id": "B",
+              "nombre": "Ajqueroso",
+              "grado": "6C",
+              "entrada": "Sit",
+              "salida": "T",
+              "mano_izq": "No recuerdo",
+              "mano_der": "No recuerdo",
+              "manos_juntas": "",
+              "definicion": "Travesía hacia la izquierda, hace top en presa a definir",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "foto_base": "fotos/CB_B4",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
             }
           ]
         }
