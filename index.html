@@ -753,32 +753,17 @@
         function setupBackButtonHandler() {
             if (window.Capacitor && Capacitor.isNativePlatform()) {
                 document.addEventListener('backbutton', (e) => {
-                    // Si hay overlay de contraseña activo, no hacer nada (obligatorio)
-                    if (document.getElementById('passwordOverlay').classList.contains('active')) {
+                    if (document.getElementById('passwordOverlay').classList.contains('active') ||
+                        document.getElementById('legalCondiciones').classList.contains('active') ||
+                        document.getElementById('legalProteccion').classList.contains('active')) {
                         e.preventDefault();
                         return;
                     }
-                    
-                    // Si hay overlay de condiciones activo, no hacer nada (obligatorio)
-                    if (document.getElementById('legalCondiciones').classList.contains('active')) {
-                        e.preventDefault();
-                        return;
-                    }
-                    
-                    // Si hay overlay de protección de datos activo, no hacer nada (obligatorio)
-                    if (document.getElementById('legalProteccion').classList.contains('active')) {
-                        e.preventDefault();
-                        return;
-                    }
-                    
-                    // Si estamos en la pantalla de ficha de bloque, volver al sector
                     if (isInFichaBloque) {
                         e.preventDefault();
                         goBack();
                         return;
                     }
-                    
-                    // Si estamos dentro de un sector, volver a la portada
                     if (currentSector !== null && !isInFichaBloque) {
                         e.preventDefault();
                         navigateToScreen('screen-portada');
@@ -786,8 +771,6 @@
                         isInFichaBloque = false;
                         return;
                     }
-                    
-                    // Si estamos en la portada, permitir salir (no prevenimos el evento)
                 }, false);
             }
         }
@@ -1056,6 +1039,7 @@
 
         function cargarTodosLosMapas(sector) { let mapasHtml = ''; if (sector.mapa) mapasHtml += cargarMapaIndividual(sector, sector.mapa, true); if (sector.mapa_2) mapasHtml += cargarMapaIndividual(sector, sector.mapa_2, false); if (sector.mapa_3) mapasHtml += cargarMapaIndividual(sector, sector.mapa_3, false); return mapasHtml; }
 
+        // Función mejorada para cargar croquis interactivo
         function cargarCroquisInteractivo(sector, croquisIndex) {
             const croquis = sector.croquis_list[croquisIndex];
             if (!croquis) return '<div class="info-sector"><p>Croquis no disponible</p></div>';
@@ -1066,8 +1050,77 @@
             html += `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg?v=${timestamp}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
-            setTimeout(() => { const objectTag = document.getElementById(`croquisObject_${containerId}`); if (objectTag && objectTag.contentDocument) { const svgDoc = objectTag.contentDocument; const svgElement = svgDoc.documentElement; if (svgElement) { const allEl = svgElement.querySelectorAll('*'); allEl.forEach(el => { if (el.tagName !== 'svg') { el.setAttribute('fill', 'transparent'); el.setAttribute('stroke', 'transparent'); el.setAttribute('fill-opacity', '0'); el.setAttribute('stroke-opacity', '0'); if (el.style) el.style.opacity = '0'; } }); const elementosConLabel = svgDoc.querySelectorAll('*'); elementosConLabel.forEach(el => { let label = null; label = el.getAttribute('inkscape:label'); if (!label && el.attributes) { for (let attr of el.attributes) { if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) { label = attr.value; break; } } } if (label && !isNaN(parseInt(label))) { el.style.cursor = 'pointer'; el.addEventListener('click', (e) => { e.stopPropagation(); const bloqueBase = label; const bloqueEncontrado = sector.bloques.find(b => { if (b.id === bloqueBase) return true; if (b.id.startsWith(`${bloqueBase}_`)) return true; return false; }); if (bloqueEncontrado) { const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id); if (indice !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(indice); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice }); } } }); } }); } } }, 500);
+            
+            // Procesar el SVG cuando esté cargado
+            setTimeout(() => {
+                const objectTag = document.getElementById(`croquisObject_${containerId}`);
+                if (objectTag) {
+                    const tryProcess = () => {
+                        if (objectTag.contentDocument) {
+                            procesarSVGCroquis(objectTag.contentDocument, sector);
+                        } else {
+                            setTimeout(tryProcess, 100);
+                        }
+                    };
+                    tryProcess();
+                }
+            }, 100);
             return html;
+        }
+
+        function procesarSVGCroquis(svgDoc, sector) {
+            if (!svgDoc) return;
+            const svgElement = svgDoc.documentElement;
+            if (!svgElement) return;
+            
+            // Hacer transparentes todos los elementos excepto el svg
+            const allEl = svgElement.querySelectorAll('*');
+            allEl.forEach(el => {
+                if (el.tagName !== 'svg') {
+                    el.setAttribute('fill', 'transparent');
+                    el.setAttribute('stroke', 'transparent');
+                    el.setAttribute('fill-opacity', '0');
+                    el.setAttribute('stroke-opacity', '0');
+                    if (el.style) el.style.opacity = '0';
+                }
+            });
+            
+            // Buscar elementos con label numérico (identificadores de bloque)
+            const elementosConLabel = svgDoc.querySelectorAll('*');
+            elementosConLabel.forEach(el => {
+                let label = null;
+                label = el.getAttribute('inkscape:label');
+                if (!label && el.attributes) {
+                    for (let attr of el.attributes) {
+                        if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) {
+                            label = attr.value;
+                            break;
+                        }
+                    }
+                }
+                if (label && !isNaN(parseInt(label))) {
+                    el.style.cursor = 'pointer';
+                    el.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const bloqueBase = label;
+                        const bloqueEncontrado = sector.bloques.find(b => {
+                            if (b.id === bloqueBase) return true;
+                            if (b.id.startsWith(`${bloqueBase}_`)) return true;
+                            return false;
+                        });
+                        if (bloqueEncontrado) {
+                            const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
+                            if (indice !== -1) {
+                                currentTab = 'bloques';
+                                isInFichaBloque = true;
+                                actualizarBotonActivo('bloques');
+                                cargarFichaBloque(indice);
+                                navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice });
+                            }
+                        }
+                    });
+                }
+            });
         }
 
         function navigateToScreen(screenId, stateData = null) {
@@ -1125,8 +1178,14 @@
             const mapasHtml = cargarTodosLosMapas(currentSector);
             let croquisHtml = '';
             if (currentSector.croquis_list && currentSector.croquis_list.length > 0) {
-                if (currentSector.croquis_list.length === 1) { const croq = currentSector.croquis_list[0]; croquisHtml = `<div class="croquis-list"><div id="croquisViewerArea" style="margin-bottom: 20px;">${cargarCroquisInteractivo(currentSector, 0)}</div></div>`; }
-                else { let thumbsHtml = '<div class="croquis-list"><div class="croquis-list-title">Selecciona un croquis:</div><div class="croquis-thumbnails">'; currentSector.croquis_list.forEach((croq, idx) => { thumbsHtml += `<div class="croquis-thumb" data-croquis-idx="${idx}"><img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'"></div>`; }); thumbsHtml += '</div></div><div id="croquisViewerArea" style="margin-bottom: 20px;"></div>'; croquisHtml = thumbsHtml; }
+                if (currentSector.croquis_list.length === 1) { 
+                    croquisHtml = `<div class="croquis-list"><div id="croquisViewerArea" style="margin-bottom: 20px;">${cargarCroquisInteractivo(currentSector, 0)}</div></div>`;
+                } else { 
+                    let thumbsHtml = '<div class="croquis-list"><div class="croquis-list-title">Selecciona un croquis:</div><div class="croquis-thumbnails">'; 
+                    currentSector.croquis_list.forEach((croq, idx) => { thumbsHtml += `<div class="croquis-thumb" data-croquis-idx="${idx}"><img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'"></div>`; }); 
+                    thumbsHtml += '</div></div><div id="croquisViewerArea" style="margin-bottom: 20px;"></div>'; 
+                    croquisHtml = thumbsHtml; 
+                }
             } else { croquisHtml = '<div class="info-sector"><p>No hay croquis disponibles</p></div>'; }
             let descripcionHtml = '';
             if (currentSector.descripcion) { let texto = currentSector.descripcion; const parrafos = texto.split('//'); descripcionHtml = parrafos.map(p => `<p>${p.trim()}</p>`).join(''); descripcionHtml = descripcionHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); }
@@ -1183,7 +1242,11 @@
             setTimeout(() => dibujarGrafica(currentSector), 100);
         }
 
-        function cargarCroquisEnArea(idx) { if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return; const area = document.getElementById('croquisViewerArea'); if (area) area.innerHTML = cargarCroquisInteractivo(currentSector, idx); }
+        function cargarCroquisEnArea(idx) { 
+            if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return; 
+            const area = document.getElementById('croquisViewerArea'); 
+            if (area) area.innerHTML = cargarCroquisInteractivo(currentSector, idx); 
+        }
 
         function dibujarGrafica(sector) {
             const conteo = {};
