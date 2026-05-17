@@ -337,7 +337,7 @@
             },
             {
               "linea_id": "C.1",
-              "nombre": "Abrazapiedras",
+              "nombre": "Abrazapiedras Sit",
               "grado": "Pr",
               "entrada": "Sit",
               "salida": "TO",
@@ -594,7 +594,7 @@
           "foto_base": "fotos/MLC_B8_2",
           "vias": [
             {
-              "linea_id": "F",
+              "linea_id": "E",
               "nombre": "Mi primera chamba",
               "grado": "4",
               "entrada": "Semi-Sit",
@@ -945,7 +945,7 @@
               "mano_izq": "Presa buena baja",
               "mano_der": "Invertida abierta",
               "manos_juntas": "",
-              "definicion": "Sale cambiando de plano",
+              "definicion": "Sale cambiando de plano, por la cara izquierda",
               "expuesta": ""
             },
             {
@@ -957,11 +957,11 @@
               "mano_izq": "Bidedo abierto",
               "mano_der": "Patata invertida",
               "manos_juntas": "",
-              "definicion": "Sale recto",
+              "definicion": "Sale recto por la cara izquierda",
               "expuesta": ""
             },
             {
-              "linea_id": "C",
+              "linea_id": "B.3",
               "nombre": "Chocotete",
               "grado": "6C+",
               "entrada": "Sit",
@@ -979,7 +979,7 @@
           "foto_base": "fotos/BG_B6_2",
           "vias": [
             {
-              "linea_id": "D",
+              "linea_id": "C",
               "nombre": "Terror de azúcar",
               "grado": "5",
               "entrada": "Semi-Sit",
@@ -1347,7 +1347,7 @@
             {
               "linea_id": "A",
               "nombre": "Morena mía",
-              "grado": "",
+              "grado": "Pr",
               "entrada": "",
               "salida": "",
               "mano_izq": "",
@@ -1419,7 +1419,7 @@
             {
               "linea_id": "A",
               "nombre": "El Tobogán",
-              "grado": "",
+              "grado": "Pr",
               "entrada": "",
               "salida": "",
               "mano_izq": "",
@@ -1497,7 +1497,7 @@
             {
               "linea_id": "A",
               "nombre": "",
-              "grado": "",
+              "grado": "Pr",
               "entrada": "",
               "salida": "",
               "mano_izq": "",
@@ -1515,7 +1515,7 @@
             {
               "linea_id": "B",
               "nombre": "",
-              "grado": "",
+              "grado": "Pr",
               "entrada": "",
               "salida": "",
               "mano_izq": "",
