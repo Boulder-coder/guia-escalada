@@ -1043,7 +1043,7 @@
 
         function cargarTodosLosMapas(sector) { let mapasHtml = ''; if (sector.mapa) mapasHtml += cargarMapaIndividual(sector, sector.mapa, true); if (sector.mapa_2) mapasHtml += cargarMapaIndividual(sector, sector.mapa_2, false); if (sector.mapa_3) mapasHtml += cargarMapaIndividual(sector, sector.mapa_3, false); return mapasHtml; }
 
-        // ===== FUNCIÓN CROQUIS CORREGIDA (soporta inkscape:label y también id) =====
+        // ===== FUNCIÓN CROQUIS MEJORADA (DETECTA NÚMEROS EN TEXTO Y ATRIBUTOS) =====
         function cargarCroquisInteractivo(sector, croquisIndex) {
             const croquis = sector.croquis_list[croquisIndex];
             if (!croquis) return '<div class="info-sector"><p>Croquis no disponible</p></div>';
@@ -1054,12 +1054,14 @@
             html += `<div id="${containerId}" class="croquis-viewer" style="position: relative;">`;
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg?v=${timestamp}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
+            
             setTimeout(() => { 
                 const objectTag = document.getElementById(`croquisObject_${containerId}`); 
                 if (objectTag && objectTag.contentDocument) { 
                     const svgDoc = objectTag.contentDocument; 
                     const svgElement = svgDoc.documentElement; 
                     if (svgElement) { 
+                        // Hacer transparentes TODOS los elementos del SVG
                         const allEl = svgElement.querySelectorAll('*'); 
                         allEl.forEach(el => { 
                             if (el.tagName !== 'svg') { 
@@ -1068,47 +1070,74 @@
                                 el.setAttribute('fill-opacity', '0'); 
                                 el.setAttribute('stroke-opacity', '0'); 
                                 if (el.style) el.style.opacity = '0'; 
+                                el.style.pointerEvents = 'none';
+                                el.removeEventListener('click', manejarClick);
                             } 
                         }); 
-                        const elementosConLabel = svgDoc.querySelectorAll('*'); 
-                        elementosConLabel.forEach(el => { 
-                            let label = null; 
-                            label = el.getAttribute('inkscape:label'); 
-                            if (!label && el.attributes) { 
-                                for (let attr of el.attributes) { 
-                                    if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) { 
-                                        label = attr.value; 
-                                        break; 
-                                    } 
-                                } 
+                        
+                        // Identificar elementos que contienen números
+                        const elementosConNumero = svgDoc.querySelectorAll('*');
+                        elementosConNumero.forEach(el => {
+                            let numero = null;
+                            // Buscar en atributos
+                            let label = el.getAttribute('inkscape:label');
+                            if (!label) label = el.getAttribute('id');
+                            if (!label) label = el.getAttribute('data-id');
+                            if (label && !isNaN(parseInt(label))) {
+                                numero = parseInt(label);
                             }
-                            // Si no encontró inkscape:label, intentar con el atributo id
-                            if (!label) {
-                                label = el.getAttribute('id');
+                            // Si no hay atributo numérico, buscar en el texto (para elementos text o tspan)
+                            if (!numero && (el.tagName === 'text' || el.tagName === 'tspan')) {
+                                const texto = el.textContent.trim();
+                                if (texto && !isNaN(parseInt(texto))) {
+                                    numero = parseInt(texto);
+                                }
                             }
-                            if (label && !isNaN(parseInt(label))) { 
-                                el.style.cursor = 'pointer'; 
-                                el.addEventListener('click', (e) => { 
-                                    e.stopPropagation(); 
-                                    const bloqueBase = label; 
-                                    const bloqueEncontrado = sector.bloques.find(b => { 
-                                        if (b.id === bloqueBase) return true; 
-                                        if (b.id.startsWith(`${bloqueBase}_`)) return true; 
-                                        return false; 
-                                    }); 
-                                    if (bloqueEncontrado) { 
-                                        const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id); 
-                                        if (indice !== -1) { 
-                                            currentTab = 'bloques'; 
-                                            isInFichaBloque = true; 
-                                            actualizarBotonActivo('bloques'); 
-                                            cargarFichaBloque(indice); 
-                                            navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice }); 
-                                        } 
-                                    } 
-                                }); 
-                            } 
-                        }); 
+                            if (numero) {
+                                // Hacer visible y clickeable solo el elemento que contiene el número
+                                el.setAttribute('fill', '#6674FF');
+                                el.setAttribute('fill-opacity', '0.8');
+                                el.setAttribute('stroke', 'none');
+                                el.style.opacity = '1';
+                                el.style.cursor = 'pointer';
+                                el.style.pointerEvents = 'visible';
+                                el.setAttribute('data-bloque-id', numero);
+                                el.addEventListener('click', manejarClick);
+                            }
+                        });
+                        
+                        // Función manejadora de clics
+                        const manejarClick = (e) => {
+                            e.stopPropagation();
+                            let bloqueId = e.currentTarget.getAttribute('data-bloque-id');
+                            if (!bloqueId) {
+                                let label = e.currentTarget.getAttribute('inkscape:label');
+                                if (!label) label = e.currentTarget.getAttribute('id');
+                                if (label && !isNaN(parseInt(label))) bloqueId = label;
+                                else {
+                                    const texto = e.currentTarget.textContent.trim();
+                                    if (texto && !isNaN(parseInt(texto))) bloqueId = texto;
+                                }
+                            }
+                            if (bloqueId) {
+                                const bloqueBase = bloqueId.toString();
+                                const bloqueEncontrado = sector.bloques.find(b => {
+                                    if (b.id === bloqueBase) return true;
+                                    if (b.id.startsWith(`${bloqueBase}_`)) return true;
+                                    return false;
+                                });
+                                if (bloqueEncontrado) {
+                                    const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
+                                    if (indice !== -1) {
+                                        currentTab = 'bloques';
+                                        isInFichaBloque = true;
+                                        actualizarBotonActivo('bloques');
+                                        cargarFichaBloque(indice);
+                                        navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice });
+                                    }
+                                }
+                            }
+                        };
                     } 
                 } 
             }, 500);
