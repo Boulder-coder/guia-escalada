@@ -528,7 +528,7 @@
               "expuesta": ""
             },
             {
-              "linea_id": "C",
+              "linea_id": "B.3",
               "nombre": "Boccato di coordinate",
               "grado": "Pr",
               "entrada": "Sit",
@@ -540,7 +540,7 @@
               "expuesta": ""
             },
             {
-              "linea_id": "D.1",
+              "linea_id": "C.1",
               "nombre": "Monty Burns",
               "grado": "6A",
               "entrada": "De Pie",
@@ -552,7 +552,7 @@
               "expuesta": ""
             },
             {
-              "linea_id": "D.2",
+              "linea_id": "C.2",
               "nombre": "Saltamonty Burns",
               "grado": "6B",
               "entrada": "De Pie",
@@ -564,8 +564,8 @@
               "expuesta": ""
             },
             {
-              "linea_id": "D.3",
-              "nombre": "Saltamonty Burns",
+              "linea_id": "C.3",
+              "nombre": "Saltamonty Burns Sit",
               "grado": "Pr",
               "entrada": "Sit",
               "salida": "TO",
@@ -576,7 +576,7 @@
               "expuesta": ""
             },
             {
-              "linea_id": "E",
+              "linea_id": "D",
               "nombre": "Aristogatos",
               "grado": "6A+",
               "entrada": "Sit",
