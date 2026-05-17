@@ -753,23 +753,32 @@
         function setupBackButtonHandler() {
             if (window.Capacitor && Capacitor.isNativePlatform()) {
                 document.addEventListener('backbutton', (e) => {
+                    // Si hay overlay de contraseña activo, no hacer nada (obligatorio)
                     if (document.getElementById('passwordOverlay').classList.contains('active')) {
                         e.preventDefault();
                         return;
                     }
+                    
+                    // Si hay overlay de condiciones activo, no hacer nada (obligatorio)
                     if (document.getElementById('legalCondiciones').classList.contains('active')) {
                         e.preventDefault();
                         return;
                     }
+                    
+                    // Si hay overlay de protección de datos activo, no hacer nada (obligatorio)
                     if (document.getElementById('legalProteccion').classList.contains('active')) {
                         e.preventDefault();
                         return;
                     }
+                    
+                    // Si estamos en la pantalla de ficha de bloque, volver al sector
                     if (isInFichaBloque) {
                         e.preventDefault();
                         goBack();
                         return;
                     }
+                    
+                    // Si estamos dentro de un sector, volver a la portada
                     if (currentSector !== null && !isInFichaBloque) {
                         e.preventDefault();
                         navigateToScreen('screen-portada');
@@ -777,6 +786,8 @@
                         isInFichaBloque = false;
                         return;
                     }
+                    
+                    // Si estamos en la portada, permitir salir (no prevenimos el evento)
                 }, false);
             }
         }
@@ -871,7 +882,10 @@
         }
 
         function getColorByGrado(grado) {
-            if (!grado || grado === '*' || grado.trim() === '') return '#FF93DB';
+            // Si el grado es "*" o está vacío, devolver #FF93DB
+            if (!grado || grado === '*' || grado.trim() === '') {
+                return '#FF93DB';
+            }
             const g = grado.toUpperCase().trim();
             if (g === 'PR') return '#212121';
             const match = g.match(/(\d+)([A-Z]?)(\+?)/);
@@ -1043,7 +1057,7 @@
 
         function cargarTodosLosMapas(sector) { let mapasHtml = ''; if (sector.mapa) mapasHtml += cargarMapaIndividual(sector, sector.mapa, true); if (sector.mapa_2) mapasHtml += cargarMapaIndividual(sector, sector.mapa_2, false); if (sector.mapa_3) mapasHtml += cargarMapaIndividual(sector, sector.mapa_3, false); return mapasHtml; }
 
-        // ===== FUNCIÓN CROQUIS MEJORADA (DETECTA NÚMEROS EN TEXTO Y ATRIBUTOS) =====
+        // ========== FUNCIÓN CROQUIS MEJORADA ==========
         function cargarCroquisInteractivo(sector, croquisIndex) {
             const croquis = sector.croquis_list[croquisIndex];
             if (!croquis) return '<div class="info-sector"><p>Croquis no disponible</p></div>';
@@ -1055,92 +1069,99 @@
             html += `<img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`;
             html += `<object id="croquisObject_${containerId}" data="${croquis.svg}.svg?v=${timestamp}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`;
             
-            setTimeout(() => { 
-                const objectTag = document.getElementById(`croquisObject_${containerId}`); 
-                if (objectTag && objectTag.contentDocument) { 
-                    const svgDoc = objectTag.contentDocument; 
-                    const svgElement = svgDoc.documentElement; 
-                    if (svgElement) { 
-                        // Hacer transparentes TODOS los elementos del SVG
-                        const allEl = svgElement.querySelectorAll('*'); 
-                        allEl.forEach(el => { 
-                            if (el.tagName !== 'svg') { 
-                                el.setAttribute('fill', 'transparent'); 
-                                el.setAttribute('stroke', 'transparent'); 
-                                el.setAttribute('fill-opacity', '0'); 
-                                el.setAttribute('stroke-opacity', '0'); 
-                                if (el.style) el.style.opacity = '0'; 
-                                el.style.pointerEvents = 'none';
-                                el.removeEventListener('click', manejarClick);
-                            } 
-                        }); 
+            setTimeout(() => {
+                const objectTag = document.getElementById(`croquisObject_${containerId}`);
+                if (objectTag) {
+                    const asignarEventos = () => {
+                        const svgDoc = objectTag.contentDocument;
+                        if (!svgDoc) return;
+                        const svgElement = svgDoc.documentElement;
+                        if (!svgElement) return;
                         
-                        // Identificar elementos que contienen números
-                        const elementosConNumero = svgDoc.querySelectorAll('*');
-                        elementosConNumero.forEach(el => {
-                            let numero = null;
-                            // Buscar en atributos
+                        // Hacer transparentes todos los elementos excepto aquellos con label numérico
+                        const allElements = svgElement.querySelectorAll('*');
+                        allElements.forEach(el => {
                             let label = el.getAttribute('inkscape:label');
-                            if (!label) label = el.getAttribute('id');
-                            if (!label) label = el.getAttribute('data-id');
-                            if (label && !isNaN(parseInt(label))) {
-                                numero = parseInt(label);
-                            }
-                            // Si no hay atributo numérico, buscar en el texto (para elementos text o tspan)
-                            if (!numero && (el.tagName === 'text' || el.tagName === 'tspan')) {
-                                const texto = el.textContent.trim();
-                                if (texto && !isNaN(parseInt(texto))) {
-                                    numero = parseInt(texto);
+                            if (!label && el.attributes) {
+                                for (let attr of el.attributes) {
+                                    if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) {
+                                        label = attr.value;
+                                        break;
+                                    }
                                 }
                             }
-                            if (numero) {
-                                // Hacer visible y clickeable solo el elemento que contiene el número
-                                el.setAttribute('fill', '#6674FF');
+                            // Si no tiene label numérico, lo hacemos transparente
+                            if (!label || isNaN(parseInt(label))) {
+                                el.setAttribute('fill', 'transparent');
+                                el.setAttribute('stroke', 'transparent');
+                                el.setAttribute('fill-opacity', '0');
+                                el.setAttribute('stroke-opacity', '0');
+                                if (el.style) el.style.opacity = '0';
+                            } else {
+                                // Elemento clickeable
+                                el.setAttribute('fill', '#6674FF');  // Fondo opcional
                                 el.setAttribute('fill-opacity', '0.8');
-                                el.setAttribute('stroke', 'none');
-                                el.style.opacity = '1';
                                 el.style.cursor = 'pointer';
                                 el.style.pointerEvents = 'visible';
-                                el.setAttribute('data-bloque-id', numero);
+                                // Eliminar evento anterior para evitar duplicados
+                                el.removeEventListener('click', manejarClick);
                                 el.addEventListener('click', manejarClick);
                             }
                         });
                         
-                        // Función manejadora de clics
-                        const manejarClick = (e) => {
-                            e.stopPropagation();
-                            let bloqueId = e.currentTarget.getAttribute('data-bloque-id');
-                            if (!bloqueId) {
-                                let label = e.currentTarget.getAttribute('inkscape:label');
-                                if (!label) label = e.currentTarget.getAttribute('id');
-                                if (label && !isNaN(parseInt(label))) bloqueId = label;
-                                else {
-                                    const texto = e.currentTarget.textContent.trim();
-                                    if (texto && !isNaN(parseInt(texto))) bloqueId = texto;
+                        // Eliminar fondos grandes (rectángulos que puedan estar cubriendo)
+                        const rects = svgElement.querySelectorAll('rect');
+                        rects.forEach(rect => {
+                            const width = parseFloat(rect.getAttribute('width')) || 0;
+                            const height = parseFloat(rect.getAttribute('height')) || 0;
+                            if (width > 100 && height > 100) {
+                                rect.setAttribute('fill', 'transparent');
+                                rect.setAttribute('fill-opacity', '0');
+                            }
+                        });
+                    };
+                    
+                    const manejarClick = (e) => {
+                        e.stopPropagation();
+                        const el = e.currentTarget;
+                        let label = el.getAttribute('inkscape:label');
+                        if (!label && el.attributes) {
+                            for (let attr of el.attributes) {
+                                if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) {
+                                    label = attr.value;
+                                    break;
                                 }
                             }
-                            if (bloqueId) {
-                                const bloqueBase = bloqueId.toString();
-                                const bloqueEncontrado = sector.bloques.find(b => {
-                                    if (b.id === bloqueBase) return true;
-                                    if (b.id.startsWith(`${bloqueBase}_`)) return true;
-                                    return false;
-                                });
-                                if (bloqueEncontrado) {
-                                    const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
-                                    if (indice !== -1) {
-                                        currentTab = 'bloques';
-                                        isInFichaBloque = true;
-                                        actualizarBotonActivo('bloques');
-                                        cargarFichaBloque(indice);
-                                        navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice });
-                                    }
+                        }
+                        if (label) {
+                            const bloqueBase = label;
+                            const bloqueEncontrado = sector.bloques.find(b => {
+                                if (b.id === bloqueBase) return true;
+                                if (b.id.startsWith(`${bloqueBase}_`)) return true;
+                                return false;
+                            });
+                            if (bloqueEncontrado) {
+                                const indice = sector.bloques.findIndex(b => b.id === bloqueEncontrado.id);
+                                if (indice !== -1) {
+                                    currentTab = 'bloques';
+                                    isInFichaBloque = true;
+                                    actualizarBotonActivo('bloques');
+                                    cargarFichaBloque(indice);
+                                    navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: indice });
                                 }
                             }
-                        };
-                    } 
-                } 
-            }, 500);
+                        }
+                    };
+                    
+                    // Esperar carga completa
+                    if (objectTag.contentDocument && objectTag.contentDocument.readyState === 'complete') {
+                        asignarEventos();
+                    } else {
+                        objectTag.addEventListener('load', asignarEventos);
+                        setTimeout(asignarEventos, 1000);
+                    }
+                }
+            }, 100);
             return html;
         }
 
@@ -1194,6 +1215,7 @@
             currentSector = datosApp.sectores.find(s => s.nombre === sectorNombre);
             if (!currentSector) return;
             isInFichaBloque = false;
+            // Forzar pestaña "Info" al abrir cualquier sector
             currentTab = 'info';
             const container = document.getElementById('sector-detalle-content');
             const mapasHtml = cargarTodosLosMapas(currentSector);
@@ -1292,6 +1314,7 @@
             const svgUrl = `${bloque.foto_base}.svg`;
             const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
             if (!mediaContainer) return;
+            
             fetch(svgUrl)
                 .then(response => {
                     if (response.ok) {
@@ -1304,6 +1327,7 @@
                     const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
                     const svgElement = svgDoc.documentElement;
                     if (!svgElement) return;
+                    
                     aplicarColoresSVG(svgDoc, bloque, vias);
                     svgElement.setAttribute('preserveAspectRatio', 'none');
                     svgElement.style.width = '100%';
@@ -1313,11 +1337,14 @@
                     svgElement.style.left = '0';
                     svgElement.style.pointerEvents = 'none';
                     svgElement.style.zIndex = '20';
+                    
                     const oldSvg = mediaContainer.querySelector('svg');
                     if (oldSvg) oldSvg.remove();
                     mediaContainer.appendChild(svgElement);
                 })
-                .catch(err => { console.log(`SVG no disponible para ${bloque.id}`); });
+                .catch(err => {
+                    console.log(`SVG no disponible para ${bloque.id}`);
+                });
         }
 
         function getStatusIndicator(status) { if (status === 'flash') return '<span class="status-indicator status-flash">⚡</span>'; if (status === 'redpoint') return '<span class="status-indicator status-redpoint"></span>'; if (status === 'proyecto') return '<span class="status-indicator status-proyecto">P</span>'; return ''; }
