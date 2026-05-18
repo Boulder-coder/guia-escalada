@@ -89,7 +89,6 @@
         .bloque-group h3 { background: #d4d4d4; padding: 10px 15px; font-size: 0.95rem; color: #2c2c2c; margin: 0; }
         .linea-item { padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; display: flex; justify-content: space-between; align-items: center; }
         .linea-item:last-child { border-bottom: none; }
-        .linea-item:active { background: #f0f0f0; }
         .linea-nombre { font-weight: 500; font-size: 0.85rem; text-align: left; }
         .linea-right { display: flex; align-items: center; gap: 6px; }
         .linea-grado-badge { display: inline-flex; align-items: center; justify-content: center; color: white; border-radius: 20px; padding: 2px 5px; min-width: 38px; height: 20px; font-size: 0.65rem; font-weight: 500; white-space: nowrap; text-align: center; }
@@ -258,7 +257,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-    // ========== CONFIGURACIÓN ==========
+    // ========== CONFIGURACIÓN INICIAL ==========
     const PASSWORD_VERSION = "2026.2";
     const VALID_PASSWORD_HASH = "749aa338a7abca24db6a4f63ea187c976f0e7d1abf43ce6513d45e355f98e037";
     const STORAGE_PWD_VERSION = 'boulder_password_version';
@@ -267,98 +266,28 @@
     const DATA_URL = 'https://boulder-coder.github.io/guia-escalada/datos/datos.json';
 
     let datosApp = null, currentSector = null, swiperBloques = null;
-    let currentLineaKey = null;
-    let currentSwiperIndex = 0;
-    let currentTab = 'info';
-    let isInFichaBloque = false;
+    let currentLineaKey = null, currentSwiperIndex = 0, currentTab = 'info', isInFichaBloque = false;
     let navigationStack = [];
-    let croquisInterval = null; // Para controlar el intervalo de carga del croquis
+    let currentCroquisInterval = null; // para el intervalo de carga
 
-    // ========== AUTENTICACIÓN (sin cambios) ==========
-    async function sha256(message) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(message);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
+    // ========== AUTENTICACIÓN (igual que tu original) ==========
+    async function sha256(message) { const encoder = new TextEncoder(); const data = encoder.encode(message); const hashBuffer = await crypto.subtle.digest('SHA-256', data); const hashArray = Array.from(new Uint8Array(hashBuffer)); return hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); }
     function isPasswordAccepted() { return localStorage.getItem(STORAGE_PWD_VERSION) === PASSWORD_VERSION; }
     function acceptPassword() { localStorage.setItem(STORAGE_PWD_VERSION, PASSWORD_VERSION); }
-    async function checkAndShowPassword() {
-        if (isPasswordAccepted()) return true;
-        document.getElementById('passwordOverlay').classList.add('active');
-        return false;
-    }
-    async function verifyPassword() {
-        const inputEl = document.getElementById('passwordInput');
-        const password = inputEl.value.trim();
-        const errorEl = document.getElementById('passwordError');
-        if (!password) { errorEl.textContent = 'Introduce la contraseña.'; return; }
-        const hash = await sha256(password);
-        if (hash === VALID_PASSWORD_HASH) {
-            acceptPassword();
-            document.getElementById('passwordOverlay').classList.remove('active');
-            proceedToLegal();
-        } else { errorEl.textContent = 'Contraseña incorrecta.'; }
-    }
+    async function checkAndShowPassword() { if (isPasswordAccepted()) return true; document.getElementById('passwordOverlay').classList.add('active'); return false; }
+    async function verifyPassword() { const inputEl = document.getElementById('passwordInput'); const password = inputEl.value.trim(); const errorEl = document.getElementById('passwordError'); if (!password) { errorEl.textContent = 'Introduce la contraseña.'; return; } const hash = await sha256(password); if (hash === VALID_PASSWORD_HASH) { acceptPassword(); document.getElementById('passwordOverlay').classList.remove('active'); proceedToLegal(); } else { errorEl.textContent = 'Contraseña incorrecta.'; } }
     function isTermsAccepted() { return localStorage.getItem(STORAGE_TERMS) === 'true'; }
     function isPrivacyAccepted() { return localStorage.getItem(STORAGE_PRIVACY) === 'true'; }
-    function acceptTerms() {
-        localStorage.setItem(STORAGE_TERMS, 'true');
-        document.getElementById('legalCondiciones').classList.remove('active');
-        if (!isPrivacyAccepted()) document.getElementById('legalProteccion').classList.add('active');
-        else initAppAfterLegal();
-    }
-    function acceptPrivacy() {
-        localStorage.setItem(STORAGE_PRIVACY, 'true');
-        document.getElementById('legalProteccion').classList.remove('active');
-        initAppAfterLegal();
-    }
+    function acceptTerms() { localStorage.setItem(STORAGE_TERMS, 'true'); document.getElementById('legalCondiciones').classList.remove('active'); if (!isPrivacyAccepted()) document.getElementById('legalProteccion').classList.add('active'); else initAppAfterLegal(); }
+    function acceptPrivacy() { localStorage.setItem(STORAGE_PRIVACY, 'true'); document.getElementById('legalProteccion').classList.remove('active'); initAppAfterLegal(); }
     function decline() { window.location.reload(); }
-    function proceedToLegal() {
-        if (!isTermsAccepted()) document.getElementById('legalCondiciones').classList.add('active');
-        else if (!isPrivacyAccepted()) document.getElementById('legalProteccion').classList.add('active');
-        else initAppAfterLegal();
-    }
-    async function enableScreenProtection() {
-        if (window.Capacitor && Capacitor.isNativePlatform()) {
-            try { await Capacitor.Plugins.PrivacyScreen.enable(); } catch(e) { console.log(e); }
-        }
-    }
-    function setupBackButtonHandler() {
-        if (window.Capacitor && Capacitor.isNativePlatform()) {
-            document.addEventListener('backbutton', (e) => {
-                if (document.getElementById('passwordOverlay').classList.contains('active') ||
-                    document.getElementById('legalCondiciones').classList.contains('active') ||
-                    document.getElementById('legalProteccion').classList.contains('active')) {
-                    e.preventDefault(); return;
-                }
-                if (isInFichaBloque) { e.preventDefault(); goBack(); return; }
-                if (currentSector !== null && !isInFichaBloque) { e.preventDefault(); navigateToScreen('screen-portada'); currentSector = null; isInFichaBloque = false; return; }
-            });
-        }
-    }
-    function initAppAfterLegal() {
-        enableScreenProtection();
-        setupBackButtonHandler();
-        document.getElementById('loadingScreen').classList.add('visible');
-        registerServiceWorkerAndStart();
-    }
-    async function registerServiceWorkerAndStart() {
-        if ('serviceWorker' in navigator) {
-            try {
-                await navigator.serviceWorker.register('/guia-escalada/sw.js');
-                console.log('SW registrado');
-            } catch(e) { console.error(e); }
-        }
-        document.getElementById('loadingScreen').classList.remove('visible');
-        cargarDatos();
-        initMenu();
-        navigateToScreen('screen-portada');
-        history.pushState({}, '');
-    }
+    function proceedToLegal() { if (!isTermsAccepted()) document.getElementById('legalCondiciones').classList.add('active'); else if (!isPrivacyAccepted()) document.getElementById('legalProteccion').classList.add('active'); else initAppAfterLegal(); }
+    async function enableScreenProtection() { if (window.Capacitor && Capacitor.isNativePlatform()) { try { await Capacitor.Plugins.PrivacyScreen.enable(); } catch(e) {} } }
+    function setupBackButtonHandler() { if (window.Capacitor && Capacitor.isNativePlatform()) { document.addEventListener('backbutton', (e) => { if (document.getElementById('passwordOverlay').classList.contains('active') || document.getElementById('legalCondiciones').classList.contains('active') || document.getElementById('legalProteccion').classList.contains('active')) { e.preventDefault(); return; } if (isInFichaBloque) { e.preventDefault(); goBack(); return; } if (currentSector !== null && !isInFichaBloque) { e.preventDefault(); navigateToScreen('screen-portada'); currentSector = null; isInFichaBloque = false; return; } }); } }
+    function initAppAfterLegal() { enableScreenProtection(); setupBackButtonHandler(); document.getElementById('loadingScreen').classList.add('visible'); registerServiceWorkerAndStart(); }
+    async function registerServiceWorkerAndStart() { if ('serviceWorker' in navigator) { try { await navigator.serviceWorker.register('/guia-escalada/sw.js'); } catch(e) {} } document.getElementById('loadingScreen').classList.remove('visible'); cargarDatos(); initMenu(); navigateToScreen('screen-portada'); history.pushState({}, ''); }
 
-    // ========== FUNCIONES AUXILIARES (sin cambios importantes) ==========
+    // ========== FUNCIONES AUXILIARES ==========
     function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
     function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
     function toggleDrawer() { if (document.getElementById('drawer').classList.contains('open')) closeDrawer(); else openDrawer(); }
@@ -367,20 +296,34 @@
     function getSimboloSalida(salida) { if (!salida) return 'text'; if (salida === 'T') return 'circle'; if (salida === 'TO') return '▲'; if (salida === 'TOD') return '▶'; if (salida === 'TOI') return '◀'; return '●'; }
     function getTextoParaCirculo(lineaId) { const baseLetra = lineaId.split('.')[0]; if (/^\d+$/.test(baseLetra)) return ''; const partes = lineaId.split('.'); if (partes.length === 1) return baseLetra; if (partes.length === 2 && partes[1] === '1') return baseLetra; return ''; }
     function encontrarElementoPorLabel(svgDoc, label) { if (!svgDoc) return null; let elemento = svgDoc.querySelector(`[inkscape\\:label="${label}"]`); if (elemento) return elemento; const todos = svgDoc.querySelectorAll('*'); for (let el of todos) { let labelValue = el.getAttribute('inkscape:label'); if (!labelValue && el.attributes) { for (let attr of el.attributes) { if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) { labelValue = attr.value; break; } } } if (labelValue === label) return el; } return null; }
-    function aplicarColoresSVG(svgDoc, bloque, vias) { if (!svgDoc) return; vias.forEach(via => { const lineaId = via.linea_id; const color = getColorByGrado(via.grado); const simbolo = getSimboloSalida(via.salida); const textoCirculo = getTextoParaCirculo(lineaId); const linea = encontrarElementoPorLabel(svgDoc, `${lineaId}_linea`); if (linea) { linea.removeAttribute('style'); linea.setAttribute('stroke', color); linea.setAttribute('fill', 'none'); linea.setAttribute('stroke-width', '6'); } const circuloEntrada = encontrarElementoPorLabel(svgDoc, `${lineaId}_entrada`); if (circuloEntrada) { circuloEntrada.removeAttribute('style'); circuloEntrada.setAttribute('fill', color); circuloEntrada.setAttribute('stroke', '#FFFFFF'); circuloEntrada.setAttribute('stroke-width', '2'); } const circuloSalida = encontrarElementoPorLabel(svgDoc, `${lineaId}_salida`); if (circuloSalida) { circuloSalida.removeAttribute('style'); circuloSalida.setAttribute('fill', color); circuloSalida.removeAttribute('stroke'); circuloSalida.removeAttribute('stroke-width'); } const svgRoot = svgDoc.documentElement; if (textoCirculo && circuloEntrada) { let cx = parseFloat(circuloEntrada.getAttribute('cx')); let cy = parseFloat(circuloEntrada.getAttribute('cy')); let radio = parseFloat(circuloEntrada.getAttribute('r')) || 17.5; if (isNaN(cx) && circuloEntrada.hasAttribute('transform')) { const transform = circuloEntrada.getAttribute('transform'); const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/); if (translateMatch) { cx = parseFloat(translateMatch[1]); cy = parseFloat(translateMatch[2]); } } if (isNaN(cx)) cx = 0; if (isNaN(cy)) cy = 0; const oldText = svgRoot.querySelector(`text[data-for="${lineaId}_entrada"]`); if (oldText) oldText.remove(); const textFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); textFill.setAttribute('data-for', `${lineaId}_entrada`); textFill.setAttribute('x', cx); textFill.setAttribute('y', cy); textFill.setAttribute('text-anchor', 'middle'); textFill.setAttribute('dominant-baseline', 'central'); textFill.setAttribute('fill', '#FFFFFF'); textFill.setAttribute('font-size', `${radio * 1.3}px`); textFill.setAttribute('font-weight', 'bold'); textFill.textContent = textoCirculo; svgRoot.appendChild(textFill); } if (simbolo && circuloSalida) { let cx = parseFloat(circuloSalida.getAttribute('cx')); let cy = parseFloat(circuloSalida.getAttribute('cy')); let radio = parseFloat(circuloSalida.getAttribute('r')) || 12.5; if (isNaN(cx) && circuloSalida.hasAttribute('transform')) { const transform = circuloSalida.getAttribute('transform'); const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/); if (translateMatch) { cx = parseFloat(translateMatch[1]); cy = parseFloat(translateMatch[2]); } } if (isNaN(cx)) cx = 0; if (isNaN(cy)) cy = 0; const oldSymbol = svgRoot.querySelector(`[data-for="${lineaId}_salida"]`); if (oldSymbol) oldSymbol.remove(); if (simbolo === 'circle') { const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); innerCircle.setAttribute('data-for', `${lineaId}_salida`); innerCircle.setAttribute('cx', cx); innerCircle.setAttribute('cy', cy); innerCircle.setAttribute('r', radio * 0.5); innerCircle.setAttribute('fill', '#FFFFFF'); svgRoot.appendChild(innerCircle); } else if (simbolo === '▲') { const fontSize = radio * 1.75; const yOffset = -radio * 0.15; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx); symbolFill.setAttribute('y', cy + yOffset); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); } else if (simbolo === '▶') { const fontSize = radio * 1.3; const xOffset = radio * 0.15; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx + xOffset); symbolFill.setAttribute('y', cy); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); } else if (simbolo === '◀') { const fontSize = radio * 1.3; const xOffset = -radio * 0.15; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx + xOffset); symbolFill.setAttribute('y', cy); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); } else { const fontSize = radio * 1.1; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx); symbolFill.setAttribute('y', cy); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); } } }); }
+    function aplicarColoresSVG(svgDoc, bloque, vias) { if (!svgDoc) return; vias.forEach(via => { const lineaId = via.linea_id; const color = getColorByGrado(via.grado); const simbolo = getSimboloSalida(via.salida); const textoCirculo = getTextoParaCirculo(lineaId); const linea = encontrarElementoPorLabel(svgDoc, `${lineaId}_linea`); if (linea) { linea.removeAttribute('style'); linea.setAttribute('stroke', color); linea.setAttribute('fill', 'none'); linea.setAttribute('stroke-width', '6'); } const circuloEntrada = encontrarElementoPorLabel(svgDoc, `${lineaId}_entrada`); if (circuloEntrada) { circuloEntrada.removeAttribute('style'); circuloEntrada.setAttribute('fill', color); circuloEntrada.setAttribute('stroke', '#FFFFFF'); circuloEntrada.setAttribute('stroke-width', '2'); } const circuloSalida = encontrarElementoPorLabel(svgDoc, `${lineaId}_salida`); if (circuloSalida) { circuloSalida.removeAttribute('style'); circuloSalida.setAttribute('fill', color); circuloSalida.removeAttribute('stroke'); } const svgRoot = svgDoc.documentElement; if (textoCirculo && circuloEntrada) { let cx = parseFloat(circuloEntrada.getAttribute('cx')); let cy = parseFloat(circuloEntrada.getAttribute('cy')); let radio = parseFloat(circuloEntrada.getAttribute('r')) || 17.5; if (isNaN(cx) && circuloEntrada.hasAttribute('transform')) { const transform = circuloEntrada.getAttribute('transform'); const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/); if (translateMatch) { cx = parseFloat(translateMatch[1]); cy = parseFloat(translateMatch[2]); } } if (isNaN(cx)) cx = 0; if (isNaN(cy)) cy = 0; const oldText = svgRoot.querySelector(`text[data-for="${lineaId}_entrada"]`); if (oldText) oldText.remove(); const textFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); textFill.setAttribute('data-for', `${lineaId}_entrada`); textFill.setAttribute('x', cx); textFill.setAttribute('y', cy); textFill.setAttribute('text-anchor', 'middle'); textFill.setAttribute('dominant-baseline', 'central'); textFill.setAttribute('fill', '#FFFFFF'); textFill.setAttribute('font-size', `${radio * 1.3}px`); textFill.setAttribute('font-weight', 'bold'); textFill.textContent = textoCirculo; svgRoot.appendChild(textFill); } if (simbolo && circuloSalida) { let cx = parseFloat(circuloSalida.getAttribute('cx')); let cy = parseFloat(circuloSalida.getAttribute('cy')); let radio = parseFloat(circuloSalida.getAttribute('r')) || 12.5; if (isNaN(cx) && circuloSalida.hasAttribute('transform')) { const transform = circuloSalida.getAttribute('transform'); const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/); if (translateMatch) { cx = parseFloat(translateMatch[1]); cy = parseFloat(translateMatch[2]); } } if (isNaN(cx)) cx = 0; if (isNaN(cy)) cy = 0; const oldSymbol = svgRoot.querySelector(`[data-for="${lineaId}_salida"]`); if (oldSymbol) oldSymbol.remove(); if (simbolo === 'circle') { const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); innerCircle.setAttribute('data-for', `${lineaId}_salida`); innerCircle.setAttribute('cx', cx); innerCircle.setAttribute('cy', cy); innerCircle.setAttribute('r', radio * 0.5); innerCircle.setAttribute('fill', '#FFFFFF'); svgRoot.appendChild(innerCircle); } else if (simbolo === '▲') { const fontSize = radio * 1.75; const yOffset = -radio * 0.15; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx); symbolFill.setAttribute('y', cy + yOffset); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); } else if (simbolo === '▶') { const fontSize = radio * 1.3; const xOffset = radio * 0.15; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx + xOffset); symbolFill.setAttribute('y', cy); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); } else if (simbolo === '◀') { const fontSize = radio * 1.3; const xOffset = -radio * 0.15; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx + xOffset); symbolFill.setAttribute('y', cy); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); } else { const fontSize = radio * 1.1; const symbolFill = document.createElementNS('http://www.w3.org/2000/svg', 'text'); symbolFill.setAttribute('data-for', `${lineaId}_salida`); symbolFill.setAttribute('x', cx); symbolFill.setAttribute('y', cy); symbolFill.setAttribute('text-anchor', 'middle'); symbolFill.setAttribute('dominant-baseline', 'central'); symbolFill.setAttribute('fill', '#FFFFFF'); symbolFill.setAttribute('font-size', `${fontSize}px`); symbolFill.setAttribute('font-weight', 'bold'); symbolFill.textContent = simbolo; svgRoot.appendChild(symbolFill); } } }); }
     function encontrarElementosPorLabel(svgDoc, label) { const resultados = []; const todos = svgDoc.querySelectorAll('*'); for (let el of todos) { let labelValue = el.getAttribute('inkscape:label'); if (!labelValue && el.attributes) { for (let attr of el.attributes) { if (attr.name === 'inkscape:label' || attr.name.endsWith(':label')) { labelValue = attr.value; break; } } } if (labelValue === label) resultados.push(el); } return resultados; }
     function cargarMapaIndividual(sector, mapaBase, incluirFooter = false) { if (!mapaBase) return ''; const mapaUrl = `${mapaBase}.jpg`; const timestamp = Date.now(); const svgMapaUrl = `${mapaBase}.svg?v=${timestamp}`; const containerId = `mapaContainer_${timestamp}_${Math.random()}`; let html = `<div class="mapa-single"><div id="${containerId}" class="croquis-viewer" style="position: relative;">`; html += `<img src="${mapaUrl}" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`; html += `<object id="mapaObject_${containerId}" data="${svgMapaUrl}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`; if (incluirFooter && sector.parking && sector.parking.length > 0) html += `<div class="mapa-footer">📍 Toca sobre los aparcamientos (P1, P2, P3...) para ver su ubicación en Google Maps</div>`; html += `</div>`; setTimeout(() => { const objectTag = document.getElementById(`mapaObject_${containerId}`); if (objectTag && objectTag.contentDocument) { const svgDoc = objectTag.contentDocument; if (svgDoc) { const svgElement = svgDoc.documentElement; if (svgElement) { const allEl = svgElement.querySelectorAll('*'); allEl.forEach(el => { if (el.tagName !== 'svg') { el.setAttribute('fill', 'transparent'); el.setAttribute('stroke', 'transparent'); if (el.style) el.style.opacity = '0'; } }); if (incluirFooter && sector.parking && sector.parking.length > 0) { const parkings = sector.parking; for (let i = 0; i < parkings.length; i++) { const parkingLabel = `parking_${i+1}`; const elementos = encontrarElementosPorLabel(svgDoc, parkingLabel); elementos.forEach(el => { el.style.cursor = 'pointer'; el.addEventListener('click', (e) => { e.stopPropagation(); window.open(parkings[i], '_blank'); }); }); } } } } } }, 500); return html; }
     function cargarTodosLosMapas(sector) { let mapasHtml = ''; if (sector.mapa) mapasHtml += cargarMapaIndividual(sector, sector.mapa, true); if (sector.mapa_2) mapasHtml += cargarMapaIndividual(sector, sector.mapa_2, false); if (sector.mapa_3) mapasHtml += cargarMapaIndividual(sector, sector.mapa_3, false); return mapasHtml; }
+    function getTextoManos(via) { if (via.manos_juntas && via.manos_juntas.trim() !== "") return `Manos juntas: ${via.manos_juntas}`; let partes = []; if (via.mano_izq && via.mano_izq.trim() !== "") partes.push(`Izq: ${via.mano_izq}`); if (via.mano_der && via.mano_der.trim() !== "") partes.push(`Der: ${via.mano_der}`); return partes.length > 0 ? partes.join(" · ") : ""; }
+    function cargarYColorearSVGBloque(bloque, slideIndex, vias) { const svgUrl = `${bloque.foto_base}.svg`; const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`); if (!mediaContainer) return; fetch(svgUrl).then(response => response.ok ? response.text() : Promise.reject()).then(svgText => { const parser = new DOMParser(); const svgDoc = parser.parseFromString(svgText, 'image/svg+xml'); const svgElement = svgDoc.documentElement; if (!svgElement) return; aplicarColoresSVG(svgDoc, bloque, vias); svgElement.setAttribute('preserveAspectRatio', 'none'); svgElement.style.width = '100%'; svgElement.style.height = '100%'; svgElement.style.position = 'absolute'; svgElement.style.top = '0'; svgElement.style.left = '0'; svgElement.style.pointerEvents = 'none'; svgElement.style.zIndex = '20'; const oldSvg = mediaContainer.querySelector('svg'); if (oldSvg) oldSvg.remove(); mediaContainer.appendChild(svgElement); }).catch(err => console.log(`SVG no disponible para ${bloque.id}`)); }
+    function getStatusIndicator(status) { if (status === 'flash') return '<span class="status-indicator status-flash">⚡</span>'; if (status === 'redpoint') return '<span class="status-indicator status-redpoint"></span>'; if (status === 'proyecto') return '<span class="status-indicator status-proyecto">P</span>'; return ''; }
+    function getLineaStatusIndicator(status) { if (status === 'flash') return { class: 'linea-status-flash', text: '⚡' }; if (status === 'redpoint') return { class: 'linea-status-redpoint', text: '' }; if (status === 'proyecto') return { class: 'linea-status-proyecto', text: 'P' }; return null; }
+    function getLineStatus(sectorNombre, bloqueId, lineaId) { return localStorage.getItem(`${sectorNombre}_${bloqueId}_${lineaId}_status`); }
+    function setLineStatus(sectorNombre, bloqueId, lineaId, status) { const key = `${sectorNombre}_${bloqueId}_${lineaId}_status`; if (status === null || status === 'clear') localStorage.removeItem(key); else localStorage.setItem(key, status); updateSingleLineIndicator(sectorNombre, bloqueId, lineaId); refreshFichaBloqueContent(); refreshResumenContent(); }
+    function updateSingleLineIndicator(sectorNombre, bloqueId, lineaId) { const activeScreen = document.querySelector('.screen:not([style*="display: none"])'); if (activeScreen && activeScreen.id === 'screen-ficha-bloque') { const viasDivs = document.querySelectorAll('.ficha-via-item'); for (let viaDiv of viasDivs) { const viaNombreSpan = viaDiv.querySelector('.via-nombre'); if (viaNombreSpan && viaNombreSpan.textContent.startsWith(lineaId + ' ·')) { const newStatus = getLineStatus(sectorNombre, bloqueId, lineaId); const newIndicator = getStatusIndicator(newStatus); const oldIndicator = viaDiv.querySelector('.status-indicator'); if (oldIndicator) oldIndicator.outerHTML = newIndicator; else if (newIndicator) viaDiv.insertAdjacentHTML('beforeend', newIndicator); break; } } } }
+    function refreshFichaBloqueContent() { const activeScreen = document.querySelector('.screen:not([style*="display: none"])'); if (activeScreen && activeScreen.id === 'screen-ficha-bloque' && currentSector) { const currentIndex = swiperBloques ? swiperBloques.activeIndex : 0; cargarFichaBloque(currentIndex, true); } }
+    function refreshResumenContent() { const resumenPane = document.getElementById('tab-resumen'); if (resumenPane && resumenPane.style.display !== 'none' && currentSector) { generarResumenContent(); } }
+    function generarResumenContent() { const resumenContainer = document.getElementById('tab-resumen'); if (!resumenContainer) return; let resumenHtml = ''; const grupos = {}; currentSector.bloques.forEach((bloque, idx) => { const numBase = parseInt(bloque.id, 10); if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] }; grupos[numBase].bloques.push({ ...bloque, idx }); }); Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => { resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`; grupo.bloques.forEach(bloqueInfo => { bloqueInfo.vias.forEach(via => { const gradoColor = getColorByGrado(via.grado || '*'); const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id); const statusIndicator = getLineaStatusIndicator(status); resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}"><span class="linea-nombre">${via.linea_id} · ${via.nombre}</span><div class="linea-right">${statusIndicator ? `<span class="linea-status-indicator ${statusIndicator.class}">${statusIndicator.text}</span>` : ''}<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado || '*'}</span></div></div>`; }); }); resumenHtml += `</div></div>`; }); resumenContainer.innerHTML = resumenHtml; document.querySelectorAll('#tab-resumen .linea-item').forEach(item => { item.addEventListener('click', () => { const bloqueId = item.dataset.bloqueId; const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId); if (bloqueIndex !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(bloqueIndex); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }); } }); }); }
+    function actualizarBotonActivo(tabName) { const btns = document.querySelectorAll('#globalBottomTabs .bottom-tab-btn'); btns.forEach(btn => { if (btn.dataset.tab === tabName) btn.classList.add('active'); else btn.classList.remove('active'); }); }
+    function navigateToScreen(screenId, stateData = null) { const currentScreen = document.querySelector('.screen:not([style*="display: none"])'); if (currentScreen && currentScreen.id !== screenId) navigationStack.push({ screen: currentScreen.id, state: { ...stateData, sectorNombre: currentSector?.nombre, currentTab, currentSwiperIndex } }); document.querySelectorAll('.screen').forEach(s => s.style.display = 'none'); document.getElementById(screenId).style.display = 'block'; document.querySelector('.app-content').scrollTop = 0; const bottomTabs = document.getElementById('globalBottomTabs'); if (screenId === 'screen-sector-detalle' || screenId === 'screen-ficha-bloque') bottomTabs.style.display = 'flex'; else bottomTabs.style.display = 'none'; if (screenId === 'screen-ficha-bloque') actualizarBotonActivo('bloques'); }
+    function goBack() { if (navigationStack.length > 0) { const prev = navigationStack.pop(); navigateToScreen(prev.screen); if (prev.state?.sectorNombre) { currentSector = datosApp.sectores.find(s => s.nombre === prev.state.sectorNombre); if (currentSector && prev.screen === 'screen-ficha-bloque') { setTimeout(() => { if (swiperBloques) swiperBloques.slideTo(prev.state.currentSwiperIndex || 0); currentSwiperIndex = prev.state.currentSwiperIndex || 0; }, 100); } } if (prev.screen === 'screen-sector-detalle' && prev.state?.currentTab) { currentTab = prev.state.currentTab; actualizarBotonActivo(currentTab); document.getElementById('tab-info').style.display = 'none'; document.getElementById('tab-croquis').style.display = 'none'; document.getElementById('tab-resumen').style.display = 'none'; document.getElementById('tab-bloques').style.display = 'none'; const tabToShow = document.getElementById(`tab-${currentTab}`); if (tabToShow) tabToShow.style.display = 'block'; } isInFichaBloque = (prev.screen === 'screen-ficha-bloque'); } else { navigateToScreen('screen-portada'); if (datosApp) renderSectoresList(); else cargarDatos(); currentSector = null; isInFichaBloque = false; } }
+    window.addEventListener('popstate', () => goBack());
 
-    // ========== CROQUIS: VERSIÓN MEJORADA (100% FIABLE) ==========
+    // ========== CROQUIS: VERSIÓN DEFINITIVA Y FIABLE ==========
     function cargarCroquisEnArea(idx) {
         if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return;
         const area = document.getElementById('croquisViewerArea');
         if (!area) return;
         // Cancelar cualquier intervalo anterior
-        if (croquisInterval) {
-            clearInterval(croquisInterval);
-            croquisInterval = null;
+        if (currentCroquisInterval) {
+            clearInterval(currentCroquisInterval);
+            currentCroquisInterval = null;
         }
         const croquis = currentSector.croquis_list[idx];
         const uniqueId = Date.now() + '_' + Math.random();
@@ -398,40 +341,33 @@
             const obj = document.getElementById(objId);
             if (obj && obj.contentDocument && obj.contentDocument.documentElement) {
                 clearInterval(interval);
-                croquisInterval = null;
-                // Esperar un poco más para asegurar que el SVG está completamente renderizado
-                setTimeout(() => {
-                    procesarSVGCroquis(obj.contentDocument, currentSector);
-                }, 50);
-            } else if (attempts > 50) { // 10 segundos máximo (200ms * 50)
+                currentCroquisInterval = null;
+                procesarSVGCroquis(obj.contentDocument, currentSector);
+            } else if (attempts > 50) {
                 clearInterval(interval);
                 console.warn('No se pudo cargar el SVG del croquis');
-                croquisInterval = null;
+                currentCroquisInterval = null;
             }
         }, 200);
-        croquisInterval = interval;
+        currentCroquisInterval = interval;
     }
-    
+
     function procesarSVGCroquis(svgDoc, sector) {
         const svg = svgDoc.documentElement;
         if (!svg) return;
-        // Evitar reprocesar
         if (svg.getAttribute('data-croquis-procesado') === 'true') return;
         svg.setAttribute('data-croquis-procesado', 'true');
         
-        // Hacer transparentes todos los elementos excepto el svg raíz
-        const all = svg.querySelectorAll('*');
-        all.forEach(el => {
+        // Hacer transparentes todos los elementos excepto el svg
+        const allEl = svg.querySelectorAll('*');
+        allEl.forEach(el => {
             if (el.tagName !== 'svg') {
-                // Eliminar estilos inline que puedan forzar opacidad
-                el.removeAttribute('style');
                 el.setAttribute('fill', 'transparent');
                 el.setAttribute('stroke', 'transparent');
                 el.setAttribute('fill-opacity', '0');
                 el.setAttribute('stroke-opacity', '0');
-                // Forzar opacidad con estilo
-                el.style.opacity = '0';
-                el.style.pointerEvents = 'none'; // Por defecto no clickeable
+                if (el.style) el.style.opacity = '0';
+                el.style.pointerEvents = 'none';
             }
         });
         
@@ -447,10 +383,9 @@
                 }
             }
             if (label && !isNaN(parseInt(label))) {
-                // Hacer clickeable solo este elemento
                 el.style.cursor = 'pointer';
                 el.style.pointerEvents = 'auto';
-                el.style.opacity = '0'; // Sigue transparente pero clickeable
+                el.style.opacity = '0'; // sigue transparente pero clickeable
                 el.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const bloqueBase = label;
@@ -470,7 +405,7 @@
         });
     }
 
-    // ========== CARGA DE DATOS Y RENDERIZADO ==========
+    // ========== CARGA DE DATOS Y RENDERIZADO PRINCIPAL ==========
     async function cargarDatos() {
         const container = document.getElementById('sectores-list');
         container.innerHTML = '<div class="loader">Cargando...</div>';
@@ -580,10 +515,9 @@
             actualizarBotonActivo(tabName);
             if (tabName === 'info') setTimeout(() => dibujarGrafica(currentSector), 100);
             if (tabName === 'croquis') {
-                // Cargar el primer croquis automáticamente al entrar en la pestaña
+                // Cargar el primer croquis automáticamente
                 if (currentSector.croquis_list.length > 0) {
                     cargarCroquisEnArea(0);
-                    // Marcar la primera miniatura como activa
                     const firstThumb = document.querySelector('.croquis-thumb');
                     if (firstThumb) {
                         document.querySelectorAll('.croquis-thumb').forEach(t => t.classList.remove('active'));
@@ -615,7 +549,6 @@
         actualizarBotonActivo(currentTab);
         
         setTimeout(() => {
-            // Configurar clics en miniaturas
             const thumbs = document.querySelectorAll('.croquis-thumb');
             thumbs.forEach(thumb => {
                 thumb.onclick = () => {
@@ -625,10 +558,7 @@
                     thumb.classList.add('active');
                 };
             });
-            // Si ya estamos en la pestaña de croquis, cargar el primero
-            if (currentTab === 'croquis' && thumbs.length > 0) {
-                thumbs[0].click();
-            }
+            if (thumbs.length && currentTab === 'croquis') thumbs[0].click();
             document.querySelectorAll('#tab-resumen .linea-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const bloqueId = item.dataset.bloqueId;
@@ -695,141 +625,6 @@
         });
     }
     
-    function getTextoManos(via) {
-        if (via.manos_juntas && via.manos_juntas.trim() !== "") return `Manos juntas: ${via.manos_juntas}`;
-        let partes = [];
-        if (via.mano_izq && via.mano_izq.trim() !== "") partes.push(`Izq: ${via.mano_izq}`);
-        if (via.mano_der && via.mano_der.trim() !== "") partes.push(`Der: ${via.mano_der}`);
-        return partes.length > 0 ? partes.join(" · ") : "";
-    }
-    
-    function cargarYColorearSVGBloque(bloque, slideIndex, vias) {
-        const svgUrl = `${bloque.foto_base}.svg`;
-        const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
-        if (!mediaContainer) return;
-        fetch(svgUrl).then(response => response.ok ? response.text() : Promise.reject()).then(svgText => {
-            const parser = new DOMParser();
-            const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-            const svgElement = svgDoc.documentElement;
-            if (!svgElement) return;
-            aplicarColoresSVG(svgDoc, bloque, vias);
-            svgElement.setAttribute('preserveAspectRatio', 'none');
-            svgElement.style.width = '100%'; svgElement.style.height = '100%';
-            svgElement.style.position = 'absolute'; svgElement.style.top = '0'; svgElement.style.left = '0';
-            svgElement.style.pointerEvents = 'none'; svgElement.style.zIndex = '20';
-            const oldSvg = mediaContainer.querySelector('svg');
-            if (oldSvg) oldSvg.remove();
-            mediaContainer.appendChild(svgElement);
-        }).catch(err => console.log(`SVG no disponible para ${bloque.id}`));
-    }
-    
-    function getStatusIndicator(status) {
-        if (status === 'flash') return '<span class="status-indicator status-flash">⚡</span>';
-        if (status === 'redpoint') return '<span class="status-indicator status-redpoint"></span>';
-        if (status === 'proyecto') return '<span class="status-indicator status-proyecto">P</span>';
-        return '';
-    }
-    
-    function getLineaStatusIndicator(status) {
-        if (status === 'flash') return { class: 'linea-status-flash', text: '⚡' };
-        if (status === 'redpoint') return { class: 'linea-status-redpoint', text: '' };
-        if (status === 'proyecto') return { class: 'linea-status-proyecto', text: 'P' };
-        return null;
-    }
-    
-    function getLineStatus(sectorNombre, bloqueId, lineaId) {
-        const key = `${sectorNombre}_${bloqueId}_${lineaId}_status`;
-        return localStorage.getItem(key);
-    }
-    
-    function setLineStatus(sectorNombre, bloqueId, lineaId, status) {
-        const key = `${sectorNombre}_${bloqueId}_${lineaId}_status`;
-        if (status === null || status === 'clear') localStorage.removeItem(key);
-        else localStorage.setItem(key, status);
-        updateSingleLineIndicator(sectorNombre, bloqueId, lineaId);
-        refreshFichaBloqueContent();
-        refreshResumenContent();
-    }
-    
-    function updateSingleLineIndicator(sectorNombre, bloqueId, lineaId) {
-        const activeScreen = document.querySelector('.screen:not([style*="display: none"])');
-        if (activeScreen && activeScreen.id === 'screen-ficha-bloque') {
-            const viasDivs = document.querySelectorAll('.ficha-via-item');
-            for (let viaDiv of viasDivs) {
-                const viaNombreSpan = viaDiv.querySelector('.via-nombre');
-                if (viaNombreSpan && viaNombreSpan.textContent.startsWith(lineaId + ' ·')) {
-                    const newStatus = getLineStatus(sectorNombre, bloqueId, lineaId);
-                    const newIndicator = getStatusIndicator(newStatus);
-                    const oldIndicator = viaDiv.querySelector('.status-indicator');
-                    if (oldIndicator) oldIndicator.outerHTML = newIndicator;
-                    else if (newIndicator) viaDiv.insertAdjacentHTML('beforeend', newIndicator);
-                    break;
-                }
-            }
-        }
-    }
-    
-    function refreshFichaBloqueContent() {
-        const activeScreen = document.querySelector('.screen:not([style*="display: none"])');
-        if (activeScreen && activeScreen.id === 'screen-ficha-bloque' && currentSector) {
-            const currentIndex = swiperBloques ? swiperBloques.activeIndex : 0;
-            cargarFichaBloque(currentIndex, true);
-        }
-    }
-    
-    function refreshResumenContent() {
-        const resumenPane = document.getElementById('tab-resumen');
-        if (resumenPane && resumenPane.style.display !== 'none' && currentSector) {
-            generarResumenContent();
-        }
-    }
-    
-    function generarResumenContent() {
-        const resumenContainer = document.getElementById('tab-resumen');
-        if (!resumenContainer) return;
-        let resumenHtml = '';
-        const grupos = {};
-        currentSector.bloques.forEach((bloque, idx) => {
-            const numBase = parseInt(bloque.id, 10);
-            if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] };
-            grupos[numBase].bloques.push({ ...bloque, idx });
-        });
-        Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => {
-            resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`;
-            grupo.bloques.forEach(bloqueInfo => {
-                bloqueInfo.vias.forEach(via => {
-                    const gradoColor = getColorByGrado(via.grado || '*');
-                    const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id);
-                    const statusIndicator = getLineaStatusIndicator(status);
-                    resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}"><span class="linea-nombre">${via.linea_id} · ${via.nombre}</span><div class="linea-right">${statusIndicator ? `<span class="linea-status-indicator ${statusIndicator.class}">${statusIndicator.text}</span>` : ''}<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado || '*'}</span></div></div>`;
-                });
-            });
-            resumenHtml += `</div></div>`;
-        });
-        resumenContainer.innerHTML = resumenHtml;
-        document.querySelectorAll('#tab-resumen .linea-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const bloqueId = item.dataset.bloqueId;
-                const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId);
-                if (bloqueIndex !== -1) {
-                    currentTab = 'bloques';
-                    isInFichaBloque = true;
-                    actualizarBotonActivo('bloques');
-                    cargarFichaBloque(bloqueIndex);
-                    navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex });
-                }
-            });
-        });
-    }
-    
-    function actualizarBotonActivo(tabName) {
-        const btns = document.querySelectorAll('#globalBottomTabs .bottom-tab-btn');
-        btns.forEach(btn => {
-            if (btn.dataset.tab === tabName) btn.classList.add('active');
-            else btn.classList.remove('active');
-        });
-    }
-    
     function cargarFichaBloque(bloqueIndex, keepSlide = false) {
         if (!currentSector) return;
         isInFichaBloque = true;
@@ -888,12 +683,10 @@
         currentLineaKey = { sectorNombre, bloqueId, lineaId, callback };
         document.getElementById('statusModal').classList.add('active');
     }
-    
     function closeModal() {
         document.getElementById('statusModal').classList.remove('active');
         currentLineaKey = null;
     }
-    
     document.querySelectorAll('.modal-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const value = btn.dataset.value;
@@ -906,58 +699,9 @@
             closeModal();
         });
     });
-    
     document.getElementById('statusModal').addEventListener('click', (e) => {
         if (e.target === document.getElementById('statusModal')) closeModal();
     });
-    
-    // ========== MENÚ Y NAVEGACIÓN ==========
-    function navigateToScreen(screenId, stateData = null) {
-        const currentScreen = document.querySelector('.screen:not([style*="display: none"])');
-        if (currentScreen && currentScreen.id !== screenId) navigationStack.push({ screen: currentScreen.id, state: { ...stateData, sectorNombre: currentSector?.nombre, currentTab, currentSwiperIndex } });
-        document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-        document.getElementById(screenId).style.display = 'block';
-        document.querySelector('.app-content').scrollTop = 0;
-        const bottomTabs = document.getElementById('globalBottomTabs');
-        if (screenId === 'screen-sector-detalle' || screenId === 'screen-ficha-bloque') bottomTabs.style.display = 'flex';
-        else bottomTabs.style.display = 'none';
-        if (screenId === 'screen-ficha-bloque') actualizarBotonActivo('bloques');
-    }
-    
-    function goBack() {
-        if (navigationStack.length > 0) {
-            const prev = navigationStack.pop();
-            navigateToScreen(prev.screen);
-            if (prev.state?.sectorNombre) {
-                currentSector = datosApp.sectores.find(s => s.nombre === prev.state.sectorNombre);
-                if (currentSector && prev.screen === 'screen-ficha-bloque') {
-                    setTimeout(() => {
-                        if (swiperBloques) swiperBloques.slideTo(prev.state.currentSwiperIndex || 0);
-                        currentSwiperIndex = prev.state.currentSwiperIndex || 0;
-                    }, 100);
-                }
-            }
-            if (prev.screen === 'screen-sector-detalle' && prev.state?.currentTab) {
-                currentTab = prev.state.currentTab;
-                actualizarBotonActivo(currentTab);
-                document.getElementById('tab-info').style.display = 'none';
-                document.getElementById('tab-croquis').style.display = 'none';
-                document.getElementById('tab-resumen').style.display = 'none';
-                document.getElementById('tab-bloques').style.display = 'none';
-                const tabToShow = document.getElementById(`tab-${currentTab}`);
-                if (tabToShow) tabToShow.style.display = 'block';
-            }
-            isInFichaBloque = (prev.screen === 'screen-ficha-bloque');
-        } else {
-            navigateToScreen('screen-portada');
-            if (datosApp) renderSectoresList();
-            else cargarDatos();
-            currentSector = null;
-            isInFichaBloque = false;
-        }
-    }
-    
-    window.addEventListener('popstate', () => goBack());
     
     function initMenu() {
         const toggle = document.getElementById('menuToggle');
@@ -988,7 +732,6 @@
         });
     }
     
-    // ========== INICIALIZACIÓN ==========
     (async () => {
         const passwordOk = await checkAndShowPassword();
         if (passwordOk) proceedToLegal();
