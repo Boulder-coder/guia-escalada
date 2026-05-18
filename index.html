@@ -89,6 +89,7 @@
         .bloque-group h3 { background: #d4d4d4; padding: 10px 15px; font-size: 0.95rem; color: #2c2c2c; margin: 0; }
         .linea-item { padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; display: flex; justify-content: space-between; align-items: center; }
         .linea-item:last-child { border-bottom: none; }
+        .linea-item:active { background: #f0f0f0; }
         .linea-nombre { font-weight: 500; font-size: 0.85rem; text-align: left; }
         .linea-right { display: flex; align-items: center; gap: 6px; }
         .linea-grado-badge { display: inline-flex; align-items: center; justify-content: center; color: white; border-radius: 20px; padding: 2px 5px; min-width: 38px; height: 20px; font-size: 0.65rem; font-weight: 500; white-space: nowrap; text-align: center; }
@@ -268,9 +269,9 @@
     let datosApp = null, currentSector = null, swiperBloques = null;
     let currentLineaKey = null, currentSwiperIndex = 0, currentTab = 'info', isInFichaBloque = false;
     let navigationStack = [];
-    let currentCroquisInterval = null; // para el intervalo de carga
+    let currentCroquisInterval = null;
 
-    // ========== AUTENTICACIÓN (igual que tu original) ==========
+    // ========== AUTENTICACIÓN ==========
     async function sha256(message) { const encoder = new TextEncoder(); const data = encoder.encode(message); const hashBuffer = await crypto.subtle.digest('SHA-256', data); const hashArray = Array.from(new Uint8Array(hashBuffer)); return hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); }
     function isPasswordAccepted() { return localStorage.getItem(STORAGE_PWD_VERSION) === PASSWORD_VERSION; }
     function acceptPassword() { localStorage.setItem(STORAGE_PWD_VERSION, PASSWORD_VERSION); }
@@ -315,12 +316,11 @@
     function goBack() { if (navigationStack.length > 0) { const prev = navigationStack.pop(); navigateToScreen(prev.screen); if (prev.state?.sectorNombre) { currentSector = datosApp.sectores.find(s => s.nombre === prev.state.sectorNombre); if (currentSector && prev.screen === 'screen-ficha-bloque') { setTimeout(() => { if (swiperBloques) swiperBloques.slideTo(prev.state.currentSwiperIndex || 0); currentSwiperIndex = prev.state.currentSwiperIndex || 0; }, 100); } } if (prev.screen === 'screen-sector-detalle' && prev.state?.currentTab) { currentTab = prev.state.currentTab; actualizarBotonActivo(currentTab); document.getElementById('tab-info').style.display = 'none'; document.getElementById('tab-croquis').style.display = 'none'; document.getElementById('tab-resumen').style.display = 'none'; document.getElementById('tab-bloques').style.display = 'none'; const tabToShow = document.getElementById(`tab-${currentTab}`); if (tabToShow) tabToShow.style.display = 'block'; } isInFichaBloque = (prev.screen === 'screen-ficha-bloque'); } else { navigateToScreen('screen-portada'); if (datosApp) renderSectoresList(); else cargarDatos(); currentSector = null; isInFichaBloque = false; } }
     window.addEventListener('popstate', () => goBack());
 
-    // ========== CROQUIS: VERSIÓN DEFINITIVA Y FIABLE ==========
+    // ========== CROQUIS: VERSIÓN DEFINITIVA ==========
     function cargarCroquisEnArea(idx) {
         if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return;
         const area = document.getElementById('croquisViewerArea');
         if (!area) return;
-        // Cancelar cualquier intervalo anterior
         if (currentCroquisInterval) {
             clearInterval(currentCroquisInterval);
             currentCroquisInterval = null;
@@ -357,8 +357,6 @@
         if (!svg) return;
         if (svg.getAttribute('data-croquis-procesado') === 'true') return;
         svg.setAttribute('data-croquis-procesado', 'true');
-        
-        // Hacer transparentes todos los elementos excepto el svg
         const allEl = svg.querySelectorAll('*');
         allEl.forEach(el => {
             if (el.tagName !== 'svg') {
@@ -370,8 +368,6 @@
                 el.style.pointerEvents = 'none';
             }
         });
-        
-        // Buscar elementos con label numérico (identificadores de bloque)
         const elementos = svgDoc.querySelectorAll('*');
         elementos.forEach(el => {
             let label = el.getAttribute('inkscape:label');
@@ -385,7 +381,7 @@
             if (label && !isNaN(parseInt(label))) {
                 el.style.cursor = 'pointer';
                 el.style.pointerEvents = 'auto';
-                el.style.opacity = '0'; // sigue transparente pero clickeable
+                el.style.opacity = '0';
                 el.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const bloqueBase = label;
@@ -443,7 +439,7 @@
         const container = document.getElementById('sector-detalle-content');
         const mapasHtml = cargarTodosLosMapas(currentSector);
         
-        // Siempre generar miniaturas, incluso si solo hay un croquis
+        // --- UNIFICADO: SIEMPRE GENERAR MINIATURAS, INCLUSO SI HAY UN SOLO CROQUIS ---
         let croquisHtml = '';
         if (currentSector.croquis_list && currentSector.croquis_list.length > 0) {
             let thumbsHtml = '<div class="croquis-list"><div class="croquis-list-title">Selecciona un croquis:</div><div class="croquis-thumbnails">';
@@ -463,7 +459,6 @@
             descripcionHtml = parrafos.map(p => `<p>${p.trim()}</p>`).join('');
             descripcionHtml = descripcionHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         }
-        
         let resumenHtml = '';
         const grupos = {};
         currentSector.bloques.forEach((bloque, idx) => {
@@ -489,7 +484,6 @@
             });
             resumenHtml += `</div></div>`;
         });
-        
         container.innerHTML = `<div class="sector-content-wrapper"><h2>${currentSector.nombre}</h2>
             <div id="tab-info" class="tab-pane" style="display: block">
                 <div class="info-sector info-section-spacing">${descripcionHtml || '<p>Sin descripción disponible.</p>'}</div>
@@ -500,7 +494,6 @@
             <div id="tab-resumen" class="tab-pane" style="display: none">${resumenHtml}</div>
             <div id="tab-bloques" class="tab-pane" style="display: none"></div>
         </div>`;
-        
         const bottomTabs = document.getElementById('globalBottomTabs');
         const btns = bottomTabs.querySelectorAll('.bottom-tab-btn');
         function cambiarPestana(tabName) {
@@ -515,7 +508,7 @@
             actualizarBotonActivo(tabName);
             if (tabName === 'info') setTimeout(() => dibujarGrafica(currentSector), 100);
             if (tabName === 'croquis') {
-                // Cargar el primer croquis automáticamente
+                // Cargar el primer croquis automáticamente al entrar en la pestaña
                 if (currentSector.croquis_list.length > 0) {
                     cargarCroquisEnArea(0);
                     const firstThumb = document.querySelector('.croquis-thumb');
@@ -547,7 +540,6 @@
             };
         });
         actualizarBotonActivo(currentTab);
-        
         setTimeout(() => {
             const thumbs = document.querySelectorAll('.croquis-thumb');
             thumbs.forEach(thumb => {
@@ -573,7 +565,6 @@
                 });
             });
         }, 100);
-        
         navigateToScreen('screen-sector-detalle', { sectorNombre: currentSector.nombre });
         setTimeout(() => dibujarGrafica(currentSector), 100);
     }
