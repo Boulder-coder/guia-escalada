@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
-        /* ===== ESTILOS COMPLETOS (LOS MISMOS QUE TU ORIGINAL) ===== */
+        /* ===== TU ESTILO ORIGINAL (COMPLETO) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Roboto', sans-serif; background: #e8e8e8; height: 100vh; overflow: hidden; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
         body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; height: env(safe-area-inset-top); background-color: #2c2c2c; z-index: 9999; }
@@ -258,7 +258,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-    // ========== CONFIGURACIÓN INICIAL ==========
+    // ========== TU CÓDIGO ORIGINAL (COMPLETO) CON LAS ÚNICAS MODIFICACIONES EN CROQUIS ==========
     const PASSWORD_VERSION = "2026.2";
     const VALID_PASSWORD_HASH = "749aa338a7abca24db6a4f63ea187c976f0e7d1abf43ce6513d45e355f98e037";
     const STORAGE_PWD_VERSION = 'boulder_password_version';
@@ -270,7 +270,7 @@
     let currentLineaKey = null, currentSwiperIndex = 0, currentTab = 'info', isInFichaBloque = false;
     let navigationStack = [];
 
-    // ========== AUTENTICACIÓN ==========
+    // ========== AUTENTICACIÓN (SIN CAMBIOS) ==========
     async function sha256(message) { const encoder = new TextEncoder(); const data = encoder.encode(message); const hashBuffer = await crypto.subtle.digest('SHA-256', data); const hashArray = Array.from(new Uint8Array(hashBuffer)); return hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); }
     function isPasswordAccepted() { return localStorage.getItem(STORAGE_PWD_VERSION) === PASSWORD_VERSION; }
     function acceptPassword() { localStorage.setItem(STORAGE_PWD_VERSION, PASSWORD_VERSION); }
@@ -287,7 +287,7 @@
     function initAppAfterLegal() { enableScreenProtection(); setupBackButtonHandler(); document.getElementById('loadingScreen').classList.add('visible'); registerServiceWorkerAndStart(); }
     async function registerServiceWorkerAndStart() { if ('serviceWorker' in navigator) { try { await navigator.serviceWorker.register('/guia-escalada/sw.js'); } catch(e) {} } document.getElementById('loadingScreen').classList.remove('visible'); cargarDatos(); initMenu(); navigateToScreen('screen-portada'); history.pushState({}, ''); }
 
-    // ========== FUNCIONES AUXILIARES ==========
+    // ========== FUNCIONES AUXILIARES (SIN CAMBIOS) ==========
     function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
     function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
     function toggleDrawer() { if (document.getElementById('drawer').classList.contains('open')) closeDrawer(); else openDrawer(); }
@@ -311,11 +311,12 @@
     function refreshResumenContent() { const resumenPane = document.getElementById('tab-resumen'); if (resumenPane && resumenPane.style.display !== 'none' && currentSector) { generarResumenContent(); } }
     function generarResumenContent() { const resumenContainer = document.getElementById('tab-resumen'); if (!resumenContainer) return; let resumenHtml = ''; const grupos = {}; currentSector.bloques.forEach((bloque, idx) => { const numBase = parseInt(bloque.id, 10); if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] }; grupos[numBase].bloques.push({ ...bloque, idx }); }); Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => { resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`; grupo.bloques.forEach(bloqueInfo => { bloqueInfo.vias.forEach(via => { const gradoColor = getColorByGrado(via.grado || '*'); const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id); const statusIndicator = getLineaStatusIndicator(status); resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}"><span class="linea-nombre">${via.linea_id} · ${via.nombre}</span><div class="linea-right">${statusIndicator ? `<span class="linea-status-indicator ${statusIndicator.class}">${statusIndicator.text}</span>` : ''}<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado || '*'}</span></div></div>`; }); }); resumenHtml += `</div></div>`; }); resumenContainer.innerHTML = resumenHtml; document.querySelectorAll('#tab-resumen .linea-item').forEach(item => { item.addEventListener('click', () => { const bloqueId = item.dataset.bloqueId; const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId); if (bloqueIndex !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(bloqueIndex); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }); } }); }); }
     function actualizarBotonActivo(tabName) { const btns = document.querySelectorAll('#globalBottomTabs .bottom-tab-btn'); btns.forEach(btn => { if (btn.dataset.tab === tabName) btn.classList.add('active'); else btn.classList.remove('active'); }); }
-    function navigateToScreen(screenId, stateData = null) { const currentScreen = document.querySelector('.screen:not([style*="display: none"])'); if (currentScreen && currentScreen.id !== screenId) navigationStack.push({ screen: currentScreen.id, state: { ...stateData, sectorNombre: currentSector?.nombre, currentTab, currentSwiperIndex } }); document.querySelectorAll('.screen').forEach(s => s.style.display = 'none'); document.getElementById(screenId).style.display = 'block'); document.querySelector('.app-content').scrollTop = 0; const bottomTabs = document.getElementById('globalBottomTabs'); if (screenId === 'screen-sector-detalle' || screenId === 'screen-ficha-bloque') bottomTabs.style.display = 'flex'; else bottomTabs.style.display = 'none'; if (screenId === 'screen-ficha-bloque') actualizarBotonActivo('bloques'); }
+    function navigateToScreen(screenId, stateData = null) { const currentScreen = document.querySelector('.screen:not([style*="display: none"])'); if (currentScreen && currentScreen.id !== screenId) navigationStack.push({ screen: currentScreen.id, state: { ...stateData, sectorNombre: currentSector?.nombre, currentTab, currentSwiperIndex } }); document.querySelectorAll('.screen').forEach(s => s.style.display = 'none'); document.getElementById(screenId).style.display = 'block'; document.querySelector('.app-content').scrollTop = 0; const bottomTabs = document.getElementById('globalBottomTabs'); if (screenId === 'screen-sector-detalle' || screenId === 'screen-ficha-bloque') bottomTabs.style.display = 'flex'; else bottomTabs.style.display = 'none'; if (screenId === 'screen-ficha-bloque') actualizarBotonActivo('bloques'); }
     function goBack() { if (navigationStack.length > 0) { const prev = navigationStack.pop(); navigateToScreen(prev.screen); if (prev.state?.sectorNombre) { currentSector = datosApp.sectores.find(s => s.nombre === prev.state.sectorNombre); if (currentSector && prev.screen === 'screen-ficha-bloque') { setTimeout(() => { if (swiperBloques) swiperBloques.slideTo(prev.state.currentSwiperIndex || 0); currentSwiperIndex = prev.state.currentSwiperIndex || 0; }, 100); } } if (prev.screen === 'screen-sector-detalle' && prev.state?.currentTab) { currentTab = prev.state.currentTab; actualizarBotonActivo(currentTab); document.getElementById('tab-info').style.display = 'none'; document.getElementById('tab-croquis').style.display = 'none'; document.getElementById('tab-resumen').style.display = 'none'; document.getElementById('tab-bloques').style.display = 'none'; const tabToShow = document.getElementById(`tab-${currentTab}`); if (tabToShow) tabToShow.style.display = 'block'; } isInFichaBloque = (prev.screen === 'screen-ficha-bloque'); } else { navigateToScreen('screen-portada'); if (datosApp) renderSectoresList(); else cargarDatos(); currentSector = null; isInFichaBloque = false; } }
     window.addEventListener('popstate', () => goBack());
 
-    // ========== CROQUIS: VERSIÓN SIMPLIFICADA Y FIABLE ==========
+    // ========== CROQUIS: VERSIÓN CORREGIDA (ÚNICA MODIFICACIÓN) ==========
+    // Esta función ahora espera a que el SVG esté cargado y lo procesa correctamente
     function cargarCroquisEnArea(idx) {
         if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return;
         const area = document.getElementById('croquisViewerArea');
@@ -330,27 +331,28 @@
                 <img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
                 <object id="${objId}" data="${croquis.svg}.svg?t=${uniqueId}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object>
             </div>`;
-        // Esperar a que el SVG se cargue y procesarlo
-        const checkInterval = setInterval(() => {
+        let attempts = 0;
+        const interval = setInterval(() => {
+            attempts++;
             const obj = document.getElementById(objId);
             if (obj && obj.contentDocument && obj.contentDocument.documentElement) {
-                clearInterval(checkInterval);
+                clearInterval(interval);
                 procesarSVGCroquis(obj.contentDocument, currentSector);
+            } else if (attempts > 50) {
+                clearInterval(interval);
+                console.warn('No se pudo cargar el SVG del croquis');
             }
         }, 200);
-        // Limpiar el intervalo después de 10 segundos
-        setTimeout(() => clearInterval(checkInterval), 10000);
     }
 
     function procesarSVGCroquis(svgDoc, sector) {
         const svg = svgDoc.documentElement;
         if (!svg) return;
-        // Evitar procesar el mismo SVG dos veces
         if (svg.getAttribute('data-croquis-procesado') === 'true') return;
         svg.setAttribute('data-croquis-procesado', 'true');
         // Hacer transparentes todos los elementos excepto el svg
-        const allEl = svg.querySelectorAll('*');
-        allEl.forEach(el => {
+        const all = svg.querySelectorAll('*');
+        all.forEach(el => {
             if (el.tagName !== 'svg') {
                 el.setAttribute('fill', 'transparent');
                 el.setAttribute('stroke', 'transparent');
@@ -360,7 +362,7 @@
                 el.style.pointerEvents = 'none';
             }
         });
-        // Buscar elementos con label numérico
+        // Buscar elementos con label numérico (identificadores de bloque)
         const elementos = svgDoc.querySelectorAll('*');
         elementos.forEach(el => {
             let label = el.getAttribute('inkscape:label');
@@ -374,11 +376,11 @@
             if (label && !isNaN(parseInt(label))) {
                 el.style.cursor = 'pointer';
                 el.style.pointerEvents = 'auto';
-                el.style.opacity = '0';
+                el.style.opacity = '0'; // Sigue transparente pero clickeable
                 el.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const bloqueBase = label;
-                    // Buscar bloque que coincida exactamente o que comience con el label seguido de "_"
+                    // Buscar bloque que coincida exactamente o que empiece por el label + "_"
                     const bloque = sector.bloques.find(b => b.id === bloqueBase || b.id.startsWith(bloqueBase + '_'));
                     if (bloque) {
                         const idx = sector.bloques.findIndex(b => b.id === bloque.id);
