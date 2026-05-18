@@ -269,7 +269,6 @@
     let datosApp = null, currentSector = null, swiperBloques = null;
     let currentLineaKey = null, currentSwiperIndex = 0, currentTab = 'info', isInFichaBloque = false;
     let navigationStack = [];
-    let currentCroquisInterval = null;
 
     // ========== AUTENTICACIÓN ==========
     async function sha256(message) { const encoder = new TextEncoder(); const data = encoder.encode(message); const hashBuffer = await crypto.subtle.digest('SHA-256', data); const hashArray = Array.from(new Uint8Array(hashBuffer)); return hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); }
@@ -312,19 +311,15 @@
     function refreshResumenContent() { const resumenPane = document.getElementById('tab-resumen'); if (resumenPane && resumenPane.style.display !== 'none' && currentSector) { generarResumenContent(); } }
     function generarResumenContent() { const resumenContainer = document.getElementById('tab-resumen'); if (!resumenContainer) return; let resumenHtml = ''; const grupos = {}; currentSector.bloques.forEach((bloque, idx) => { const numBase = parseInt(bloque.id, 10); if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] }; grupos[numBase].bloques.push({ ...bloque, idx }); }); Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => { resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`; grupo.bloques.forEach(bloqueInfo => { bloqueInfo.vias.forEach(via => { const gradoColor = getColorByGrado(via.grado || '*'); const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id); const statusIndicator = getLineaStatusIndicator(status); resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}"><span class="linea-nombre">${via.linea_id} · ${via.nombre}</span><div class="linea-right">${statusIndicator ? `<span class="linea-status-indicator ${statusIndicator.class}">${statusIndicator.text}</span>` : ''}<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado || '*'}</span></div></div>`; }); }); resumenHtml += `</div></div>`; }); resumenContainer.innerHTML = resumenHtml; document.querySelectorAll('#tab-resumen .linea-item').forEach(item => { item.addEventListener('click', () => { const bloqueId = item.dataset.bloqueId; const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId); if (bloqueIndex !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(bloqueIndex); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }); } }); }); }
     function actualizarBotonActivo(tabName) { const btns = document.querySelectorAll('#globalBottomTabs .bottom-tab-btn'); btns.forEach(btn => { if (btn.dataset.tab === tabName) btn.classList.add('active'); else btn.classList.remove('active'); }); }
-    function navigateToScreen(screenId, stateData = null) { const currentScreen = document.querySelector('.screen:not([style*="display: none"])'); if (currentScreen && currentScreen.id !== screenId) navigationStack.push({ screen: currentScreen.id, state: { ...stateData, sectorNombre: currentSector?.nombre, currentTab, currentSwiperIndex } }); document.querySelectorAll('.screen').forEach(s => s.style.display = 'none'); document.getElementById(screenId).style.display = 'block'; document.querySelector('.app-content').scrollTop = 0; const bottomTabs = document.getElementById('globalBottomTabs'); if (screenId === 'screen-sector-detalle' || screenId === 'screen-ficha-bloque') bottomTabs.style.display = 'flex'; else bottomTabs.style.display = 'none'; if (screenId === 'screen-ficha-bloque') actualizarBotonActivo('bloques'); }
+    function navigateToScreen(screenId, stateData = null) { const currentScreen = document.querySelector('.screen:not([style*="display: none"])'); if (currentScreen && currentScreen.id !== screenId) navigationStack.push({ screen: currentScreen.id, state: { ...stateData, sectorNombre: currentSector?.nombre, currentTab, currentSwiperIndex } }); document.querySelectorAll('.screen').forEach(s => s.style.display = 'none'); document.getElementById(screenId).style.display = 'block'); document.querySelector('.app-content').scrollTop = 0; const bottomTabs = document.getElementById('globalBottomTabs'); if (screenId === 'screen-sector-detalle' || screenId === 'screen-ficha-bloque') bottomTabs.style.display = 'flex'; else bottomTabs.style.display = 'none'; if (screenId === 'screen-ficha-bloque') actualizarBotonActivo('bloques'); }
     function goBack() { if (navigationStack.length > 0) { const prev = navigationStack.pop(); navigateToScreen(prev.screen); if (prev.state?.sectorNombre) { currentSector = datosApp.sectores.find(s => s.nombre === prev.state.sectorNombre); if (currentSector && prev.screen === 'screen-ficha-bloque') { setTimeout(() => { if (swiperBloques) swiperBloques.slideTo(prev.state.currentSwiperIndex || 0); currentSwiperIndex = prev.state.currentSwiperIndex || 0; }, 100); } } if (prev.screen === 'screen-sector-detalle' && prev.state?.currentTab) { currentTab = prev.state.currentTab; actualizarBotonActivo(currentTab); document.getElementById('tab-info').style.display = 'none'; document.getElementById('tab-croquis').style.display = 'none'; document.getElementById('tab-resumen').style.display = 'none'; document.getElementById('tab-bloques').style.display = 'none'; const tabToShow = document.getElementById(`tab-${currentTab}`); if (tabToShow) tabToShow.style.display = 'block'; } isInFichaBloque = (prev.screen === 'screen-ficha-bloque'); } else { navigateToScreen('screen-portada'); if (datosApp) renderSectoresList(); else cargarDatos(); currentSector = null; isInFichaBloque = false; } }
     window.addEventListener('popstate', () => goBack());
 
-    // ========== CROQUIS: VERSIÓN DEFINITIVA ==========
+    // ========== CROQUIS: VERSIÓN SIMPLIFICADA Y FIABLE ==========
     function cargarCroquisEnArea(idx) {
         if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return;
         const area = document.getElementById('croquisViewerArea');
         if (!area) return;
-        if (currentCroquisInterval) {
-            clearInterval(currentCroquisInterval);
-            currentCroquisInterval = null;
-        }
         const croquis = currentSector.croquis_list[idx];
         const uniqueId = Date.now() + '_' + Math.random();
         const viewerId = `croqViewer_${uniqueId}`;
@@ -335,28 +330,25 @@
                 <img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
                 <object id="${objId}" data="${croquis.svg}.svg?t=${uniqueId}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object>
             </div>`;
-        let attempts = 0;
-        const interval = setInterval(() => {
-            attempts++;
+        // Esperar a que el SVG se cargue y procesarlo
+        const checkInterval = setInterval(() => {
             const obj = document.getElementById(objId);
             if (obj && obj.contentDocument && obj.contentDocument.documentElement) {
-                clearInterval(interval);
-                currentCroquisInterval = null;
+                clearInterval(checkInterval);
                 procesarSVGCroquis(obj.contentDocument, currentSector);
-            } else if (attempts > 50) {
-                clearInterval(interval);
-                console.warn('No se pudo cargar el SVG del croquis');
-                currentCroquisInterval = null;
             }
         }, 200);
-        currentCroquisInterval = interval;
+        // Limpiar el intervalo después de 10 segundos
+        setTimeout(() => clearInterval(checkInterval), 10000);
     }
 
     function procesarSVGCroquis(svgDoc, sector) {
         const svg = svgDoc.documentElement;
         if (!svg) return;
+        // Evitar procesar el mismo SVG dos veces
         if (svg.getAttribute('data-croquis-procesado') === 'true') return;
         svg.setAttribute('data-croquis-procesado', 'true');
+        // Hacer transparentes todos los elementos excepto el svg
         const allEl = svg.querySelectorAll('*');
         allEl.forEach(el => {
             if (el.tagName !== 'svg') {
@@ -368,6 +360,7 @@
                 el.style.pointerEvents = 'none';
             }
         });
+        // Buscar elementos con label numérico
         const elementos = svgDoc.querySelectorAll('*');
         elementos.forEach(el => {
             let label = el.getAttribute('inkscape:label');
@@ -385,7 +378,8 @@
                 el.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const bloqueBase = label;
-                    const bloque = sector.bloques.find(b => b.id === bloqueBase || b.id.startsWith(bloqueBase+'_'));
+                    // Buscar bloque que coincida exactamente o que comience con el label seguido de "_"
+                    const bloque = sector.bloques.find(b => b.id === bloqueBase || b.id.startsWith(bloqueBase + '_'));
                     if (bloque) {
                         const idx = sector.bloques.findIndex(b => b.id === bloque.id);
                         if (idx !== -1) {
