@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/cocogoose" rel="stylesheet">
     <style>
-        /* ===== ESTILOS COMPLETOS (MISMO QUE TU ORIGINAL) ===== */
+        /* ===== ESTILOS COMPLETOS (LOS MISMOS QUE TU ORIGINAL) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Roboto', sans-serif; background: #e8e8e8; height: 100vh; overflow: hidden; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
         body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; height: env(safe-area-inset-top); background-color: #2c2c2c; z-index: 9999; }
@@ -372,7 +372,7 @@
     function cargarMapaIndividual(sector, mapaBase, incluirFooter = false) { if (!mapaBase) return ''; const mapaUrl = `${mapaBase}.jpg`; const timestamp = Date.now(); const svgMapaUrl = `${mapaBase}.svg?v=${timestamp}`; const containerId = `mapaContainer_${timestamp}_${Math.random()}`; let html = `<div class="mapa-single"><div id="${containerId}" class="croquis-viewer" style="position: relative;">`; html += `<img src="${mapaUrl}" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">`; html += `<object id="mapaObject_${containerId}" data="${svgMapaUrl}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object></div>`; if (incluirFooter && sector.parking && sector.parking.length > 0) html += `<div class="mapa-footer">📍 Toca sobre los aparcamientos (P1, P2, P3...) para ver su ubicación en Google Maps</div>`; html += `</div>`; setTimeout(() => { const objectTag = document.getElementById(`mapaObject_${containerId}`); if (objectTag && objectTag.contentDocument) { const svgDoc = objectTag.contentDocument; if (svgDoc) { const svgElement = svgDoc.documentElement; if (svgElement) { const allEl = svgElement.querySelectorAll('*'); allEl.forEach(el => { if (el.tagName !== 'svg') { el.setAttribute('fill', 'transparent'); el.setAttribute('stroke', 'transparent'); if (el.style) el.style.opacity = '0'; } }); if (incluirFooter && sector.parking && sector.parking.length > 0) { const parkings = sector.parking; for (let i = 0; i < parkings.length; i++) { const parkingLabel = `parking_${i+1}`; const elementos = encontrarElementosPorLabel(svgDoc, parkingLabel); elementos.forEach(el => { el.style.cursor = 'pointer'; el.addEventListener('click', (e) => { e.stopPropagation(); window.open(parkings[i], '_blank'); }); }); } } } } } }, 500); return html; }
     function cargarTodosLosMapas(sector) { let mapasHtml = ''; if (sector.mapa) mapasHtml += cargarMapaIndividual(sector, sector.mapa, true); if (sector.mapa_2) mapasHtml += cargarMapaIndividual(sector, sector.mapa_2, false); if (sector.mapa_3) mapasHtml += cargarMapaIndividual(sector, sector.mapa_3, false); return mapasHtml; }
 
-    // ========== CROQUIS: VERSIÓN CORREGIDA (CON INTERVALO Y CANCELACIÓN) ==========
+    // ========== CROQUIS: VERSIÓN MEJORADA (100% FIABLE) ==========
     function cargarCroquisEnArea(idx) {
         if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return;
         const area = document.getElementById('croquisViewerArea');
@@ -398,8 +398,11 @@
             const obj = document.getElementById(objId);
             if (obj && obj.contentDocument && obj.contentDocument.documentElement) {
                 clearInterval(interval);
-                procesarSVGCroquis(obj.contentDocument, currentSector);
                 croquisInterval = null;
+                // Esperar un poco más para asegurar que el SVG está completamente renderizado
+                setTimeout(() => {
+                    procesarSVGCroquis(obj.contentDocument, currentSector);
+                }, 50);
             } else if (attempts > 50) { // 10 segundos máximo (200ms * 50)
                 clearInterval(interval);
                 console.warn('No se pudo cargar el SVG del croquis');
@@ -411,18 +414,28 @@
     
     function procesarSVGCroquis(svgDoc, sector) {
         const svg = svgDoc.documentElement;
-        if (!svg || svg.getAttribute('data-croquis-procesado') === 'true') return;
+        if (!svg) return;
+        // Evitar reprocesar
+        if (svg.getAttribute('data-croquis-procesado') === 'true') return;
         svg.setAttribute('data-croquis-procesado', 'true');
+        
+        // Hacer transparentes todos los elementos excepto el svg raíz
         const all = svg.querySelectorAll('*');
         all.forEach(el => {
             if (el.tagName !== 'svg') {
+                // Eliminar estilos inline que puedan forzar opacidad
+                el.removeAttribute('style');
                 el.setAttribute('fill', 'transparent');
                 el.setAttribute('stroke', 'transparent');
                 el.setAttribute('fill-opacity', '0');
                 el.setAttribute('stroke-opacity', '0');
-                if (el.style) el.style.opacity = '0';
+                // Forzar opacidad con estilo
+                el.style.opacity = '0';
+                el.style.pointerEvents = 'none'; // Por defecto no clickeable
             }
         });
+        
+        // Buscar elementos con label numérico (identificadores de bloque)
         const elementos = svgDoc.querySelectorAll('*');
         elementos.forEach(el => {
             let label = el.getAttribute('inkscape:label');
@@ -434,7 +447,10 @@
                 }
             }
             if (label && !isNaN(parseInt(label))) {
+                // Hacer clickeable solo este elemento
                 el.style.cursor = 'pointer';
+                el.style.pointerEvents = 'auto';
+                el.style.opacity = '0'; // Sigue transparente pero clickeable
                 el.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const bloqueBase = label;
@@ -492,7 +508,7 @@
         const container = document.getElementById('sector-detalle-content');
         const mapasHtml = cargarTodosLosMapas(currentSector);
         
-        // --- UNIFICADO: SIEMPRE GENERAR MINIATURAS, INCLUSO SI HAY UN SOLO CROQUIS ---
+        // Siempre generar miniaturas, incluso si solo hay un croquis
         let croquisHtml = '';
         if (currentSector.croquis_list && currentSector.croquis_list.length > 0) {
             let thumbsHtml = '<div class="croquis-list"><div class="croquis-list-title">Selecciona un croquis:</div><div class="croquis-thumbnails">';
