@@ -258,7 +258,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-    // ========== TU CÓDIGO ORIGINAL (COMPLETO) CON LAS ÚNICAS MODIFICACIONES EN CROQUIS ==========
+    // ========== TU CÓDIGO ORIGINAL CON LAS MODIFICACIONES EN CROQUIS ==========
     const PASSWORD_VERSION = "2026.2";
     const VALID_PASSWORD_HASH = "749aa338a7abca24db6a4f63ea187c976f0e7d1abf43ce6513d45e355f98e037";
     const STORAGE_PWD_VERSION = 'boulder_password_version';
@@ -315,8 +315,7 @@
     function goBack() { if (navigationStack.length > 0) { const prev = navigationStack.pop(); navigateToScreen(prev.screen); if (prev.state?.sectorNombre) { currentSector = datosApp.sectores.find(s => s.nombre === prev.state.sectorNombre); if (currentSector && prev.screen === 'screen-ficha-bloque') { setTimeout(() => { if (swiperBloques) swiperBloques.slideTo(prev.state.currentSwiperIndex || 0); currentSwiperIndex = prev.state.currentSwiperIndex || 0; }, 100); } } if (prev.screen === 'screen-sector-detalle' && prev.state?.currentTab) { currentTab = prev.state.currentTab; actualizarBotonActivo(currentTab); document.getElementById('tab-info').style.display = 'none'; document.getElementById('tab-croquis').style.display = 'none'; document.getElementById('tab-resumen').style.display = 'none'; document.getElementById('tab-bloques').style.display = 'none'; const tabToShow = document.getElementById(`tab-${currentTab}`); if (tabToShow) tabToShow.style.display = 'block'; } isInFichaBloque = (prev.screen === 'screen-ficha-bloque'); } else { navigateToScreen('screen-portada'); if (datosApp) renderSectoresList(); else cargarDatos(); currentSector = null; isInFichaBloque = false; } }
     window.addEventListener('popstate', () => goBack());
 
-    // ========== CROQUIS: VERSIÓN CORREGIDA (ÚNICA MODIFICACIÓN) ==========
-    // Esta función ahora espera a que el SVG esté cargado y lo procesa correctamente
+    // ========== CROQUIS: VERSIÓN MEJORADA (CON DOBLE VERIFICACIÓN) ==========
     function cargarCroquisEnArea(idx) {
         if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return;
         const area = document.getElementById('croquisViewerArea');
@@ -331,18 +330,25 @@
                 <img src="${croquis.imagen}.jpg" style="width:100%; height:auto; display:block;" onerror="this.src='https://picsum.photos/id/20/800/600'">
                 <object id="${objId}" data="${croquis.svg}.svg?t=${uniqueId}" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"></object>
             </div>`;
-        let attempts = 0;
-        const interval = setInterval(() => {
-            attempts++;
-            const obj = document.getElementById(objId);
-            if (obj && obj.contentDocument && obj.contentDocument.documentElement) {
+        // Esperar a que el SVG se cargue usando el evento load y un intervalo de respaldo
+        const obj = document.getElementById(objId);
+        if (!obj) return;
+        let processed = false;
+        const process = () => {
+            if (processed) return;
+            if (obj.contentDocument && obj.contentDocument.documentElement) {
+                processed = true;
                 clearInterval(interval);
                 procesarSVGCroquis(obj.contentDocument, currentSector);
-            } else if (attempts > 50) {
-                clearInterval(interval);
-                console.warn('No se pudo cargar el SVG del croquis');
             }
-        }, 200);
+        };
+        obj.addEventListener('load', process);
+        const interval = setInterval(process, 200);
+        // Limpiar después de 10 segundos
+        setTimeout(() => {
+            clearInterval(interval);
+            if (!processed) console.warn('No se pudo cargar el SVG del croquis');
+        }, 10000);
     }
 
     function procesarSVGCroquis(svgDoc, sector) {
@@ -380,7 +386,7 @@
                 el.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const bloqueBase = label;
-                    // Buscar bloque que coincida exactamente o que empiece por el label + "_"
+                    // Buscar bloque que coincida exactamente o que comience con el label seguido de "_"
                     const bloque = sector.bloques.find(b => b.id === bloqueBase || b.id.startsWith(bloqueBase + '_'));
                     if (bloque) {
                         const idx = sector.bloques.findIndex(b => b.id === bloque.id);
