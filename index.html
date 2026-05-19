@@ -345,9 +345,9 @@
             justify-content: center;   /* Centra las miniaturas horizontalmente */
         }
         .croquis-thumb { 
-            width: 110px;              /* Tamaño fijo 110x110 */
-            height: 110px;
-            min-width: 110px;
+            width: 120px;              /* Tamaño fijo 120x120 */
+            height: 120px;
+            min-width: 120px;
             border-radius: 10px; 
             overflow: hidden; 
             box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
@@ -999,7 +999,7 @@
             const currentScreen = document.querySelector('.screen:not([style*="display: none"])');
             if (currentScreen && currentScreen.id !== screenId) navigationStack.push({ screen: currentScreen.id, state: { ...stateData, sectorNombre: currentSector?.nombre, currentTab, currentSwiperIndex } });
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-            document.getElementById(screenId).style.display = 'block');
+            document.getElementById(screenId).style.display = 'block';
             document.querySelector('.app-content').scrollTop = 0;
             const bottomTabs = document.getElementById('globalBottomTabs');
             if (screenId === 'screen-sector-detalle' || screenId === 'screen-ficha-bloque') bottomTabs.style.display = 'flex';
