@@ -225,24 +225,6 @@
             color: white;
         }
         
-        /* ===== DRAWER Y OVERLAY ===== */
-        .drawer-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1100;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .drawer-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        
         .drawer {
             position: fixed;
             top: 0;
@@ -360,10 +342,10 @@
             flex-wrap: wrap; 
             gap: 10px; 
             margin-bottom: 5px;
-            justify-content: center;
+            justify-content: center;   /* Centra las miniaturas horizontalmente */
         }
         .croquis-thumb { 
-            width: 100px;
+            width: 100px;              /* Tamaño fijo 100x100 */
             height: 100px;
             min-width: 100px;
             border-radius: 10px; 
@@ -375,7 +357,7 @@
         .croquis-thumb img { 
             width: 100%; 
             height: 100%;
-            object-fit: cover;
+            object-fit: cover;         /* Recorta la imagen para llenar el contenedor sin deformar */
             display: block; 
         }
         .croquis-thumb:active { transform: scale(0.98); }
@@ -847,42 +829,9 @@
         let isInFichaBloque = false;
         let navigationStack = [];
 
-        // ===== FUNCIONES DEL DRAWER (con overlay y swipe) =====
-        function openDrawer() { 
-            document.getElementById('drawer').classList.add('open'); 
-            document.getElementById('drawerOverlay').classList.add('open'); 
-        }
-        function closeDrawer() { 
-            document.getElementById('drawer').classList.remove('open'); 
-            document.getElementById('drawerOverlay').classList.remove('open'); 
-        }
-        function toggleDrawer() { 
-            if (document.getElementById('drawer').classList.contains('open')) closeDrawer(); 
-            else openDrawer(); 
-        }
-
-        // Detectar swipe hacia la izquierda para cerrar el drawer
-        let touchStartX = 0;
-        let touchEndX = 0;
-        
-        function setupSwipeToClose() {
-            const content = document.querySelector('.app-content');
-            if (!content) return;
-            
-            content.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-            }, false);
-            
-            content.addEventListener('touchend', (e) => {
-                touchEndX = e.changedTouches[0].screenX;
-                // Si el swipe es hacia la izquierda (inicio > fin) y la distancia es significativa (más de 50px)
-                if (touchStartX - touchEndX > 50) {
-                    if (document.getElementById('drawer').classList.contains('open')) {
-                        closeDrawer();
-                    }
-                }
-            }, false);
-        }
+        function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
+        function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
+        function toggleDrawer() { if (document.getElementById('drawer').classList.contains('open')) closeDrawer(); else openDrawer(); }
 
         function populateDrawer() {
             if (!datosApp || !datosApp.sectores) return;
@@ -1366,6 +1315,52 @@
             document.getElementById('drawerProteccionBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-proteccion'); currentSector = null; isInFichaBloque = false; });
         }
 
+        // ---- NUEVO: CERRAR DRAWER CON SWIPE (DESLIZAMIENTO) ----
+        function setupSwipeToCloseDrawer() {
+            let touchStartX = 0;
+            let touchEndX = 0;
+            const minSwipeDistance = 50; // distancia mínima en píxeles para considerar swipe
+
+            function handleTouchStart(event) {
+                touchStartX = event.changedTouches[0].screenX;
+            }
+
+            function handleTouchEnd(event) {
+                touchEndX = event.changedTouches[0].screenX;
+                const deltaX = touchEndX - touchStartX;
+                const drawer = document.getElementById('drawer');
+                // Si el drawer está abierto y se desliza hacia la izquierda (delta negativo) o derecha (delta positivo) más de la distancia
+                if (drawer.classList.contains('open')) {
+                    // Deslizar hacia la izquierda (cerrar) o hacia la derecha (también cerramos)
+                    if (Math.abs(deltaX) > minSwipeDistance) {
+                        closeDrawer();
+                    }
+                }
+            }
+
+            const content = document.querySelector('.app-content');
+            const drawer = document.getElementById('drawer');
+            // Añadir listeners al contenido principal (la zona de scroll) y al propio drawer
+            if (content) {
+                content.addEventListener('touchstart', handleTouchStart);
+                content.addEventListener('touchend', handleTouchEnd);
+            }
+            if (drawer) {
+                drawer.addEventListener('touchstart', handleTouchStart);
+                drawer.addEventListener('touchend', handleTouchEnd);
+            }
+        }
+
+        // Llamar a la función después de que el DOM esté listo (dentro de initMenu o similar)
+        // La añadimos en initMenu para que se ejecute tras la carga de la app
+        // (Ya existe initMenu, la modificamos para incluir esta configuración)
+        const originalInitMenu = initMenu;
+        initMenu = function() {
+            originalInitMenu();
+            setupSwipeToCloseDrawer();
+        };
+        // --------------------------------------------
+
         (async () => {
             const passwordOk = await checkAndShowPassword();
             if (passwordOk) proceedToLegal();
@@ -1377,9 +1372,6 @@
         document.getElementById('declineCondiciones').addEventListener('click', decline);
         document.getElementById('acceptProteccion').addEventListener('click', acceptPrivacy);
         document.getElementById('declineProteccion').addEventListener('click', decline);
-
-        // Inicializar detección de swipe
-        setupSwipeToClose();
     </script>
 </body>
 </html>
