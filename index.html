@@ -225,6 +225,24 @@
             color: white;
         }
         
+        /* ===== DRAWER Y OVERLAY ===== */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .drawer-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
         .drawer {
             position: fixed;
             top: 0;
@@ -342,10 +360,10 @@
             flex-wrap: wrap; 
             gap: 10px; 
             margin-bottom: 5px;
-            justify-content: center;   /* Centra las miniaturas horizontalmente */
+            justify-content: center;
         }
         .croquis-thumb { 
-            width: 100px;              /* Tamaño fijo 100x100 */
+            width: 100px;
             height: 100px;
             min-width: 100px;
             border-radius: 10px; 
@@ -357,7 +375,7 @@
         .croquis-thumb img { 
             width: 100%; 
             height: 100%;
-            object-fit: cover;         /* Recorta la imagen para llenar el contenedor sin deformar */
+            object-fit: cover;
             display: block; 
         }
         .croquis-thumb:active { transform: scale(0.98); }
@@ -829,9 +847,42 @@
         let isInFichaBloque = false;
         let navigationStack = [];
 
-        function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
-        function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
-        function toggleDrawer() { if (document.getElementById('drawer').classList.contains('open')) closeDrawer(); else openDrawer(); }
+        // ===== FUNCIONES DEL DRAWER (con overlay y swipe) =====
+        function openDrawer() { 
+            document.getElementById('drawer').classList.add('open'); 
+            document.getElementById('drawerOverlay').classList.add('open'); 
+        }
+        function closeDrawer() { 
+            document.getElementById('drawer').classList.remove('open'); 
+            document.getElementById('drawerOverlay').classList.remove('open'); 
+        }
+        function toggleDrawer() { 
+            if (document.getElementById('drawer').classList.contains('open')) closeDrawer(); 
+            else openDrawer(); 
+        }
+
+        // Detectar swipe hacia la izquierda para cerrar el drawer
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        function setupSwipeToClose() {
+            const content = document.querySelector('.app-content');
+            if (!content) return;
+            
+            content.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, false);
+            
+            content.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                // Si el swipe es hacia la izquierda (inicio > fin) y la distancia es significativa (más de 50px)
+                if (touchStartX - touchEndX > 50) {
+                    if (document.getElementById('drawer').classList.contains('open')) {
+                        closeDrawer();
+                    }
+                }
+            }, false);
+        }
 
         function populateDrawer() {
             if (!datosApp || !datosApp.sectores) return;
@@ -1326,6 +1377,9 @@
         document.getElementById('declineCondiciones').addEventListener('click', decline);
         document.getElementById('acceptProteccion').addEventListener('click', acceptPrivacy);
         document.getElementById('declineProteccion').addEventListener('click', decline);
+
+        // Inicializar detección de swipe
+        setupSwipeToClose();
     </script>
 </body>
 </html>
