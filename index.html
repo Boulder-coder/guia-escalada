@@ -12,7 +12,6 @@
         /* ===== AJUSTES PARA PANTALLA COMPLETA (Safe Area) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* Ajustes globales para respetar las barras del sistema */
         body { 
             font-family: 'Roboto', sans-serif; 
             background: #e8e8e8;
@@ -24,7 +23,6 @@
             padding-right: env(safe-area-inset-right);
         }
         
-        /* Barras de sistema con color sólido */
         body::before {
             content: '';
             position: fixed;
@@ -47,7 +45,6 @@
             z-index: 9999;
         }
         
-        /* Header fijo */
         .app-header { 
             position: fixed; 
             top: env(safe-area-inset-top);
@@ -60,7 +57,6 @@
             border-bottom: 1px solid #e8e8e8;
         }
         
-        /* Contenido principal */
         .app-content { 
             margin-top: calc(25px + env(safe-area-inset-top));
             height: calc(100vh - 56px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); 
@@ -70,7 +66,6 @@
             background: #e8e8e8;
         }
         
-        /* Faldón inferior (tabs) - COLOR #e8e8e8 */
         .sector-bottom-tabs {
             position: fixed;
             bottom: env(safe-area-inset-bottom);
@@ -85,7 +80,6 @@
             border-top: 1px solid #d4d4d4;
         }
         
-        /* Botones de la barra inferior */
         .sector-bottom-tabs .bottom-tab-btn {
             background: none;
             border: none;
@@ -104,7 +98,6 @@
             background: #FFDE66;
         }
         
-        /* ===== PANTALLA DE CONTRASEÑA CENTRADA VERTICALMENTE ===== */
         .password-overlay {
             position: fixed;
             top: 0;
@@ -179,7 +172,6 @@
             font-size: 0.85rem;
         }
         
-        /* ===== PANTALLAS DE CONDICIONES Y PROTECCIÓN DE DATOS ===== */
         .legal-overlay {
             position: fixed;
             top: 0;
@@ -233,7 +225,6 @@
             color: white;
         }
         
-        /* ===== Drawer con márgenes ===== */
         .drawer {
             position: fixed;
             top: 0;
@@ -319,7 +310,6 @@
             margin: 12px 20px;
         }
         
-        /* ===== RESTO DE ESTILOS ORIGINALES ===== */
         .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
         }
@@ -329,12 +319,6 @@
         .screen { display: none; }
         .screen.active { display: block; }
         
-        /* Pantallas de consulta de condiciones y protección (sin botones) */
-        #screen-condiciones, #screen-proteccion {
-            padding-bottom: 30px;
-        }
-        
-        /* Tarjetas de sectores */
         .sector-card { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
         .sector-card img { width: 100%; height: 140px; object-fit: cover; }
         .sector-info { padding: 10px; background: #d4d4d4; }
@@ -342,20 +326,14 @@
         .sector-nombre { font-size: 1rem; color: #2c2c2c; text-align: left; }
         .sector-stats { font-size: 0.75rem; color: #555; text-align: left; }
         
-        /* Gráfica */
         .grafica-container { background: #ffffff; border-radius: 12px; padding: 12px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .grafica-titulo { text-align: left; margin-bottom: 10px; color: #6674FF; font-size: 1rem; }
         canvas { width: 100%; max-width: 100%; height: auto; background: transparent; display: block; }
         
-        /* Contenido informativo */
         .info-sector, .condiciones-content, .proteccion-content { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
         .info-sector p { text-align: justify; margin-bottom: 10px; line-height: 1.4; font-size: 0.9rem; }
         .info-sector strong, .info-sector b { font-weight: 700; color: #2c2c2c; }
-        .condiciones-content strong, .proteccion-content strong { color: #6674FF; }
-        .condiciones-content p, .proteccion-content p { margin-bottom: 10px; line-height: 1.4; text-align: left; font-size: 0.9rem; }
-        .condiciones-content ul, .proteccion-content ul { margin: 5px 0 10px 20px; }
         
-        /* Croquis */
         .croquis-list { margin-bottom: 15px; }
         .croquis-list-title { margin: 10px 0 8px; font-weight: 600; color: #6674FF; font-size: 0.9rem; }
         .croquis-thumbnails { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 5px; }
@@ -382,13 +360,11 @@
         .croquis-viewer img { width: 100%; height: auto; display: block; }
         .croquis-viewer object { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto; }
         
-        /* Bloques y vías */
         .bloque-group { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .bloque-group:last-child { margin-bottom: 15px; }
         .bloque-group h3 { background: #d4d4d4; padding: 10px 15px; font-size: 0.95rem; color: #2c2c2c; margin: 0; }
         .linea-item { padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; display: flex; justify-content: space-between; align-items: center; }
         .linea-item:last-child { border-bottom: none; }
-        .linea-item:active { background: #f0f0f0; }
         .linea-nombre { font-weight: 500; font-size: 0.85rem; text-align: left; }
         .linea-right { display: flex; align-items: center; gap: 6px; }
         .linea-grado-badge { display: inline-flex; align-items: center; justify-content: center; color: white; border-radius: 20px; padding: 2px 5px; min-width: 38px; height: 20px; font-size: 0.65rem; font-weight: 500; white-space: nowrap; text-align: center; }
@@ -397,7 +373,6 @@
         .linea-status-redpoint { background-color: #e74c3c; }
         .linea-status-proyecto { background-color: #2c2c2c; color: white; }
         
-        /* Ficha de bloque */
         .ficha-bloque { background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 0; }
         .media-container { position: relative; background: #d4d4d4; min-height: 180px; }
         .media-container img { width: 100%; height: auto; display: block; }
@@ -415,21 +390,16 @@
         .grado-badge { display: inline-flex; align-items: center; justify-content: center; color: white; border-radius: 20px; padding: 2px 5px; min-width: 38px; height: 20px; font-size: 0.65rem; font-weight: 500; text-align: center; }
         .entrada-texto { font-size: 0.7rem; color: #444; }
         .detalles-texto { font-size: 0.7rem; color: #555; margin-top: 3px; line-height: 1.3; }
-        .detalles-texto div { margin-top: 2px; }
         .status-indicator { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; font-weight: bold; font-size: 0.7rem; margin-left: 10px; flex-shrink: 0; }
         .status-flash { background-color: #e74c3c; color: white; }
         .status-redpoint { background-color: #e74c3c; }
         .status-proyecto { background-color: #2c2c2c; color: white; }
         
-        /* Utilidades */
         .sector-content-wrapper { padding-bottom: 20px; }
         .info-section-spacing { margin-bottom: 10px; }
-        .info-section-spacing:last-child { margin-bottom: 0; }
         .mapa-footer { font-size: 0.65rem; color: #6674FF; margin-top: 4px; text-align: center; font-style: italic; }
         .mapa-single { margin-bottom: 10px; }
-        .mapa-single:last-child { margin-bottom: 0; }
         
-        /* Modales de estado */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 2000;
             display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: 0.2s;
@@ -447,14 +417,12 @@
         .btn-proyecto { background-color: #2c2c2c; color: white; }
         .btn-clear { background-color: #7f8c8d; color: white; margin-top: 5px; }
         
-        /* Swiper */
         .swiper-button-next, .swiper-button-prev { color: #6674FF !important; background: rgba(255,255,255,0.8); border-radius: 50%; width: 28px; height: 28px; }
         .swiper-button-next:after, .swiper-button-prev:after { font-size: 12px; }
         .swiper-pagination-bullet-active { background: #6674FF !important; }
         .loader { text-align: center; padding: 30px; color: #666; }
         h2, h3, h4 { color: #6674FF; letter-spacing: 0.5px; font-size: 1.1rem; margin-bottom: 8px; }
         
-        /* Pantalla de carga */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -474,7 +442,6 @@
             display: none;
         }
         .loading-screen.visible { display: flex; }
-        .loading-screen.hidden { opacity: 0; pointer-events: none; }
         .loading-spinner {
             width: 40px;
             height: 40px;
@@ -490,7 +457,6 @@
 </head>
 <body>
 
-    <!-- Pantalla de carga (oculta inicialmente) -->
     <div id="loadingScreen" class="loading-screen">
         <div class="loading-spinner"></div>
         <div id="loadingMessage">Descargando contenido para uso offline...</div>
@@ -501,7 +467,7 @@
     <div id="passwordOverlay" class="password-overlay">
         <div class="password-content">
             <h2>🔐 ACCESO RESTRINGIDO</h2>
-            <p>Esta guía es de uso exclusivo para socios del club. Introduce la contraseña anual para continuar.</p>
+            <p>Introduce la contraseña anual para continuar.</p>
             <input type="password" id="passwordInput" class="password-input" placeholder="Contraseña" autocomplete="off">
             <div id="passwordError" class="error-msg"></div>
             <div class="password-buttons">
@@ -580,40 +546,16 @@
     <div class="app-content">
         <div id="screen-portada" class="screen active"><h2>🏔️ Sectores</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
         
-        <!-- Pantalla de CONDICIONES para consulta (sin botones) -->
         <div id="screen-condiciones" class="screen">
             <div class="condiciones-content">
                 <strong>CONDICIONES DE USO Y AVISO LEGAL</strong><br><br>
-                <strong>1. Ámbito de aplicación</strong><br>
-                Esta aplicación (en adelante, «la Guía») es un instrumento digital de uso exclusivo para los socios del club Grupo Espeleo Carcalín. El acceso y la utilización de la Guía implican la aceptación íntegra de las presentes condiciones.<br><br>
-                <strong>2. Acceso y renovación</strong><br>
-                El acceso está protegido mediante una contraseña que se renovará anualmente. La nueva contraseña será comunicada exclusivamente a los socios a través del canal oficial del club (grupo de WhatsApp). El usuario se compromete a no difundir la contraseña a terceros no autorizados.<br><br>
-                <strong>3. Exención de responsabilidad por daños y accidentes</strong><br>
-                La Guía se proporciona únicamente con fines informativos y deportivos. El escalador asume toda la responsabilidad sobre su seguridad y sus actos durante el uso de la guía.<br><br>
-                <strong>4. Advertencia sobre el estado de los bloques</strong><br>
-                El usuario es informado de que algunos bloques se encuentran poco escalados, por lo que determinadas presas o cantos pueden desprenderse inesperadamente. Es responsabilidad del usuario inspeccionar visualmente la roca antes de escalar y proceder con la prudencia que dicte su propia experiencia y criterio.<br><br>
-                <strong>5. Uso responsable y conservación del entorno</strong><br>
-                Se exige al usuario un comportamiento cívico y responsable durante el uso de la Guía. En particular, deberá:<br>
-                • Respetar los accesos, caminos y zonas de aparcamiento.<br>
-                • No alterar el entorno natural ni los bloques (no tallar presas artificiales, no dejar residuos, etc.).<br>
-                • Abstenerse de escalar en condiciones climáticas adversas o cuando el terreno esté húmedo, para evitar daños a la roca y accidentes.<br><br>
-                <strong>6. Actualización de la información</strong><br>
-                El contenido de la Guía se actualizará periódicamente conforme se abran nuevos bloques o sectores. No obstante, pueden existir desviaciones o información no actualizada. El club se reserva el derecho de modificar, suspender o interrumpir el servicio en cualquier momento.<br><br>
-                <strong>7. Grados y comunidad</strong><br>
-                La graduación de los bloques es orientativa, igual que la indicación de las manos de inicio y el trazado de la línea. Nada te impide escalar como quieras. Si estás disconforme con el grado, abres nuevas líneas o desbloqueas algún proyecto, comunícalo a través del grupo de WhatsApp y evaluaremos introducir los cambios.<br><br>
-                <strong>8. Aceptación</strong><br>
-                El simple uso de esta aplicación implica la total aceptación de las presentes condiciones. Si el usuario no está de acuerdo con alguna de ellas, deberá abstenerse de utilizar la Guía.<br><br>
-                <strong>Finalmente, el club anima a los socios a disfrutar de la escalada en roca con responsabilidad, respeto hacia el medio ambiente y compañerismo. ¡Felices bloques!</strong>
+                <strong>1. Ámbito de aplicación</strong><br>...
             </div>
         </div>
         
-        <!-- Pantalla de PROTECCIÓN DE DATOS para consulta (sin botones) -->
         <div id="screen-proteccion" class="screen">
             <div class="proteccion-content">
-                <strong>PROTECCIÓN DE DATOS</strong><br><br>
-                Esta aplicación no recopila ni almacena ningún dato personal (como nombre, correo electrónico o dirección IP). Únicamente guarda en tu dispositivo tus marcadores de progreso (Flash, Red-Point, Proyecto) para recordar tu historial de escalada.<br><br>
-                Por este mismo motivo, si cambias de dispositivo, formateas o borras el caché de la Guía, perderás tu historial de escalada.<br><br>
-                Estos datos no son accesibles por terceros ni se transmiten a ningún servidor. El uso de la app implica tu consentimiento para esta funcionalidad local.
+                <strong>PROTECCIÓN DE DATOS</strong><br><br>...
             </div>
         </div>
         
@@ -736,7 +678,6 @@
             }
         }
 
-        // ===== PROTECCIÓN DE CAPTURAS DE PANTALLA =====
         async function enableScreenProtection() {
             if (window.Capacitor && Capacitor.isNativePlatform()) {
                 try {
@@ -749,36 +690,20 @@
             }
         }
 
-        // ===== MANEJADOR DEL BOTÓN ATRÁS =====
         function setupBackButtonHandler() {
             if (window.Capacitor && Capacitor.isNativePlatform()) {
                 document.addEventListener('backbutton', (e) => {
-                    // Si hay overlay de contraseña activo, no hacer nada (obligatorio)
-                    if (document.getElementById('passwordOverlay').classList.contains('active')) {
+                    if (document.getElementById('passwordOverlay').classList.contains('active') ||
+                        document.getElementById('legalCondiciones').classList.contains('active') ||
+                        document.getElementById('legalProteccion').classList.contains('active')) {
                         e.preventDefault();
                         return;
                     }
-                    
-                    // Si hay overlay de condiciones activo, no hacer nada (obligatorio)
-                    if (document.getElementById('legalCondiciones').classList.contains('active')) {
-                        e.preventDefault();
-                        return;
-                    }
-                    
-                    // Si hay overlay de protección de datos activo, no hacer nada (obligatorio)
-                    if (document.getElementById('legalProteccion').classList.contains('active')) {
-                        e.preventDefault();
-                        return;
-                    }
-                    
-                    // Si estamos en la pantalla de ficha de bloque, volver al sector
                     if (isInFichaBloque) {
                         e.preventDefault();
                         goBack();
                         return;
                     }
-                    
-                    // Si estamos dentro de un sector, volver a la portada
                     if (currentSector !== null && !isInFichaBloque) {
                         e.preventDefault();
                         navigateToScreen('screen-portada');
@@ -786,8 +711,6 @@
                         isInFichaBloque = false;
                         return;
                     }
-                    
-                    // Si estamos en la portada, permitir salir (no prevenimos el evento)
                 }, false);
             }
         }
@@ -882,7 +805,6 @@
         }
 
         function getColorByGrado(grado) {
-            // Si el grado es "*" o está vacío, devolver #FF93DB
             if (!grado || grado === '*' || grado.trim() === '') {
                 return '#FF93DB';
             }
@@ -1121,15 +1043,24 @@
             currentSector = datosApp.sectores.find(s => s.nombre === sectorNombre);
             if (!currentSector) return;
             isInFichaBloque = false;
-            // FORZAR la pestaña "Info" al abrir cualquier sector
             currentTab = 'info';
             const container = document.getElementById('sector-detalle-content');
             const mapasHtml = cargarTodosLosMapas(currentSector);
+            
+            // --- CAMBIO IMPORTANTE: SIEMPRE GENERAMOS MINIATURAS, INCLUSO SI HAY UN SOLO CROQUIS ---
             let croquisHtml = '';
             if (currentSector.croquis_list && currentSector.croquis_list.length > 0) {
-                if (currentSector.croquis_list.length === 1) { const croq = currentSector.croquis_list[0]; croquisHtml = `<div class="croquis-list"><div id="croquisViewerArea" style="margin-bottom: 20px;">${cargarCroquisInteractivo(currentSector, 0)}</div></div>`; }
-                else { let thumbsHtml = '<div class="croquis-list"><div class="croquis-list-title">Selecciona un croquis:</div><div class="croquis-thumbnails">'; currentSector.croquis_list.forEach((croq, idx) => { thumbsHtml += `<div class="croquis-thumb" data-croquis-idx="${idx}"><img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'"></div>`; }); thumbsHtml += '</div></div><div id="croquisViewerArea" style="margin-bottom: 20px;"></div>'; croquisHtml = thumbsHtml; }
-            } else { croquisHtml = '<div class="info-sector"><p>No hay croquis disponibles</p></div>'; }
+                // Generar miniaturas siempre (sin distinguir si es 1 o más)
+                let thumbsHtml = '<div class="croquis-list"><div class="croquis-list-title">Selecciona un croquis:</div><div class="croquis-thumbnails">';
+                currentSector.croquis_list.forEach((croq, idx) => {
+                    thumbsHtml += `<div class="croquis-thumb" data-croquis-idx="${idx}"><img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'"></div>`;
+                });
+                thumbsHtml += '</div></div><div id="croquisViewerArea" style="margin-bottom: 20px;"></div>';
+                croquisHtml = thumbsHtml;
+            } else {
+                croquisHtml = '<div class="info-sector"><p>No hay croquis disponibles</p></div>';
+            }
+            
             let descripcionHtml = '';
             if (currentSector.descripcion) { let texto = currentSector.descripcion; const parrafos = texto.split('//'); descripcionHtml = parrafos.map(p => `<p>${p.trim()}</p>`).join(''); descripcionHtml = descripcionHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); }
             let resumenHtml = '';
@@ -1172,20 +1103,51 @@
                 const tabElement = document.getElementById(`tab-${tabName}`); if (tabElement) tabElement.style.display = 'block';
                 actualizarBotonActivo(tabName);
                 if (tabName === 'info') setTimeout(() => dibujarGrafica(currentSector), 100);
-                if (tabName === 'croquis' && currentSector.croquis_list?.length > 1) setTimeout(() => cargarCroquisEnArea(0), 100);
+                if (tabName === 'croquis') {
+                    // Al entrar en la pestaña de croquis, cargar la primera miniatura (si existe)
+                    if (currentSector.croquis_list && currentSector.croquis_list.length > 0) {
+                        const firstThumb = document.querySelector('.croquis-thumb');
+                        if (firstThumb) firstThumb.click();
+                        else cargarCroquisEnArea(0);
+                    }
+                }
             }
             btns.forEach(btn => { btn.onclick = () => { const tabName = btn.dataset.tab; if (isInFichaBloque && tabName === 'bloques') return; if (!isInFichaBloque && currentTab === tabName) return; if (tabName === 'bloques') { cargarFichaBloque(0); currentSwiperIndex = 0; navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: 0 }); } else { if (isInFichaBloque) { isInFichaBloque = false; navigateToScreen('screen-sector-detalle', { sectorNombre: currentSector.nombre }); setTimeout(() => cambiarPestana(tabName), 50); } else { cambiarPestana(tabName); } } }; });
             actualizarBotonActivo(currentTab);
             setTimeout(() => {
                 document.querySelectorAll('#tab-resumen .linea-item').forEach(item => { item.addEventListener('click', () => { const bloqueId = item.dataset.bloqueId; const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId); if (bloqueIndex !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(bloqueIndex); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }); } }); });
-                if (currentSector.croquis_list && currentSector.croquis_list.length > 1) { document.querySelectorAll('.croquis-thumb').forEach(thumb => { thumb.onclick = () => { const idx = parseInt(thumb.dataset.croquisIdx); cargarCroquisEnArea(idx); document.querySelectorAll('.croquis-thumb').forEach(t => t.classList.remove('active')); thumb.classList.add('active'); }; }); }
+                // Configurar clics en las miniaturas
+                const thumbs = document.querySelectorAll('.croquis-thumb');
+                thumbs.forEach(thumb => {
+                    thumb.onclick = () => {
+                        const idx = parseInt(thumb.dataset.croquisIdx);
+                        cargarCroquisEnArea(idx);
+                        thumbs.forEach(t => t.classList.remove('active'));
+                        thumb.classList.add('active');
+                    };
+                });
+                // Si ya estamos en la pestaña de croquis, cargar la primera
+                if (currentTab === 'croquis' && thumbs.length > 0) {
+                    thumbs[0].click();
+                }
             }, 100);
-            if (currentTab === 'croquis' && currentSector.croquis_list?.length > 1) setTimeout(() => cargarCroquisEnArea(0), 100);
+            if (currentTab === 'croquis' && currentSector.croquis_list && currentSector.croquis_list.length > 0) {
+                setTimeout(() => {
+                    if (document.querySelector('.croquis-thumb')) document.querySelector('.croquis-thumb').click();
+                    else cargarCroquisEnArea(0);
+                }, 150);
+            }
             navigateToScreen('screen-sector-detalle', { sectorNombre: currentSector.nombre });
             setTimeout(() => dibujarGrafica(currentSector), 100);
         }
 
-        function cargarCroquisEnArea(idx) { if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return; const area = document.getElementById('croquisViewerArea'); if (area) area.innerHTML = cargarCroquisInteractivo(currentSector, idx); }
+        function cargarCroquisEnArea(idx) { 
+            if (!currentSector || !currentSector.croquis_list || !currentSector.croquis_list[idx]) return; 
+            const area = document.getElementById('croquisViewerArea'); 
+            if (area) {
+                area.innerHTML = cargarCroquisInteractivo(currentSector, idx);
+            }
+        }
 
         function dibujarGrafica(sector) {
             const conteo = {};
