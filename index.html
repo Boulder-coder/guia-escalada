@@ -337,11 +337,17 @@
         /* Croquis */
         .croquis-list { margin-bottom: 15px; }
         .croquis-list-title { margin: 10px 0 8px; font-weight: 600; color: #6674FF; font-size: 0.9rem; }
-        .croquis-thumbnails { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 5px; }
-        /* --- TAMAÑO FIJO PARA MINIATURAS --- */
+        .croquis-thumbnails { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            margin-bottom: 5px;
+            justify-content: center;   /* Centra las miniaturas horizontalmente */
+        }
         .croquis-thumb { 
-            width: 120px;          /* ancho fijo */
-            min-width: 80px; 
+            width: 130px;              /* Tamaño fijo 130x130 */
+            height: 130px;
+            min-width: 130px;
             border-radius: 10px; 
             overflow: hidden; 
             box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
@@ -349,14 +355,14 @@
             transition: transform 0.2s; 
         }
         .croquis-thumb img { 
-            width: 120%; 
-            height: 120px;         /* altura fija para uniformidad */
-            object-fit: cover;     /* recorta la imagen sin deformarla */
+            width: 100%; 
+            height: 100%;
+            object-fit: cover;         /* Recorta la imagen para llenar el contenedor sin deformar */
             display: block; 
         }
-        /* ------------------------------ */
         .croquis-thumb:active { transform: scale(0.98); }
         .croquis-thumb.active { border: 3px solid #6674FF; }
+        
         .croquis-titulo {
             text-align: center;
             color: #2c2c2c;
@@ -1043,7 +1049,6 @@
             const container = document.getElementById('sector-detalle-content');
             const mapasHtml = cargarTodosLosMapas(currentSector);
             
-            // --- SIEMPRE GENERAMOS MINIATURAS (incluso con un solo croquis) ---
             let croquisHtml = '';
             if (currentSector.croquis_list && currentSector.croquis_list.length > 0) {
                 let thumbsHtml = '<div class="croquis-list"><div class="croquis-list-title">Selecciona un croquis:</div><div class="croquis-thumbnails">';
