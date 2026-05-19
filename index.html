@@ -1118,11 +1118,13 @@
                         const gradoColor = getColorByGrado(via.grado);
                         const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id);
                         const statusIndicator = getLineaStatusIndicator(status);
+                        // Mostrar siempre el badge, usando '*' si el grado está vacío
+                        const gradoMostrar = via.grado || '*';
                         resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}">
                             <span class="linea-nombre">${via.linea_id} · ${via.nombre}</span>
                             <div class="linea-right">
                                 ${statusIndicator ? `<span class="linea-status-indicator ${statusIndicator.class}">${statusIndicator.text}</span>` : ''}
-                                ${via.grado ? `<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}
+                                <span class="linea-grado-badge" style="background-color: ${getColorByGrado(gradoMostrar)};">${gradoMostrar}</span>
                             </div>
                         </div>`;
                     });
@@ -1193,8 +1195,16 @@
 
         function dibujarGrafica(sector) {
             const conteo = {};
-            sector.bloques.forEach(bloque => { bloque.vias.forEach(via => { if (via.grado && via.grado.trim() !== "") { let gradoNorm = via.grado.trim(); if (gradoNorm === 'Pr') gradoNorm = 'Pr'; conteo[gradoNorm] = (conteo[gradoNorm] || 0) + 1; } }); });
-            const ordenGrados = ["3","4","5","5+","6A","6A+","6B","6B+","6C","6C+","7A","7A+","7B","7B+","7C","7C+","8A","8A+","8B","8B+","8C","8C+","Pr"];
+            // Contar todos los grados, tratando los vacíos como '*'
+            sector.bloques.forEach(bloque => { 
+                bloque.vias.forEach(via => { 
+                    let gradoNorm = via.grado ? via.grado.trim() : '*';
+                    if (gradoNorm === 'Pr') gradoNorm = 'Pr';
+                    if (gradoNorm === '*') gradoNorm = '*';
+                    conteo[gradoNorm] = (conteo[gradoNorm] || 0) + 1;
+                }); 
+            });
+            const ordenGrados = ["3","4","5","5+","6A","6A+","6B","6B+","6C","6C+","7A","7A+","7B","7B+","7C","7C+","8A","8A+","8B","8B+","8C","8C+","Pr","*"];
             const gradosFiltrados = ordenGrados.filter(g => conteo[g] > 0);
             const valores = gradosFiltrados.map(g => conteo[g]);
             const maxValor = Math.max(...valores, 1);
@@ -1215,7 +1225,20 @@
             ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, width, height);
             ctx.beginPath(); ctx.moveTo(30, 10); ctx.lineTo(30, startY); ctx.lineTo(width - 20, startY); ctx.strokeStyle = '#aaa'; ctx.stroke();
             ctx.fillStyle = '#555'; ctx.font = '11px Roboto'; ctx.fillText('Nº vías', 10, 30); ctx.fillText('Grado', width/2 - 20, height - 5);
-            gradosFiltrados.forEach((grado, i) => { const valor = conteo[grado]; const barHeight = (valor / maxValor) * (startY - 30); const x = startX + i * barWidth + 5; const y = startY - barHeight; ctx.fillStyle = getColorByGrado(grado); ctx.fillRect(x, y, barWidth - 10, barHeight); ctx.fillStyle = '#000'; ctx.font = '11px Roboto'; ctx.fillText(grado, x + 2, startY + 12); ctx.fillStyle = '#333'; ctx.font = 'bold 11px Roboto'; ctx.fillText(valor, x + barWidth/2 - 5, y - 5); });
+            gradosFiltrados.forEach((grado, i) => { 
+                const valor = conteo[grado]; 
+                const barHeight = (valor / maxValor) * (startY - 30); 
+                const x = startX + i * barWidth + 5; 
+                const y = startY - barHeight; 
+                ctx.fillStyle = getColorByGrado(grado); 
+                ctx.fillRect(x, y, barWidth - 10, barHeight); 
+                ctx.fillStyle = '#000'; 
+                ctx.font = '11px Roboto'; 
+                ctx.fillText(grado, x + 2, startY + 12); 
+                ctx.fillStyle = '#333'; 
+                ctx.font = 'bold 11px Roboto'; 
+                ctx.fillText(valor, x + barWidth/2 - 5, y - 5); 
+            });
         }
 
         function getTextoManos(via) { if (via.manos_juntas && via.manos_juntas.trim() !== "") return `Manos juntas: ${via.manos_juntas}`; let partes = []; if (via.mano_izq && via.mano_izq.trim() !== "") partes.push(`Izq: ${via.mano_izq}`); if (via.mano_der && via.mano_der.trim() !== "") partes.push(`Der: ${via.mano_der}`); return partes.length > 0 ? partes.join(" · ") : ""; }
@@ -1265,7 +1288,44 @@
         function updateSingleLineIndicator(sectorNombre, bloqueId, lineaId) { const activeScreen = document.querySelector('.screen:not([style*="display: none"])'); if (activeScreen && activeScreen.id === 'screen-ficha-bloque') { const viasDivs = document.querySelectorAll('.ficha-via-item'); for (let viaDiv of viasDivs) { const viaNombreSpan = viaDiv.querySelector('.via-nombre'); if (viaNombreSpan && viaNombreSpan.textContent.startsWith(lineaId + ' ·')) { const newStatus = getLineStatus(sectorNombre, bloqueId, lineaId); const newIndicator = getStatusIndicator(newStatus); const oldIndicator = viaDiv.querySelector('.status-indicator'); if (oldIndicator) oldIndicator.outerHTML = newIndicator; else if (newIndicator) viaDiv.insertAdjacentHTML('beforeend', newIndicator); break; } } } }
         function refreshFichaBloqueContent() { const activeScreen = document.querySelector('.screen:not([style*="display: none"])'); if (activeScreen && activeScreen.id === 'screen-ficha-bloque' && currentSector) { const currentIndex = swiperBloques ? swiperBloques.activeIndex : 0; cargarFichaBloque(currentIndex, true); } }
         function refreshResumenContent() { const resumenPane = document.getElementById('tab-resumen'); if (resumenPane && resumenPane.style.display !== 'none' && currentSector) { generarResumenContent(); } }
-        function generarResumenContent() { const resumenContainer = document.getElementById('tab-resumen'); if (!resumenContainer) return; let resumenHtml = ''; const grupos = {}; currentSector.bloques.forEach((bloque, idx) => { const numBase = parseInt(bloque.id, 10); if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] }; grupos[numBase].bloques.push({ ...bloque, idx }); }); Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => { resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`; grupo.bloques.forEach(bloqueInfo => { bloqueInfo.vias.forEach(via => { const gradoColor = getColorByGrado(via.grado); const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id); const statusIndicator = getLineaStatusIndicator(status); resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}"><span class="linea-nombre">${via.linea_id} · ${via.nombre}</span><div class="linea-right">${statusIndicator ? `<span class="linea-status-indicator ${statusIndicator.class}">${statusIndicator.text}</span>` : ''}${via.grado ? `<span class="linea-grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}</div></div>`; }); }); resumenHtml += `</div></div>`; }); resumenContainer.innerHTML = resumenHtml; document.querySelectorAll('#tab-resumen .linea-item').forEach(item => { item.addEventListener('click', () => { const bloqueId = item.dataset.bloqueId; const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId); if (bloqueIndex !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(bloqueIndex); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }); } }); }); }
+        function generarResumenContent() { 
+            const resumenContainer = document.getElementById('tab-resumen'); 
+            if (!resumenContainer) return; 
+            let resumenHtml = ''; 
+            const grupos = {}; 
+            currentSector.bloques.forEach((bloque, idx) => { 
+                const numBase = parseInt(bloque.id, 10); 
+                if (!grupos[numBase]) grupos[numBase] = { numBase, bloques: [] }; 
+                grupos[numBase].bloques.push({ ...bloque, idx }); 
+            }); 
+            Object.values(grupos).sort((a,b) => a.numBase - b.numBase).forEach(grupo => { 
+                resumenHtml += `<div class="bloque-group"><h3>Bloque ${grupo.numBase}</h3><div>`; 
+                grupo.bloques.forEach(bloqueInfo => { 
+                    bloqueInfo.vias.forEach(via => { 
+                        const gradoMostrar = via.grado || '*';
+                        const gradoColor = getColorByGrado(gradoMostrar); 
+                        const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id); 
+                        const statusIndicator = getLineaStatusIndicator(status); 
+                        resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}"><span class="linea-nombre">${via.linea_id} · ${via.nombre}</span><div class="linea-right">${statusIndicator ? `<span class="linea-status-indicator ${statusIndicator.class}">${statusIndicator.text}</span>` : ''}<span class="linea-grado-badge" style="background-color: ${gradoColor};">${gradoMostrar}</span></div></div>`; 
+                    }); 
+                }); 
+                resumenHtml += `</div></div>`; 
+            }); 
+            resumenContainer.innerHTML = resumenHtml; 
+            document.querySelectorAll('#tab-resumen .linea-item').forEach(item => { 
+                item.addEventListener('click', () => { 
+                    const bloqueId = item.dataset.bloqueId; 
+                    const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId); 
+                    if (bloqueIndex !== -1) { 
+                        currentTab = 'bloques'; 
+                        isInFichaBloque = true; 
+                        actualizarBotonActivo('bloques'); 
+                        cargarFichaBloque(bloqueIndex); 
+                        navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }); 
+                    } 
+                }); 
+            }); 
+        }
         function actualizarBotonActivo(tabName) { const btns = document.querySelectorAll('#globalBottomTabs .bottom-tab-btn'); btns.forEach(btn => { if (btn.dataset.tab === tabName) btn.classList.add('active'); else btn.classList.remove('active'); }); }
 
         function cargarFichaBloque(bloqueIndex, keepSlide = false) {
@@ -1285,11 +1345,12 @@
                     if (textoManos) detallesTexto += `<div>${textoManos}</div>`;
                     if (via.definicion) detallesTexto += `<div>${via.definicion}</div>`;
                     if (via.expuesta) detallesTexto += `<div>⚠️ ${via.expuesta}</div>`;
-                    const gradoColor = getColorByGrado(via.grado);
+                    const gradoMostrar = via.grado || '*';
+                    const gradoColor = getColorByGrado(gradoMostrar);
                     const status = getLineStatus(currentSector.nombre, b.id, via.linea_id);
                     const indicator = getStatusIndicator(status);
                     const viaDivEl = document.createElement('div'); viaDivEl.className = 'ficha-via-item';
-                    viaDivEl.innerHTML = `<div class="via-content"><div class="via-header"><span class="via-nombre">${via.linea_id} · ${via.nombre}</span>${via.grado ? `<span class="grado-badge" style="background-color: ${gradoColor};">${via.grado}</span>` : ''}${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}</div><div class="detalles-texto">${detallesTexto}</div></div>${indicator}`;
+                    viaDivEl.innerHTML = `<div class="via-content"><div class="via-header"><span class="via-nombre">${via.linea_id} · ${via.nombre}</span><span class="grado-badge" style="background-color: ${gradoColor};">${gradoMostrar}</span>${via.entrada ? `<span class="entrada-texto">${via.entrada}</span>` : ''}</div><div class="detalles-texto">${detallesTexto}</div></div>${indicator}`;
                     viasDiv.appendChild(viaDivEl);
                     viaDivEl.addEventListener('click', (e) => { if (e.target.closest('.status-indicator')) return; const currentStatus = getLineStatus(currentSector.nombre, b.id, via.linea_id); showStatusModal(currentSector.nombre, b.id, via.linea_id, currentStatus, () => { const newStatus = getLineStatus(currentSector.nombre, b.id, via.linea_id); const newIndicator = getStatusIndicator(newStatus); const oldIndicator = viaDivEl.querySelector('.status-indicator'); if (oldIndicator) oldIndicator.outerHTML = newIndicator; else if (newIndicator) viaDivEl.insertAdjacentHTML('beforeend', newIndicator); }); });
                 });
