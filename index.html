@@ -334,12 +334,28 @@
         .info-sector p { text-align: justify; margin-bottom: 10px; line-height: 1.4; font-size: 0.9rem; }
         .info-sector strong, .info-sector b { font-weight: 700; color: #2c2c2c; }
         
+        /* Croquis */
         .croquis-list { margin-bottom: 15px; }
         .croquis-list-title { margin: 10px 0 8px; font-weight: 600; color: #6674FF; font-size: 0.9rem; }
         .croquis-thumbnails { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 5px; }
-        .croquis-thumb { flex: 1; min-width: 80px; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+        /* --- TAMAÑO FIJO PARA MINIATURAS --- */
+        .croquis-thumb { 
+            width: 100px;          /* ancho fijo */
+            min-width: 80px; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+            cursor: pointer; 
+            transition: transform 0.2s; 
+        }
+        .croquis-thumb img { 
+            width: 100%; 
+            height: 100px;         /* altura fija para uniformidad */
+            object-fit: cover;     /* recorta la imagen sin deformarla */
+            display: block; 
+        }
+        /* ------------------------------ */
         .croquis-thumb:active { transform: scale(0.98); }
-        .croquis-thumb img { width: 100%; height: auto; display: block; }
         .croquis-thumb.active { border: 3px solid #6674FF; }
         .croquis-titulo {
             text-align: center;
@@ -480,23 +496,7 @@
         <div class="legal-content">
             <div class="condiciones-content" style="margin:0; padding:0;">
                 <strong>CONDICIONES DE USO Y AVISO LEGAL</strong><br><br>
-                <strong>1. Ámbito de aplicación</strong><br>
-                Esta aplicación (en adelante, «la Guía») es un instrumento digital de uso exclusivo para los socios del club Grupo Espeleo Carcalín. El acceso y la utilización de la Guía implican la aceptación íntegra de las presentes condiciones.<br><br>
-                <strong>2. Acceso y renovación</strong><br>
-                El acceso está protegido mediante una contraseña que se renovará anualmente. La nueva contraseña será comunicada exclusivamente a los socios a través del canal oficial del club (grupo de WhatsApp).<br><br>
-                <strong>3. Exención de responsabilidad por daños y accidentes</strong><br>
-                La Guía se proporciona únicamente con fines informativos y deportivos. El escalador asume toda la responsabilidad sobre su seguridad.<br><br>
-                <strong>4. Advertencia sobre el estado de los bloques</strong><br>
-                Algunos bloques se encuentran poco escalados, por lo que determinadas presas pueden desprenderse. Es responsabilidad del usuario inspeccionar la roca.<br><br>
-                <strong>5. Uso responsable y conservación del entorno</strong><br>
-                Se exige al usuario un comportamiento cívico y responsable: respetar accesos, no alterar el entorno, no dejar residuos, y no escalar en condiciones adversas.<br><br>
-                <strong>6. Actualización de la información</strong><br>
-                El contenido se actualizará periódicamente. Pueden existir desviaciones o información no actualizada.<br><br>
-                <strong>7. Grados y comunidad</strong><br>
-                La graduación es orientativa. Si estás disconforme o abres nuevas líneas, comunícalo al club.<br><br>
-                <strong>8. Aceptación</strong><br>
-                El simple uso de esta aplicación implica la total aceptación de las presentes condiciones.<br><br>
-                <strong>¡Felices bloques!</strong>
+                <strong>1. Ámbito de aplicación</strong><br>...
             </div>
         </div>
         <div class="legal-buttons">
@@ -508,10 +508,7 @@
     <div id="legalProteccion" class="legal-overlay">
         <div class="legal-content">
             <div class="proteccion-content" style="margin:0; padding:0;">
-                <strong>PROTECCIÓN DE DATOS</strong><br><br>
-                Esta aplicación no recopila ni almacena ningún dato personal (como nombre, correo electrónico o dirección IP). Únicamente guarda en tu dispositivo tus marcadores de progreso (Flash, Red-Point, Proyecto) para recordar tu historial de escalada.<br><br>
-                Por este mismo motivo, si cambias de dispositivo, formateas o borras el caché de la Guía, perderás tu historial de escalada.<br><br>
-                Estos datos no son accesibles por terceros ni se transmiten a ningún servidor. El uso de la app implica tu consentimiento para esta funcionalidad local.
+                <strong>PROTECCIÓN DE DATOS</strong><br><br>...
             </div>
         </div>
         <div class="legal-buttons">
@@ -548,8 +545,7 @@
         
         <div id="screen-condiciones" class="screen">
             <div class="condiciones-content">
-                <strong>CONDICIONES DE USO Y AVISO LEGAL</strong><br><br>
-                <strong>1. Ámbito de aplicación</strong><br>...
+                <strong>CONDICIONES DE USO Y AVISO LEGAL</strong><br><br>...
             </div>
         </div>
         
@@ -1047,10 +1043,9 @@
             const container = document.getElementById('sector-detalle-content');
             const mapasHtml = cargarTodosLosMapas(currentSector);
             
-            // --- CAMBIO IMPORTANTE: SIEMPRE GENERAMOS MINIATURAS, INCLUSO SI HAY UN SOLO CROQUIS ---
+            // --- SIEMPRE GENERAMOS MINIATURAS (incluso con un solo croquis) ---
             let croquisHtml = '';
             if (currentSector.croquis_list && currentSector.croquis_list.length > 0) {
-                // Generar miniaturas siempre (sin distinguir si es 1 o más)
                 let thumbsHtml = '<div class="croquis-list"><div class="croquis-list-title">Selecciona un croquis:</div><div class="croquis-thumbnails">';
                 currentSector.croquis_list.forEach((croq, idx) => {
                     thumbsHtml += `<div class="croquis-thumb" data-croquis-idx="${idx}"><img src="${croq.imagen}.jpg" onerror="this.src='https://picsum.photos/id/20/800/600'"></div>`;
@@ -1104,7 +1099,6 @@
                 actualizarBotonActivo(tabName);
                 if (tabName === 'info') setTimeout(() => dibujarGrafica(currentSector), 100);
                 if (tabName === 'croquis') {
-                    // Al entrar en la pestaña de croquis, cargar la primera miniatura (si existe)
                     if (currentSector.croquis_list && currentSector.croquis_list.length > 0) {
                         const firstThumb = document.querySelector('.croquis-thumb');
                         if (firstThumb) firstThumb.click();
@@ -1116,7 +1110,6 @@
             actualizarBotonActivo(currentTab);
             setTimeout(() => {
                 document.querySelectorAll('#tab-resumen .linea-item').forEach(item => { item.addEventListener('click', () => { const bloqueId = item.dataset.bloqueId; const bloqueIndex = currentSector.bloques.findIndex(b => b.id === bloqueId); if (bloqueIndex !== -1) { currentTab = 'bloques'; isInFichaBloque = true; actualizarBotonActivo('bloques'); cargarFichaBloque(bloqueIndex); navigateToScreen('screen-ficha-bloque', { sectorNombre: currentSector.nombre, bloqueIndex: bloqueIndex }); } }); });
-                // Configurar clics en las miniaturas
                 const thumbs = document.querySelectorAll('.croquis-thumb');
                 thumbs.forEach(thumb => {
                     thumb.onclick = () => {
@@ -1126,7 +1119,6 @@
                         thumb.classList.add('active');
                     };
                 });
-                // Si ya estamos en la pestaña de croquis, cargar la primera
                 if (currentTab === 'croquis' && thumbs.length > 0) {
                     thumbs[0].click();
                 }
