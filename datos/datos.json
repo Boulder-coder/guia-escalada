@@ -152,7 +152,7 @@
             {
               "linea_id": "G.2",
               "nombre": "El juego del cascanueces",
-              "grado": "",
+              "grado": "*",
               "entrada": "De Pie",
               "salida": "T",
               "mano_izq": "",
@@ -1727,7 +1727,43 @@
           "vias": [
             {
               "linea_id": "A",
-              "nombre": "Cueva del hedonismo",
+              "nombre": "Sin abrir",
+              "grado": "Pr",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "foto_base": "fotos/CB_B2",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Sin abrir",
+              "grado": "Pr",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "3_1",
+          "foto_base": "fotos/CB_B3_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Consumido",
               "grado": "5",
               "entrada": "Sit",
               "salida": "TO",
@@ -1739,86 +1775,14 @@
             },
             {
               "linea_id": "B",
-              "nombre": "Consumido",
-              "grado": "6A",
-              "entrada": "Sit",
-              "salida": "TO",
-              "mano_izq": "",
-              "mano_der": "",
-              "manos_juntas": "Agujero grande",
-              "definicion": "Ligera tavesía a la derecha",
-              "expuesta": ""
-            },
-            {
-              "linea_id": "C",
               "nombre": "Consumado",
-              "grado": "6C",
+              "grado": "6B",
               "entrada": "Sit",
               "salida": "TO",
-              "mano_izq": "",
-              "mano_der": "",
-              "manos_juntas": "Agujero grande",
-              "definicion": "Travesía a la derecha, sale por la proa",
-              "expuesta": ""
-            },
-            {
-              "linea_id": "D.1",
-              "nombre": "Adamendra",
-              "grado": "7A",
-              "entrada": "Sit",
-              "salida": "TO",
-              "mano_izq": "Roma positiva",
-              "mano_der": "Regleta alta",
+              "mano_izq": "Agujero alto",
+              "mano_der": "Invertida irregular baja",
               "manos_juntas": "",
-              "definicion": "Sale recto por la proa",
-              "expuesta": ""
-            },
-            {
-              "linea_id": "D.2",
-              "nombre": "Adamendra Bajo",
-              "grado": "Pr",
-              "entrada": "Sit",
-              "salida": "TO",
-              "mano_izq": "Roma positiva",
-              "mano_der": "Canto plano bajo",
-              "manos_juntas": "",
-              "definicion": "Igual que D, pero inicio con manos bajas",
-              "expuesta": ""
-            }
-          ]
-        },
-        {
-          "id": "2",
-          "foto_base": "fotos/CB_B2",
-          "vias": [
-            {
-              "linea_id": "A",
-              "nombre": "Murciélago a caballo",
-              "grado": "Pr",
-              "entrada": "Semi-Sit",
-              "salida": "TO",
-              "mano_izq": "Regleta",
-              "mano_der": "Bidedo",
-              "manos_juntas": "",
-              "definicion": "Inicia bajo la piedra flotante",
-              "expuesta": ""
-            }
-          ]
-        },
-        {
-          "id": "3_1",
-          "foto_base": "fotos/CB_B3_1",
-          "vias": [
-            {
-              "linea_id": "A",
-              "nombre": "Cuidado con la cabeza",
-              "grado": "6B+",
-              "entrada": "Sit",
-              "salida": "TOD",
-              "mano_izq": "",
-              "mano_der": "",
-              "manos_juntas": "Chorrera",
-              "definicion": "Sale por la arista izquierda",
+              "definicion": "Sale recto",
               "expuesta": ""
             }
           ]
@@ -1826,6 +1790,126 @@
         {
           "id": "3_2",
           "foto_base": "fotos/CB_B3_2",
+          "vias": [
+            {
+              "linea_id": "C",
+              "nombre": "Adamendra",
+              "grado": "7A+",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Invertida irregular baja",
+              "mano_der": "Lateral plana",
+              "manos_juntas": "",
+              "definicion": "Asciende recto por la proa, sale por la cara izquierda",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D",
+              "nombre": "Travesura",
+              "grado": "6C",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Agujero grande",
+              "definicion": "Travesía hacia la derecha, cogiendo el agujero de la proa con mano izquierda y saliendo por Adamendra",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "4_1",
+          "foto_base": "fotos/CB_B4_1",
+          "vias": [
+            {
+              "linea_id": "A",
+              "nombre": "Autopisa",
+              "grado": "Pr",
+              "entrada": "Semi-Sit",
+              "salida": "TO",
+              "mano_izq": "Compresión en techo",
+              "mano_der": "Canto romo en fisura",
+              "manos_juntas": "",
+              "definicion": "Inicia empotrando rodilla y va a buscar la regleta",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B.1",
+              "nombre": "Jenga",
+              "grado": "6A",
+              "entrada": "Semi-Sit",
+              "salida": "TO",
+              "mano_izq": "Fisura en techo",
+              "mano_der": "Canto lateral",
+              "manos_juntas": "",
+              "definicion": "Sale por la piedra encastrada",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "B.2",
+              "nombre": "Torre Pokémon",
+              "grado": "7B",
+              "entrada": "Semi-Sit",
+              "salida": "TO",
+              "mano_izq": "Fisura en techo",
+              "mano_der": "Canto lateral",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatoria! No vale la piedra inferior",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "4_2",
+          "foto_base": "fotos/CB_B4_2",
+          "vias": [
+            {
+              "linea_id": "C",
+              "nombre": "Sin abrir",
+              "grado": "Pr",
+              "entrada": "",
+              "salida": "",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "",
+              "definicion": "",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "5_1",
+          "foto_base": "fotos/CB_B5_1",
+          "vias": [
+            {
+              "linea_id": "A.1",
+              "nombre": "Cuidado con la cabeza",
+              "grado": "6C+",
+              "entrada": "Sit",
+              "salida": "TOD",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Chorreras irregulares",
+              "definicion": "Inicio desplomado y finaliza por arista. Sale por encima del bloque derecho",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "A.2",
+              "nombre": "El melenitas de Instagram",
+              "grado": "6B+",
+              "entrada": "Semi-Sit",
+              "salida": "",
+              "mano_izq": "Arista izquierda",
+              "mano_der": "Patatita roma",
+              "manos_juntas": "",
+              "definicion": "Recorre la arista y sale por encima del bloque derecho",
+              "expuesta": ""
+            }
+          ]
+        },
+        {
+          "id": "5_2",
+          "foto_base": "fotos/CB_B5_2",
           "vias": [
             {
               "linea_id": "B",
@@ -1842,8 +1926,8 @@
           ]
         },
         {
-          "id": "4",
-          "foto_base": "fotos/CB_B4",
+          "id": "6",
+          "foto_base": "fotos/CB_B6",
           "vias": [
             {
               "linea_id": "A",
