@@ -938,7 +938,7 @@
                 const simbolo = getSimboloSalida(via.salida);
                 const textoCirculo = getTextoParaCirculo(lineaId);
                 const linea = encontrarElementoPorLabel(svgDoc, `${lineaId}_linea`);
-                if (linea) { linea.removeAttribute('style'); linea.setAttribute('stroke', color); linea.setAttribute('fill', 'none'); linea.setAttribute('stroke-width', '6'); }
+                if (linea) { linea.removeAttribute('style'); linea.setAttribute('stroke', color); linea.setAttribute('fill', 'none'); linea.setAttribute('stroke-width', '10'); }
                 const circuloEntrada = encontrarElementoPorLabel(svgDoc, `${lineaId}_entrada`);
                 if (circuloEntrada) { circuloEntrada.removeAttribute('style'); circuloEntrada.setAttribute('fill', color); circuloEntrada.setAttribute('stroke', '#FFFFFF'); circuloEntrada.setAttribute('stroke-width', '2'); }
                 const circuloSalida = encontrarElementoPorLabel(svgDoc, `${lineaId}_salida`);
