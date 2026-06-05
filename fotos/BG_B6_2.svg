@@ -4,9 +4,9 @@
 <svg
    version="1.1"
    id="svg1"
-   width="771"
-   height="768"
-   viewBox="0 0 771 768"
+   width="1200"
+   height="1429"
+   viewBox="0 0 1200 1429"
    sodipodi:docname="BG_B6_2.svg"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -24,12 +24,12 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="1.0611979"
-     inkscape:cx="384.00001"
-     inkscape:cy="358.55706"
+     inkscape:zoom="0.20164172"
+     inkscape:cx="-101.66547"
+     inkscape:cy="1257.1803"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
-     inkscape:window-x="1912"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="g1" />
@@ -38,24 +38,24 @@
      inkscape:label="Image"
      id="g1">
     <path
-       style="fill:none;stroke:#000000;stroke-width:4;stroke-linejoin:round;paint-order:markers fill stroke"
-       d="m 338.82932,528.93367 c -2.50691,-9.51529 17.37161,-56.82328 20.1989,-79.44165 5.60494,-44.83954 -14.8056,-88.59641 -8.48098,-132.86871 6.79043,-47.53299 25.76103,-113.05588 17.90429,-160.19632 -5.0036,-30.0216 -17.30887,-61.199827 -20.73128,-88.579137"
+       style="fill:none;stroke:#000000;stroke-width:8.80689;stroke-linejoin:round;paint-order:markers fill stroke"
+       d="M 508.50118,1028.531 C 502.98166,1007.5809 546.74864,903.4219 552.97355,853.62253 565.31408,754.8983 520.37574,658.55781 534.30079,561.08249 549.25143,456.42803 591.01943,312.16482 573.72107,208.37464 562.70453,142.27541 530.65245,113.30392 538.61503,53.642194"
        id="path1"
        inkscape:label="C_linea"
        sodipodi:nodetypes="csssc" />
     <circle
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.00051;stroke-opacity:1"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2.22333;stroke-opacity:1"
        id="circle13"
-       cx="341.71066"
-       cy="530.06158"
-       r="17.5"
+       cx="509.51505"
+       cy="1055.9298"
+       r="38.888336"
        inkscape:label="C_entrada" />
     <circle
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.714647;stroke-opacity:1"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.52853;stroke-opacity:1"
        id="circle14"
-       cx="350.85489"
-       cy="72.137085"
-       r="12.5"
+       cx="537.67664"
+       cy="57.050945"
+       r="26.735733"
        inkscape:label="C_salida" />
   </g>
 </svg>
