@@ -96,15 +96,27 @@
           "foto_base": "fotos/MLC_B2_2",
           "vias": [
             {
-              "linea_id": "D",
-              "nombre": "Taluego",
+              "linea_id": "D.1",
+              "nombre": "Talueguito",
               "grado": "6B+",
               "entrada": "Sit",
               "salida": "TO",
               "mano_izq": "Repisita",
-              "mano_der": "Presa lateral",
+              "mano_der": "Presa lateral pinchosa",
               "manos_juntas": "",
-              "definicion": "Sale recto",
+              "definicion": "Sale ligeramente a la izquierda, cogiendo el didedo con mano derecha",
+              "expuesta": ""
+            },
+            {
+              "linea_id": "D.2",
+              "nombre": "Taluego",
+              "grado": "6B",
+              "entrada": "Sit",
+              "salida": "TO",
+              "mano_izq": "Repisita",
+              "mano_der": "Presa lateral pinchosa",
+              "manos_juntas": "",
+              "definicion": "Sale recto por la repisa",
               "expuesta": ""
             },
             {
@@ -227,8 +239,8 @@
               "grado": "7A",
               "entrada": "Sit",
               "salida": "TO",
-              "mano_izq": "Agujero horizontal",
-              "mano_der": "Agujero horizontal",
+              "mano_izq": "Agujero horizontal superior",
+              "mano_der": "Agujero horizontal inferior",
               "manos_juntas": "",
               "definicion": "Sale hacia la izquierda",
               "expuesta": ""
@@ -270,19 +282,7 @@
           "foto_base": "fotos/MLC_B4",
           "vias": [
             {
-              "linea_id": "A",
-              "nombre": "Sin nombre",
-              "grado": "Pr",
-              "entrada": "De Pie",
-              "salida": "TO",
-              "mano_izq": "",
-              "mano_der": "",
-              "manos_juntas": "Presa grande",
-              "definicion": "Sale hacia la izquierda cogiendo la regleta lateral cruzando con mano derecha",
-              "expuesta": "Caída en desnivel"
-            },
-            {
-              "linea_id": "B",
+              "linea_id": "A.1",
               "nombre": "El faro",
               "grado": "6B+",
               "entrada": "De Pie",
@@ -290,11 +290,23 @@
               "mano_izq": "",
               "mano_der": "",
               "manos_juntas": "Presa grande",
-              "definicion": "Misma entrada que A, sale recto cogiendo la regleta lateral con izquierda",
+              "definicion": "Sale recto cogiendo la regleta lateral con izquierda. No vale pisar la tierra compacta",
               "expuesta": ""
             },
             {
-              "linea_id": "C",
+              "linea_id": "A.2",
+              "nombre": "El yogui infiltrado",
+              "grado": "6C",
+              "entrada": "De Pie",
+              "salida": "TO",
+              "mano_izq": "",
+              "mano_der": "",
+              "manos_juntas": "Presa grande",
+              "definicion": "Sale hacia la izquierda cogiendo la regleta lateral cruzando con mano derecha. No vale pisar la tierra compacta",
+              "expuesta": "Caída en desnivel"
+            },
+            {
+              "linea_id": "A.3",
               "nombre": "Galleta chocopinchos",
               "grado": "6C",
               "entrada": "De Pie",
@@ -302,7 +314,7 @@
               "mano_izq": "",
               "mano_der": "",
               "manos_juntas": "Presa grande",
-              "definicion": "Misma entrada que A, sale hacia la derecha. No vale pisar la tierra",
+              "definicion": "Sale hacia la derecha. No vale pisar la tierra compacta",
               "expuesta": ""
             }
           ]
@@ -1709,7 +1721,7 @@
       "mapa": "fotos/CB_MAPA",
       "mapa_2": "",
       "mapa_3": "",
-      "descripcion": "La <strong>Cueva del Buey del Arroz</strong> es un pequeño sector ubicado muy cerquita del Barrio los Condes de Yátova. La aproximación al sector son a penas 250 metros. La orientación es Oeste con amplias vistas al Motrotón y el Retoret, y la temperatura es fresca al tratarse de una cueva abierta. // Los bloques, aunque escasos, dan bastante juego. La piedra oscila entre caliza compacta y arenosa, disponiendo de agarres diferentes: agujeros grandes, romos peleones y regletas asesinas, entre otros.",
+      "descripcion": "La <strong>Cueva del Buey del Arroz</strong> es un pequeño sector ubicado muy cerquita del Barrio los Condes de Yátova. La aproximación al sector son a penas 250 metros. La orientación es Oeste con amplias vistas al Retoret, y la temperatura es fresca al tratarse de una cueva abierta. // Los bloques, aunque escasos, dan bastante juego. La piedra oscila entre caliza compacta y arenosa, por lo que erosiona fácilmente y castiga la piel. // Se trata de un lugar relevante para la tradición y cultura yatovera, por lo que se ruega especial respeto.",
       "parking": [
         "https://maps.app.goo.gl/ruszNEAx3nNmGo9x9"
       ],
@@ -1727,7 +1739,7 @@
           "vias": [
             {
               "linea_id": "A",
-              "nombre": "Sin abrir",
+              "nombre": "Alien fumeta",
               "grado": "Pr",
               "entrada": "",
               "salida": "",
@@ -1897,8 +1909,8 @@
               "linea_id": "A.2",
               "nombre": "El melenitas de Instagram",
               "grado": "6B+",
-              "entrada": "De pie",
-              "salida": "",
+              "entrada": "De Pie",
+              "salida": "TOD",
               "mano_izq": "Arista izquierda",
               "mano_der": "Patatita roma",
               "manos_juntas": "",
@@ -1931,7 +1943,7 @@
           "vias": [
             {
               "linea_id": "A",
-              "nombre": "Sin abrir",
+              "nombre": "A lo hecho techo",
               "grado": "Pr",
               "entrada": "",
               "salida": "",
