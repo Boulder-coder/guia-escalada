@@ -1534,12 +1534,12 @@
 
             // Gráfica: todas las ascensiones (Flash + Red-Point) por grado
             html += `<div class="mis-ascensiones-card">
-                        <h3>📈 Ascensiones por grado (Flash + Red-Point)</h3>
+                        <h3>📈 Ascensiones (Flash + Red-Point)</h3>
                         <div class="grafica-container"><canvas id="grafica-todas"></canvas></div>
                      </div>`;
             // Gráfica: solo Flash
             html += `<div class="mis-ascensiones-card">
-                        <h3>⚡ Ascensiones Flash por grado</h3>
+                        <h3>⚡ Ascensiones a Flash</h3>
                         <div class="grafica-container"><canvas id="grafica-flash"></canvas></div>
                      </div>`;
 
@@ -1552,7 +1552,7 @@
                 html += `<div>`;
                 proyectos.forEach(p => {
                     html += `<div class="proyecto-item">
-                                <span><strong>${p.linea}</strong> · ${p.sector}</span>
+                                <span><strong>${p.nombre}</strong> · ${p.sector}</span>
                                 <span class="linea-grado-badge" style="background-color: ${getColorByGrado(p.grado)};">${p.grado}</span>
                              </div>`;
                 });
