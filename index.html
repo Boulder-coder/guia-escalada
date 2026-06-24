@@ -1529,7 +1529,7 @@
             html += `<span class="stat-item">🧗 Total: <strong>${totalAsc}</strong></span>
                      <span class="stat-item">⚡ Flash: <strong>${totalFlash}</strong></span>
                      <span class="stat-item">🔴 Red-Point: <strong>${totalRedpoint}</strong></span>
-                     <span class="stat-item">⚪ Proyectos: <strong>${totalProy}</strong></span>`;
+                     <span class="stat-item">⚫ Proyectos: <strong>${totalProy}</strong></span>`;
             html += `</div></div>`;
 
             // Gráfica: todas las ascensiones (Flash + Red-Point) por grado
@@ -1543,16 +1543,16 @@
                         <div class="grafica-container"><canvas id="grafica-flash"></canvas></div>
                      </div>`;
 
-            // Lista de proyectos
+            // Lista de proyectos (formato modificado)
             html += `<div class="mis-ascensiones-card">
-                        <h3>⚪ Mis Proyectos</h3>`;
+                        <h3>⚫ Mis Proyectos</h3>`;
             if (proyectos.length === 0) {
                 html += `<p>No tienes proyectos anotados.</p>`;
             } else {
                 html += `<div>`;
                 proyectos.forEach(p => {
                     html += `<div class="proyecto-item">
-                                <span><span class="proyecto-sector">${p.sector}</span> · <span class="proyecto-linea">${p.linea} · ${p.nombre}</span></span>
+                                <span><strong>${p.linea}</strong> · ${p.sector}</span>
                                 <span class="linea-grado-badge" style="background-color: ${getColorByGrado(p.grado)};">${p.grado}</span>
                              </div>`;
                 });
