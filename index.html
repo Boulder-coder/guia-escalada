@@ -475,6 +475,53 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .loading-progress { font-size: 0.8rem; margin-top: 8px; color: #ffffff; }
+
+        /* ===== ESTILOS PARA MIS ASCENSIONES (NUEVO) ===== */
+        .mis-ascensiones-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .mis-ascensiones-card h3 {
+            color: #6674FF;
+            font-size: 1rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .mis-ascensiones-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .mis-ascensiones-stats .stat-item {
+            background: #f0f0f0;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.85rem;
+        }
+        .mis-ascensiones-stats .stat-item strong {
+            color: #6674FF;
+        }
+        .proyecto-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .proyecto-item:last-child {
+            border-bottom: none;
+        }
+        .proyecto-sector {
+            font-weight: 500;
+            color: #2c2c2c;
+        }
+        .proyecto-linea {
+            font-size: 0.85rem;
+            color: #555;
+        }
     </style>
 </head>
 <body>
@@ -562,6 +609,9 @@
             </div>
             <div class="drawer-bottom-links">
                 <div class="drawer-divider"></div>
+                <!-- NUEVO ENLACE: MIS ASCENSIONES -->
+                <div id="drawerMisAscensionesBtn" class="drawer-bottom-link">📊 MIS ASCENSIONES</div>
+                <div class="drawer-divider"></div>
                 <div id="drawerCondicionesBtn" class="drawer-bottom-link">📋 CONDICIONES</div>
                 <div id="drawerProteccionBtn" class="drawer-bottom-link">🔒 PROTECCIÓN DE DATOS</div>
             </div>
@@ -605,6 +655,11 @@
                 Estos datos no son accesibles por terceros ni se transmiten a ningún servidor. El uso de la app implica tu consentimiento para esta funcionalidad local.
             </div>
         </div>
+
+        <!-- NUEVA PANTALLA: MIS ASCENSIONES -->
+        <div id="screen-mis-ascensiones" class="screen">
+            <div id="mis-ascensiones-content"></div>
+        </div>
         
         <div id="screen-sector-detalle" class="screen">
             <div id="sector-detalle-content"></div>
@@ -635,9 +690,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
+        // ===== CÓDIGO EXISTENTE (no modificado) =====
         const PASSWORD_VERSION = "2026.2";
         const VALID_PASSWORD_HASH = "749aa338a7abca24db6a4f63ea187c976f0e7d1abf43ce6513d45e355f98e037";
-        
         const STORAGE_PWD_VERSION = 'boulder_password_version';
         const STORAGE_TERMS = 'boulder_terms_accepted';
         const STORAGE_PRIVACY = 'boulder_privacy_accepted';
@@ -1374,6 +1429,14 @@
             document.getElementById('drawerSectoresBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-portada'); if (datosApp) renderSectoresList(); else cargarDatos(); currentSector = null; isInFichaBloque = false; });
             document.getElementById('drawerCondicionesBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-condiciones'); currentSector = null; isInFichaBloque = false; });
             document.getElementById('drawerProteccionBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-proteccion'); currentSector = null; isInFichaBloque = false; });
+            // NUEVO: Evento para MIS ASCENSIONES
+            document.getElementById('drawerMisAscensionesBtn').addEventListener('click', (e) => { 
+                e.preventDefault(); 
+                closeDrawer(); 
+                navigateToScreen('screen-mis-ascensiones'); 
+                if (datosApp) cargarMisAscensiones(); 
+                else setTimeout(() => cargarMisAscensiones(), 500);
+            });
         }
 
         // ---- NUEVO: CERRAR DRAWER CON SWIPE (DESLIZAMIENTO) ----
@@ -1420,6 +1483,135 @@
             originalInitMenu();
             setupSwipeToCloseDrawer();
         };
+
+        // ===== NUEVO: FUNCIONES PARA MIS ASCENSIONES =====
+        function cargarMisAscensiones() {
+            if (!datosApp) {
+                document.getElementById('mis-ascensiones-content').innerHTML = '<div class="loader">Cargando datos...</div>';
+                return;
+            }
+            const content = document.getElementById('mis-ascensiones-content');
+            // Recopilar todos los estados
+            let ascensiones = []; // {sector, bloque, linea, grado, status}
+            let proyectos = [];
+            const sectores = datosApp.sectores;
+            sectores.forEach(sector => {
+                sector.bloques.forEach(bloque => {
+                    bloque.vias.forEach(via => {
+                        const status = getLineStatus(sector.nombre, bloque.id, via.linea_id);
+                        if (status) {
+                            const item = {
+                                sector: sector.nombre,
+                                bloque: bloque.id,
+                                linea: via.linea_id,
+                                nombre: via.nombre,
+                                grado: via.grado || '*',
+                                status: status
+                            };
+                            ascensiones.push(item);
+                            if (status === 'proyecto') {
+                                proyectos.push(item);
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Construir HTML
+            let html = `<h2>📊 MIS ASCENSIONES</h2>
+                        <div class="mis-ascensiones-card">
+                            <h3>Resumen de ascensiones</h3>
+                            <div class="mis-ascensiones-stats">`;
+            const totalAsc = ascensiones.length;
+            const totalProy = proyectos.length;
+            const totalFlash = ascensiones.filter(a => a.status === 'flash').length;
+            const totalRedpoint = ascensiones.filter(a => a.status === 'redpoint').length;
+            html += `<span class="stat-item">🧗 Total: <strong>${totalAsc}</strong></span>
+                     <span class="stat-item">⚡ Flash: <strong>${totalFlash}</strong></span>
+                     <span class="stat-item">🔴 Red-Point: <strong>${totalRedpoint}</strong></span>
+                     <span class="stat-item">⚪ Proyectos: <strong>${totalProy}</strong></span>`;
+            html += `</div></div>`;
+
+            // Gráfica: todas las ascensiones (Flash + Red-Point) por grado
+            html += `<div class="mis-ascensiones-card">
+                        <h3>📈 Ascensiones por grado (Flash + Red-Point)</h3>
+                        <div class="grafica-container"><canvas id="grafica-todas"></canvas></div>
+                     </div>`;
+            // Gráfica: solo Flash
+            html += `<div class="mis-ascensiones-card">
+                        <h3>⚡ Ascensiones Flash por grado</h3>
+                        <div class="grafica-container"><canvas id="grafica-flash"></canvas></div>
+                     </div>`;
+
+            // Lista de proyectos
+            html += `<div class="mis-ascensiones-card">
+                        <h3>⚪ Mis Proyectos</h3>`;
+            if (proyectos.length === 0) {
+                html += `<p>No tienes proyectos anotados.</p>`;
+            } else {
+                html += `<div>`;
+                proyectos.forEach(p => {
+                    html += `<div class="proyecto-item">
+                                <span><span class="proyecto-sector">${p.sector}</span> · <span class="proyecto-linea">${p.linea} · ${p.nombre}</span></span>
+                                <span class="linea-grado-badge" style="background-color: ${getColorByGrado(p.grado)};">${p.grado}</span>
+                             </div>`;
+                });
+                html += `</div>`;
+            }
+            html += `</div>`;
+            content.innerHTML = html;
+
+            // Dibujar gráficas después de renderizar
+            setTimeout(() => {
+                dibujarGraficaMisAscensiones('todas', ascensiones.filter(a => a.status === 'flash' || a.status === 'redpoint'));
+                dibujarGraficaMisAscensiones('flash', ascensiones.filter(a => a.status === 'flash'));
+            }, 100);
+        }
+
+        function dibujarGraficaMisAscensiones(tipo, data) {
+            const canvasId = tipo === 'todas' ? 'grafica-todas' : 'grafica-flash';
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            // Agrupar por grado
+            const conteo = {};
+            data.forEach(item => {
+                const grado = item.grado || '*';
+                conteo[grado] = (conteo[grado] || 0) + 1;
+            });
+            const ordenGrados = ["3","4","5","5+","6A","6A+","6B","6B+","6C","6C+","7A","7A+","7B","7B+","7C","7C+","8A","8A+","8B","8B+","8C","8C+","Pr","*"];
+            const gradosFiltrados = ordenGrados.filter(g => conteo[g] > 0);
+            const valores = gradosFiltrados.map(g => conteo[g]);
+            const maxValor = Math.max(...valores, 1);
+            const ctx = canvas.getContext('2d');
+            const container = canvas.parentElement;
+            const width = container.clientWidth;
+            const height = 200;
+            const scale = window.devicePixelRatio || 2;
+            canvas.width = width * scale; canvas.height = height * scale;
+            canvas.style.width = `${width}px`; canvas.style.height = `${height}px`;
+            ctx.scale(scale, scale);
+            const barWidth = (width - 60) / gradosFiltrados.length;
+            const startX = 40;
+            const startY = height - 30;
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, width, height);
+            ctx.beginPath(); ctx.moveTo(30, 10); ctx.lineTo(30, startY); ctx.lineTo(width - 20, startY); ctx.strokeStyle = '#aaa'; ctx.stroke();
+            ctx.fillStyle = '#555'; ctx.font = '11px Roboto'; ctx.fillText('Nº', 10, 30); ctx.fillText('Grado', width/2 - 20, height - 5);
+            gradosFiltrados.forEach((grado, i) => {
+                const valor = conteo[grado];
+                const barHeight = (valor / maxValor) * (startY - 30);
+                const x = startX + i * barWidth + 5;
+                const y = startY - barHeight;
+                ctx.fillStyle = getColorByGrado(grado);
+                ctx.fillRect(x, y, barWidth - 10, barHeight);
+                ctx.fillStyle = '#000';
+                ctx.font = '11px Roboto';
+                ctx.fillText(grado, x + 2, startY + 12);
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 11px Roboto';
+                ctx.fillText(valor, x + barWidth/2 - 5, y - 5);
+            });
+        }
         // --------------------------------------------
 
         (async () => {
