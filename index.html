@@ -1662,7 +1662,6 @@
                         <div class="mis-ascensiones-card">
                             <h3>Resumen de ascensiones</h3>
                             <div class="mis-ascensiones-stats">
-                                <span class="stat-item">🧗 Total: <strong>${ascensiones.length}</strong></span>
                                 <span class="stat-item">⚡ Flash: <strong>${totalFlash}</strong></span>
                                 <span class="stat-item">🔴 Red-Point: <strong>${totalRedpoint}</strong></span>
                                 <span class="stat-item">⚫ Proyectos: <strong>${totalProy}</strong></span>
@@ -1674,7 +1673,7 @@
                         <h3 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'" style="cursor:pointer;">📈 Ascensiones (Flash + Red-Point) <span style="font-size:0.7rem;">▾</span></h3>
                         <div class="grafica-container"><canvas id="grafica-todas"></canvas></div>
                         <div id="lista-todas" style="display:block; margin-top:10px;">
-                            <div style="font-size:0.9rem; margin-bottom:5px;"><strong>Total: ${totalAsc.length}</strong></div>`;
+                            <div style="font-size:0.9rem; margin-bottom:10px;"><strong>Total: ${totalAscSorted.length}</strong></div>`;
             if (totalAscSorted.length === 0) {
                 html += `<p style="font-size:0.85rem; color:#777;">No hay ascensiones registradas.</p>`;
             } else {
@@ -1692,7 +1691,7 @@
                         <h3 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'" style="cursor:pointer;">⚡ Ascensiones a Flash <span style="font-size:0.7rem;">▾</span></h3>
                         <div class="grafica-container"><canvas id="grafica-flash"></canvas></div>
                         <div id="lista-flash" style="display:block; margin-top:10px;">
-                            <div style="font-size:0.9rem; margin-bottom:5px;"><strong>Total: ${flashAscSorted.length}</strong></div>`;
+                            <div style="font-size:0.9rem; margin-bottom:10px;"><strong>Total: ${flashAscSorted.length}</strong></div>`;
             if (flashAscSorted.length === 0) {
                 html += `<p style="font-size:0.85rem; color:#777;">No tienes flashes registrados.</p>`;
             } else {
@@ -1709,7 +1708,7 @@
             html += `<div class="mis-ascensiones-card">
                         <h3 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'" style="cursor:pointer;">⚫ Mis Proyectos <span style="font-size:0.7rem;">▾</span></h3>
                         <div id="lista-proyectos" style="display:block; margin-top:10px;">
-                            <div style="font-size:0.9rem; margin-bottom:5px;"><strong>Total: ${proyectosSorted.length}</strong></div>`;
+                            <div style="font-size:0.9rem; margin-bottom:10px;"><strong>Total: ${proyectosSorted.length}</strong></div>`;
             if (proyectosSorted.length === 0) {
                 html += `<p style="font-size:0.85rem; color:#777;">No tienes proyectos anotados.</p>`;
             } else {
@@ -1740,7 +1739,7 @@
                 dibujarGraficaMisAscensiones('flash', flashAsc);
             }, 100);
         }
-
+        
         function dibujarGraficaMisAscensiones(tipo, data) {
             const canvasId = tipo === 'todas' ? 'grafica-todas' : 'grafica-flash';
             const canvas = document.getElementById(canvasId);
