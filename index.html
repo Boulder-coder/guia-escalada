@@ -1099,7 +1099,7 @@
                         const bigCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                         bigCircle.setAttribute('cx', cx);
                         bigCircle.setAttribute('cy', cy);
-                        bigCircle.setAttribute('r', radio * 2.5); // área de clic 2.5 veces mayor
+                        bigCircle.setAttribute('r', radio * 1.5); // área de clic 1.5 veces mayor
                         bigCircle.setAttribute('fill', 'transparent');
                         bigCircle.setAttribute('stroke', 'transparent');
                         bigCircle.setAttribute('pointer-events', 'all');
@@ -1125,7 +1125,7 @@
                     const oldText = svgRoot.querySelector(`text[data-for="${lineaId}_entrada"]`);
                     if (oldText) oldText.remove();
                     const textFill = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    textFill.setAttribute('data-for', `${lineaId}_entrada`); textFill.setAttribute('x', cx); textFill.setAttribute('y', cy); textFill.setAttribute('text-anchor', 'middle'); textFill.setAttribute('dominant-baseline', 'central'); textFill.setAttribute('fill', '#FFFFFF'); textFill.setAttribute('font-size', `${radio * 1.3}px`); textFill.setAttribute('font-weight', 'bold'); textFill.textContent = textoCirculo;
+                    textFill.setAttribute('data-for', `${lineaId}_entrada`); textFill.setAttribute('x', cx); textFill.setAttribute('y', cy); textFill.setAttribute('text-anchor', 'middle'); textFill.setAttribute('dominant-baseline', 'central'); textFill.setAttribute('fill', '#FFFFFF'); textFill.setAttribute('font-size', `${radio * 1.3}px`); textFill.setAttribute('font-weight', 'bold'); textFill.setAttribute('pointer-events', 'none'); textFill.textContent = textoCirculo;
                     svgRoot.appendChild(textFill);
                 }
                 if (simbolo && circuloSalida) {
