@@ -9,13 +9,12 @@
    viewBox="0 0 1200 1614"
    sodipodi:docname="CB_B3_2.svg"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xml:space="preserve"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs1" />
-  <sodipodi:namedview
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs1" /><sodipodi:namedview
      id="namedview1"
      pagecolor="#ffffff"
      bordercolor="#000000"
@@ -24,51 +23,43 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="0.35705826"
-     inkscape:cx="135.83218"
-     inkscape:cy="819.19405"
+     inkscape:zoom="0.25247832"
+     inkscape:cx="-552.52269"
+     inkscape:cy="714.91288"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g1" />
-  <g
+     inkscape:current-layer="g1" /><g
      inkscape:groupmode="layer"
      inkscape:label="Image"
-     id="g1">
-    <path
+     id="g1"><path
        style="fill:none;stroke:#000000;stroke-width:6.46949;stroke-linejoin:round;stroke-dasharray:none;paint-order:markers fill stroke"
-       d="M 289.68743,1018.876 C 481.03142,1015.6218 666.19419,759.7653 696.05725,520.86087"
+       d="M 289.68743,1018.876 C 481.03142,1015.6218 681.60392,753.8242 711.46698,514.91977"
        id="path4"
        sodipodi:nodetypes="cc"
-       inkscape:label="D_linea" />
-    <path
+       inkscape:label="D_linea" /><path
        style="fill:none;stroke:#000000;stroke-width:6.46949;stroke-linejoin:round;stroke-dasharray:none;paint-order:markers fill stroke"
-       d="M 726.41209,1244.3342 C 728.07409,1021.294 739.64355,678.70308 676.35285,429.36975 639.33102,283.52251 500.14433,328.8451 500.14433,86.964581"
+       d="M 726.41209,1244.3342 C 728.07409,1021.294 737.909,671.37662 699.19745,417.06532 672.71453,243.08868 612.86091,318.93381 591.64641,100.55775"
        id="path3"
        sodipodi:nodetypes="csc"
-       inkscape:label="C_linea" />
-    <circle
+       inkscape:label="C_linea" /><circle
        style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2.22333;stroke-opacity:1"
        id="circle1"
        cx="724.39844"
        cy="1237.2747"
        r="38.888336"
-       inkscape:label="C_entrada" />
-    <circle
+       inkscape:label="C_entrada" /><circle
        style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2.22333;stroke-opacity:1"
        id="path7"
        cx="291.57895"
        cy="1020.4167"
        r="38.888336"
-       inkscape:label="D_entrada" />
-    <circle
+       inkscape:label="D_entrada" /><circle
        style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.52854;stroke-opacity:1"
        id="circle2"
-       cx="499.60052"
-       cy="100.61938"
+       cx="590.69745"
+       cy="80.815697"
        r="26.735731"
-       inkscape:label="C_salida" />
-  </g>
-</svg>
+       inkscape:label="C_salida" /></g></svg>
