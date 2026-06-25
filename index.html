@@ -1608,8 +1608,7 @@
                 return;
             }
             const content = document.getElementById('mis-ascensiones-content');
-            // Recopilar todos los estados
-            let ascensiones = []; // {sector, bloque, linea, grado, status, nombre}
+            let ascensiones = [];
             let proyectos = [];
             const sectores = datosApp.sectores;
             sectores.forEach(sector => {
@@ -1634,34 +1633,29 @@
                 });
             });
         
-            // Ordenar por grado (función auxiliar)
             const ordenGrados = ["3","4","5","5+","6A","6A+","6B","6B+","6C","6C+","7A","7A+","7B","7B+","7C","7C+","8A","8A+","8B","8B+","8C","8C+","Pr","*"];
             function gradoIndex(g) {
                 const idx = ordenGrados.indexOf(g);
                 return idx === -1 ? 999 : idx;
             }
-            function sortByGrado(a, b) {
-                return gradoIndex(a.grado) - gradoIndex(b.grado);
+            function sortByGradoDesc(a, b) {
+                return gradoIndex(b.grado) - gradoIndex(a.grado);
             }
         
-            // Filtros
             const totalAsc = ascensiones.filter(a => a.status === 'flash' || a.status === 'redpoint');
             const flashAsc = ascensiones.filter(a => a.status === 'flash');
             const totalFlash = flashAsc.length;
             const totalRedpoint = ascensiones.filter(a => a.status === 'redpoint').length;
             const totalProy = proyectos.length;
         
-            // Ordenar listados
-            const totalAscSorted = [...totalAsc].sort(sortByGrado);
-            const flashAscSorted = [...flashAsc].sort(sortByGrado);
-            // Proyectos ordenados por sector
+            const totalAscSorted = [...totalAsc].sort(sortByGradoDesc);
+            const flashAscSorted = [...flashAsc].sort(sortByGradoDesc);
             const proyectosSorted = [...proyectos].sort((a, b) => a.sector.localeCompare(b.sector));
         
-            // Construir HTML
             let html = `<h2>📊 MIS ASCENSIONES</h2>
                         <div class="mis-ascensiones-card">
                             <h3>Resumen de ascensiones</h3>
-                            <div class="mis-ascensiones-stats">
+                            <div class="mis-ascensiones-stats" style="flex-direction: column; align-items: flex-start; gap: 5px;">
                                 <span class="stat-item">⚡ Flash: <strong>${totalFlash}</strong></span>
                                 <span class="stat-item">🔴 Red-Point: <strong>${totalRedpoint}</strong></span>
                                 <span class="stat-item">⚫ Proyectos: <strong>${totalProy}</strong></span>
@@ -1673,7 +1667,9 @@
                         <h3 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'" style="cursor:pointer;">📈 Ascensiones (Flash + Red-Point) <span style="font-size:0.7rem;">▾</span></h3>
                         <div class="grafica-container"><canvas id="grafica-todas"></canvas></div>
                         <div id="lista-todas" style="display:block; margin-top:10px;">
-                            <div style="font-size:0.9rem; margin-bottom:10px;"><strong>Total: ${totalAscSorted.length}</strong></div>`;
+                            <div class="mis-ascensiones-stats" style="display: flex; align-items: center; gap: 5px; margin-bottom: 10px;">
+                                <span class="stat-item">Total: <strong>${totalAscSorted.length}</strong></span>
+                            </div>`;
             if (totalAscSorted.length === 0) {
                 html += `<p style="font-size:0.85rem; color:#777;">No hay ascensiones registradas.</p>`;
             } else {
@@ -1691,7 +1687,9 @@
                         <h3 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'" style="cursor:pointer;">⚡ Ascensiones a Flash <span style="font-size:0.7rem;">▾</span></h3>
                         <div class="grafica-container"><canvas id="grafica-flash"></canvas></div>
                         <div id="lista-flash" style="display:block; margin-top:10px;">
-                            <div style="font-size:0.9rem; margin-bottom:10px;"><strong>Total: ${flashAscSorted.length}</strong></div>`;
+                            <div class="mis-ascensiones-stats" style="display: flex; align-items: center; gap: 5px; margin-bottom: 10px;">
+                                <span class="stat-item">Total: <strong>${flashAscSorted.length}</strong></span>
+                            </div>`;
             if (flashAscSorted.length === 0) {
                 html += `<p style="font-size:0.85rem; color:#777;">No tienes flashes registrados.</p>`;
             } else {
@@ -1708,22 +1706,22 @@
             html += `<div class="mis-ascensiones-card">
                         <h3 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'" style="cursor:pointer;">⚫ Mis Proyectos <span style="font-size:0.7rem;">▾</span></h3>
                         <div id="lista-proyectos" style="display:block; margin-top:10px;">
-                            <div style="font-size:0.9rem; margin-bottom:10px;"><strong>Total: ${proyectosSorted.length}</strong></div>`;
+                            <div class="mis-ascensiones-stats" style="display: flex; align-items: center; gap: 5px; margin-bottom: 10px;">
+                                <span class="stat-item">Total: <strong>${proyectosSorted.length}</strong></span>
+                            </div>`;
             if (proyectosSorted.length === 0) {
                 html += `<p style="font-size:0.85rem; color:#777;">No tienes proyectos anotados.</p>`;
             } else {
-                // Agrupar por sector (para mejor visualización)
                 const grouped = {};
                 proyectosSorted.forEach(p => {
                     if (!grouped[p.sector]) grouped[p.sector] = [];
                     grouped[p.sector].push(p);
                 });
-                // Mostrar por sector
                 Object.keys(grouped).sort().forEach(sector => {
                     html += `<div style="margin-top:8px; font-weight:600; color:#6674FF; font-size:0.85rem;">${sector}</div>`;
                     grouped[sector].forEach(item => {
                         html += `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #eee; font-size:0.85rem; padding-left:10px;">
-                                    <span><strong>${item.nombre}</strong></span>
+                                    <span>${item.nombre}</span>
                                     <span class="linea-grado-badge" style="background-color: ${getColorByGrado(item.grado)};">${item.grado}</span>
                                  </div>`;
                     });
@@ -1733,7 +1731,6 @@
         
             content.innerHTML = html;
         
-            // Dibujar gráficas
             setTimeout(() => {
                 dibujarGraficaMisAscensiones('todas', totalAsc);
                 dibujarGraficaMisAscensiones('flash', flashAsc);
