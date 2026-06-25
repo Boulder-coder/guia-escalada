@@ -439,6 +439,42 @@
         .btn-proyecto { background-color: #2c2c2c; color: white; }
         .btn-clear { background-color: #7f8c8d; color: white; margin-top: 5px; }
         
+        /* ===== NUEVO ESTILO PARA MODAL DE MANOS ===== */
+        #manosModal .modal-container {
+            max-width: 90%;
+            width: auto;
+            padding: 15px;
+            border-radius: 20px;
+            background: #ffffff;
+        }
+        #manosModal .modal-container h4 {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: #2c2c2c;
+        }
+        #manosModal .modal-container img {
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 10px;
+            background: #f0f0f0;
+        }
+        #manosModal .modal-close-btn {
+            margin-top: 12px;
+            padding: 8px 24px;
+            border: none;
+            border-radius: 40px;
+            background: #6674FF;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        #manosModal .modal-close-btn:active {
+            transform: scale(0.97);
+        }
+        
         .swiper-button-next, .swiper-button-prev { color: #6674FF !important; background: rgba(255,255,255,0.8); border-radius: 50%; width: 28px; height: 28px; }
         .swiper-button-next:after, .swiper-button-prev:after { font-size: 12px; }
         .swiper-pagination-bullet-active { background: #6674FF !important; }
@@ -688,9 +724,18 @@
         </div>
     </div>
 
+    <!-- ===== NUEVO MODAL PARA MANOS DE ENTRADA ===== -->
+    <div id="manosModal" class="modal-overlay">
+        <div class="modal-container">
+            <h4 id="manosModalTitle">Manos de entrada</h4>
+            <img id="manosModalImg" src="" alt="Manos de entrada">
+            <button id="manosModalClose" class="modal-close-btn">Cerrar</button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // ===== CÓDIGO EXISTENTE (no modificado) =====
+        // ===== CÓDIGO EXISTENTE (con modificaciones para añadir eventos en círculos de entrada) =====
         const PASSWORD_VERSION = "2026.2";
         const VALID_PASSWORD_HASH = "749aa338a7abca24db6a4f63ea187c976f0e7d1abf43ce6513d45e355f98e037";
         const STORAGE_PWD_VERSION = 'boulder_password_version';
@@ -985,6 +1030,33 @@
             return null;
         }
 
+        // ===== NUEVA FUNCIÓN: Mostrar pop-up de manos =====
+        function mostrarPopupManos(rutaImagen, nombreLinea) {
+            const modal = document.getElementById('manosModal');
+            const img = document.getElementById('manosModalImg');
+            const title = document.getElementById('manosModalTitle');
+            // Asumimos que la imagen es .jpg (como en el resto de la app)
+            const url = rutaImagen + '.jpg';
+            img.src = url;
+            img.onerror = function() {
+                // Si falla, intentar con .png
+                this.src = rutaImagen + '.png';
+            };
+            title.textContent = 'Manos de entrada · ' + nombreLinea;
+            modal.classList.add('active');
+        }
+
+        function cerrarPopupManos() {
+            document.getElementById('manosModal').classList.remove('active');
+        }
+
+        // Evento para cerrar el modal de manos
+        document.getElementById('manosModalClose').addEventListener('click', cerrarPopupManos);
+        document.getElementById('manosModal').addEventListener('click', function(e) {
+            if (e.target === this) cerrarPopupManos();
+        });
+
+        // Modificación de aplicarColoresSVG para añadir eventos click en círculos de entrada
         function aplicarColoresSVG(svgDoc, bloque, vias) {
             if (!svgDoc) return;
             vias.forEach(via => {
@@ -995,7 +1067,23 @@
                 const linea = encontrarElementoPorLabel(svgDoc, `${lineaId}_linea`);
                 if (linea) { linea.removeAttribute('style'); linea.setAttribute('stroke', color); linea.setAttribute('fill', 'none'); linea.setAttribute('stroke-width', '8'); }
                 const circuloEntrada = encontrarElementoPorLabel(svgDoc, `${lineaId}_entrada`);
-                if (circuloEntrada) { circuloEntrada.removeAttribute('style'); circuloEntrada.setAttribute('fill', color); circuloEntrada.setAttribute('stroke', '#FFFFFF'); circuloEntrada.setAttribute('stroke-width', '2'); }
+                if (circuloEntrada) { 
+                    circuloEntrada.removeAttribute('style'); 
+                    circuloEntrada.setAttribute('fill', color); 
+                    circuloEntrada.setAttribute('stroke', '#FFFFFF'); 
+                    circuloEntrada.setAttribute('stroke-width', '2');
+                    
+                    // ===== NUEVO: Si la vía tiene manos_fotos, hacer clic =====
+                    if (via.manos_fotos) {
+                        circuloEntrada.style.cursor = 'pointer';
+                        // Eliminar event listeners previos para evitar duplicados (no se pueden eliminar fácilmente, pero al reemplazar el SVG se pierden)
+                        // Añadimos el evento directamente
+                        circuloEntrada.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            mostrarPopupManos(via.manos_fotos, via.nombre || via.linea_id);
+                        });
+                    }
+                }
                 const circuloSalida = encontrarElementoPorLabel(svgDoc, `${lineaId}_salida`);
                 if (circuloSalida) { circuloSalida.removeAttribute('style'); circuloSalida.setAttribute('fill', color); circuloSalida.removeAttribute('stroke'); circuloSalida.removeAttribute('stroke-width'); }
                 const svgRoot = svgDoc.documentElement;
