@@ -1,5 +1,5 @@
-// sw.js - v17: Precarga completa con soporte offline para SVGs con timestamp
-const CACHE_NAME = 'guia-escalada-v17';
+// sw.js: Precarga completa con soporte offline para SVGs con timestamp
+const CACHE_NAME = 'guia-escalada-v18';
 const DATA_JSON_URL = '/guia-escalada/datos/datos.json';
 
 // Normaliza URLs eliminando parámetros de timestamp
