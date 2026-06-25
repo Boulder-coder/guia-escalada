@@ -840,24 +840,7 @@
         function setupBackButtonHandler() {
             if (window.Capacitor && Capacitor.isNativePlatform()) {
                 document.addEventListener('backbutton', (e) => {
-                    if (document.getElementById('passwordOverlay').classList.contains('active') ||
-                        document.getElementById('legalCondiciones').classList.contains('active') ||
-                        document.getElementById('legalProteccion').classList.contains('active')) {
-                        e.preventDefault();
-                        return;
-                    }
-                    if (isInFichaBloque) {
-                        e.preventDefault();
-                        goBack();
-                        return;
-                    }
-                    if (currentSector !== null && !isInFichaBloque) {
-                        e.preventDefault();
-                        navigateToScreen('screen-portada');
-                        currentSector = null;
-                        isInFichaBloque = false;
-                        return;
-                    }
+                    e.preventDefault(); // Evita que la app se cierre o que el navegador vaya atrás
                 }, false);
             }
         }
@@ -1233,7 +1216,6 @@
                 isInFichaBloque = (prev.screen === 'screen-ficha-bloque');
             } else { navigateToScreen('screen-portada'); if (datosApp) renderSectoresList(); else cargarDatos(); currentSector = null; isInFichaBloque = false; }
         }
-        window.addEventListener('popstate', () => goBack());
 
         async function cargarDatos() {
             const container = document.getElementById('sectores-list');
