@@ -1073,15 +1073,44 @@
                     circuloEntrada.setAttribute('stroke', '#FFFFFF'); 
                     circuloEntrada.setAttribute('stroke-width', '2');
                     
-                    // ===== NUEVO: Si la vía tiene manos_fotos, hacer clic =====
                     if (via.manos_fotos) {
+                        // 1. Evento en el círculo original (mantenemos por si acaso)
                         circuloEntrada.style.cursor = 'pointer';
-                        // Eliminar event listeners previos para evitar duplicados (no se pueden eliminar fácilmente, pero al reemplazar el SVG se pierden)
-                        // Añadimos el evento directamente
                         circuloEntrada.addEventListener('click', function(e) {
                             e.stopPropagation();
                             mostrarPopupManos(via.manos_fotos, via.nombre || via.linea_id);
                         });
+                
+                        // 2. Crear un círculo transparente más grande para ampliar el área de clic
+                        let cx = parseFloat(circuloEntrada.getAttribute('cx'));
+                        let cy = parseFloat(circuloEntrada.getAttribute('cy'));
+                        let radio = parseFloat(circuloEntrada.getAttribute('r')) || 17.5;
+                        if (isNaN(cx) && circuloEntrada.hasAttribute('transform')) {
+                            const transform = circuloEntrada.getAttribute('transform');
+                            const translateMatch = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+                            if (translateMatch) {
+                                cx = parseFloat(translateMatch[1]);
+                                cy = parseFloat(translateMatch[2]);
+                            }
+                        }
+                        if (isNaN(cx)) cx = 0;
+                        if (isNaN(cy)) cy = 0;
+                
+                        const bigCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                        bigCircle.setAttribute('cx', cx);
+                        bigCircle.setAttribute('cy', cy);
+                        bigCircle.setAttribute('r', radio * 2.5); // área de clic 2.5 veces mayor
+                        bigCircle.setAttribute('fill', 'transparent');
+                        bigCircle.setAttribute('stroke', 'transparent');
+                        bigCircle.setAttribute('pointer-events', 'all');
+                        bigCircle.style.cursor = 'pointer';
+                        bigCircle.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            mostrarPopupManos(via.manos_fotos, via.nombre || via.linea_id);
+                        });
+                        // Añadir al SVG (después del original, por encima)
+                        const svgRoot = svgDoc.documentElement;
+                        svgRoot.appendChild(bigCircle);
                     }
                 }
                 const circuloSalida = encontrarElementoPorLabel(svgDoc, `${lineaId}_salida`);
