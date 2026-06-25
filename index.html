@@ -1609,7 +1609,7 @@
             }
             const content = document.getElementById('mis-ascensiones-content');
             // Recopilar todos los estados
-            let ascensiones = []; // {sector, bloque, linea, grado, status}
+            let ascensiones = []; // {sector, bloque, linea, grado, status, nombre}
             let proyectos = [];
             const sectores = datosApp.sectores;
             sectores.forEach(sector => {
@@ -1621,7 +1621,7 @@
                                 sector: sector.nombre,
                                 bloque: bloque.id,
                                 linea: via.linea_id,
-                                nombre: via.nombre,
+                                nombre: via.nombre || via.linea_id,
                                 grado: via.grado || '*',
                                 status: status
                             };
@@ -1633,55 +1633,111 @@
                     });
                 });
             });
-
+        
+            // Ordenar por grado (función auxiliar)
+            const ordenGrados = ["3","4","5","5+","6A","6A+","6B","6B+","6C","6C+","7A","7A+","7B","7B+","7C","7C+","8A","8A+","8B","8B+","8C","8C+","Pr","*"];
+            function gradoIndex(g) {
+                const idx = ordenGrados.indexOf(g);
+                return idx === -1 ? 999 : idx;
+            }
+            function sortByGrado(a, b) {
+                return gradoIndex(a.grado) - gradoIndex(b.grado);
+            }
+        
+            // Filtros
+            const totalAsc = ascensiones.filter(a => a.status === 'flash' || a.status === 'redpoint');
+            const flashAsc = ascensiones.filter(a => a.status === 'flash');
+            const totalFlash = flashAsc.length;
+            const totalRedpoint = ascensiones.filter(a => a.status === 'redpoint').length;
+            const totalProy = proyectos.length;
+        
+            // Ordenar listados
+            const totalAscSorted = [...totalAsc].sort(sortByGrado);
+            const flashAscSorted = [...flashAsc].sort(sortByGrado);
+            // Proyectos ordenados por sector
+            const proyectosSorted = [...proyectos].sort((a, b) => a.sector.localeCompare(b.sector));
+        
             // Construir HTML
             let html = `<h2>📊 MIS ASCENSIONES</h2>
                         <div class="mis-ascensiones-card">
                             <h3>Resumen de ascensiones</h3>
-                            <div class="mis-ascensiones-stats">`;
-            const totalAsc = ascensiones.length;
-            const totalProy = proyectos.length;
-            const totalFlash = ascensiones.filter(a => a.status === 'flash').length;
-            const totalRedpoint = ascensiones.filter(a => a.status === 'redpoint').length;
-            html += `<span class="stat-item">🧗 Total: <strong>${totalAsc}</strong></span>
-                     <span class="stat-item">⚡ Flash: <strong>${totalFlash}</strong></span>
-                     <span class="stat-item">🔴 Red-Point: <strong>${totalRedpoint}</strong></span>
-                     <span class="stat-item">⚫ Proyectos: <strong>${totalProy}</strong></span>`;
-            html += `</div></div>`;
-
-            // Gráfica: todas las ascensiones (Flash + Red-Point) por grado
+                            <div class="mis-ascensiones-stats">
+                                <span class="stat-item">🧗 Total: <strong>${ascensiones.length}</strong></span>
+                                <span class="stat-item">⚡ Flash: <strong>${totalFlash}</strong></span>
+                                <span class="stat-item">🔴 Red-Point: <strong>${totalRedpoint}</strong></span>
+                                <span class="stat-item">⚫ Proyectos: <strong>${totalProy}</strong></span>
+                            </div>
+                        </div>`;
+        
+            // Ascensiones (Flash + Red-Point)
             html += `<div class="mis-ascensiones-card">
-                        <h3>📈 Ascensiones (Flash + Red-Point)</h3>
+                        <h3 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'" style="cursor:pointer;">📈 Ascensiones (Flash + Red-Point) <span style="font-size:0.7rem;">▾</span></h3>
                         <div class="grafica-container"><canvas id="grafica-todas"></canvas></div>
-                     </div>`;
-            // Gráfica: solo Flash
-            html += `<div class="mis-ascensiones-card">
-                        <h3>⚡ Ascensiones a Flash</h3>
-                        <div class="grafica-container"><canvas id="grafica-flash"></canvas></div>
-                     </div>`;
-
-            // Lista de proyectos (formato modificado)
-            html += `<div class="mis-ascensiones-card">
-                        <h3>⚫ Mis Proyectos</h3>`;
-            if (proyectos.length === 0) {
-                html += `<p>No tienes proyectos anotados.</p>`;
+                        <div id="lista-todas" style="display:block; margin-top:10px;">
+                            <div style="font-size:0.9rem; margin-bottom:5px;"><strong>Total: ${totalAsc.length}</strong></div>`;
+            if (totalAscSorted.length === 0) {
+                html += `<p style="font-size:0.85rem; color:#777;">No hay ascensiones registradas.</p>`;
             } else {
-                html += `<div>`;
-                proyectos.forEach(p => {
-                    html += `<div class="proyecto-item">
-                                <span><strong>${p.nombre}</strong> · ${p.sector}</span>
-                                <span class="linea-grado-badge" style="background-color: ${getColorByGrado(p.grado)};">${p.grado}</span>
+                totalAscSorted.forEach(item => {
+                    html += `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+                                <span><strong>${item.nombre}</strong> · ${item.sector}</span>
+                                <span class="linea-grado-badge" style="background-color: ${getColorByGrado(item.grado)};">${item.grado}</span>
                              </div>`;
                 });
-                html += `</div>`;
             }
-            html += `</div>`;
+            html += `</div></div>`;
+        
+            // Ascensiones a Flash
+            html += `<div class="mis-ascensiones-card">
+                        <h3 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'" style="cursor:pointer;">⚡ Ascensiones a Flash <span style="font-size:0.7rem;">▾</span></h3>
+                        <div class="grafica-container"><canvas id="grafica-flash"></canvas></div>
+                        <div id="lista-flash" style="display:block; margin-top:10px;">
+                            <div style="font-size:0.9rem; margin-bottom:5px;"><strong>Total: ${flashAscSorted.length}</strong></div>`;
+            if (flashAscSorted.length === 0) {
+                html += `<p style="font-size:0.85rem; color:#777;">No tienes flashes registrados.</p>`;
+            } else {
+                flashAscSorted.forEach(item => {
+                    html += `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+                                <span><strong>${item.nombre}</strong> · ${item.sector}</span>
+                                <span class="linea-grado-badge" style="background-color: ${getColorByGrado(item.grado)};">${item.grado}</span>
+                             </div>`;
+                });
+            }
+            html += `</div></div>`;
+        
+            // Mis proyectos
+            html += `<div class="mis-ascensiones-card">
+                        <h3 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'" style="cursor:pointer;">⚫ Mis Proyectos <span style="font-size:0.7rem;">▾</span></h3>
+                        <div id="lista-proyectos" style="display:block; margin-top:10px;">
+                            <div style="font-size:0.9rem; margin-bottom:5px;"><strong>Total: ${proyectosSorted.length}</strong></div>`;
+            if (proyectosSorted.length === 0) {
+                html += `<p style="font-size:0.85rem; color:#777;">No tienes proyectos anotados.</p>`;
+            } else {
+                // Agrupar por sector (para mejor visualización)
+                const grouped = {};
+                proyectosSorted.forEach(p => {
+                    if (!grouped[p.sector]) grouped[p.sector] = [];
+                    grouped[p.sector].push(p);
+                });
+                // Mostrar por sector
+                Object.keys(grouped).sort().forEach(sector => {
+                    html += `<div style="margin-top:8px; font-weight:600; color:#6674FF; font-size:0.85rem;">${sector}</div>`;
+                    grouped[sector].forEach(item => {
+                        html += `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #eee; font-size:0.85rem; padding-left:10px;">
+                                    <span><strong>${item.nombre}</strong></span>
+                                    <span class="linea-grado-badge" style="background-color: ${getColorByGrado(item.grado)};">${item.grado}</span>
+                                 </div>`;
+                    });
+                });
+            }
+            html += `</div></div>`;
+        
             content.innerHTML = html;
-
-            // Dibujar gráficas después de renderizar
+        
+            // Dibujar gráficas
             setTimeout(() => {
-                dibujarGraficaMisAscensiones('todas', ascensiones.filter(a => a.status === 'flash' || a.status === 'redpoint'));
-                dibujarGraficaMisAscensiones('flash', ascensiones.filter(a => a.status === 'flash'));
+                dibujarGraficaMisAscensiones('todas', totalAsc);
+                dibujarGraficaMisAscensiones('flash', flashAsc);
             }, 100);
         }
 
