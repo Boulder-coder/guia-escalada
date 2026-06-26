@@ -539,7 +539,7 @@
           "foto_base": "fotos/MLC_B8_1",
           "vias": [
             {
-              "linea_id": "A",
+              "linea_id": "A.1",
               "nombre": "Langostino Romero",
               "grado": "5",
               "entrada": "Sit",
@@ -552,7 +552,7 @@
               "manos_fotos": ""
             },
             {
-              "linea_id": "B.1",
+              "linea_id": "A.2",
               "nombre": "Dulce deleite",
               "grado": "6B+",
               "entrada": "Sit",
@@ -565,7 +565,7 @@
               "manos_fotos": ""
             },
             {
-              "linea_id": "B.2",
+              "linea_id": "A.3",
               "nombre": "Dulce deleite",
               "grado": "6C",
               "entrada": "Sit",
@@ -578,7 +578,7 @@
               "manos_fotos": ""
             },
             {
-              "linea_id": "B.3",
+              "linea_id": "A.4",
               "nombre": "Boccato di coordinate",
               "grado": "Pr",
               "entrada": "Sit",
@@ -591,7 +591,7 @@
               "manos_fotos": ""
             },
             {
-              "linea_id": "C.1",
+              "linea_id": "B.1",
               "nombre": "Monty Burns",
               "grado": "6A",
               "entrada": "De Pie",
@@ -604,7 +604,7 @@
               "manos_fotos": ""
             },
             {
-              "linea_id": "C.2",
+              "linea_id": "B.2",
               "nombre": "Saltamonty Burns",
               "grado": "6B",
               "entrada": "De Pie",
@@ -617,7 +617,7 @@
               "manos_fotos": ""
             },
             {
-              "linea_id": "C.3",
+              "linea_id": "B.3",
               "nombre": "Saltamonty Burns Sit",
               "grado": "Pr",
               "entrada": "Sit",
@@ -630,7 +630,7 @@
               "manos_fotos": ""
             },
             {
-              "linea_id": "D",
+              "linea_id": "C",
               "nombre": "Aristogatos",
               "grado": "6A+",
               "entrada": "Sit",
@@ -649,7 +649,7 @@
           "foto_base": "fotos/MLC_B8_2",
           "vias": [
             {
-              "linea_id": "E",
+              "linea_id": "D",
               "nombre": "Mi primera chamba",
               "grado": "4",
               "entrada": "Semi-Sit",
@@ -818,13 +818,13 @@
           "vias": [
             {
               "linea_id": "A",
-              "nombre": "Rasca carrasca",
-              "grado": "5",
+              "nombre": "Sin abrir",
+              "grado": "Pr",
               "entrada": "Sit",
-              "mano_izq": "Taco plano",
-              "mano_der": "Canto lateral",
+              "mano_izq": "",
+              "mano_der": "",
               "manos_juntas": "",
-              "definicion": "Sale recto",
+              "definicion": "",
               "salida": "TO",
               "expuesta": "",
               "manos_fotos": ""
@@ -856,14 +856,14 @@
               "manos_fotos": ""
             },
             {
-              "linea_id": "C",
-              "nombre": "Sin abrir",
-              "grado": "Pr",
+              "linea_id": "B.3",
+              "nombre": "Rasca carrasca",
+              "grado": "5",
               "entrada": "Sit",
-              "mano_izq": "",
-              "mano_der": "",
+              "mano_izq": "Taco plano",
+              "mano_der": "Canto lateral",
               "manos_juntas": "",
-              "definicion": "",
+              "definicion": "Sale recto",
               "salida": "TO",
               "expuesta": "",
               "manos_fotos": ""
