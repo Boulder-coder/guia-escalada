@@ -1065,8 +1065,8 @@
               "nombre": "Terror de azúcar",
               "grado": "5",
               "entrada": "Semi-Sit",
-              "mano_izq": "Canto lateral",
-              "mano_der": "Al aire",
+              "mano_izq": "Al aire",
+              "mano_der": "Canto lateral",
               "manos_juntas": "",
               "definicion": "Sale recto por la fisura.",
               "salida": "TO",
@@ -1878,16 +1878,16 @@
           "vias": [
             {
               "linea_id": "A",
-              "nombre": "Sin abrir",
-              "grado": "Pr",
-              "entrada": "",
-              "mano_izq": "",
-              "mano_der": "",
+              "nombre": "Calima",
+              "grado": "5+",
+              "entrada": "Sit",
+              "mano_izq": "Patata roma",
+              "mano_der": "Arista derecha",
               "manos_juntas": "",
-              "definicion": "",
-              "salida": "",
+              "definicion": "Sale recto. Hace top sentado sobre la repisa",
+              "salida": "T",
               "expuesta": "",
-              "manos_fotos": ""
+              "manos_fotos": "fotos/CB_B2_A"
             }
           ]
         },
@@ -1938,7 +1938,7 @@
               "definicion": "Asciende recto por la proa, sale por la cara izquierda",
               "salida": "TO",
               "expuesta": "",
-              "manos_fotos": ""
+              "manos_fotos": "fotos/CB_B3_2_C"
             },
             {
               "linea_id": "D",
@@ -1948,10 +1948,10 @@
               "mano_izq": "",
               "mano_der": "",
               "manos_juntas": "Agujero grande",
-              "definicion": "Travesía hacia la derecha, cogiendo el agujero de la proa con mano izquieda y saliendo por Adamendra",
+              "definicion": "Entra en A. Travesía hacia la derecha, cogiendo el agujero de la proa con mano izquieda y saliendo por Adamendra",
               "salida": "TO",
               "expuesta": "",
-              "manos_fotos": ""
+              "manos_fotos": "fotos/CB_B3_1_A"
             }
           ]
         },
@@ -1960,43 +1960,69 @@
           "foto_base": "fotos/CB_B4_1",
           "vias": [
             {
-              "linea_id": "A",
-              "nombre": "Autopisa",
-              "grado": "Pr",
-              "entrada": "Semi-Sit",
+              "linea_id": "A.1",
+              "nombre": "Oran-Wu-Tang Clan",
+              "grado": "7B",
+              "entrada": "Sit",
               "mano_izq": "Compresión en techo",
-              "mano_der": "Canto romo en fisura",
+              "mano_der": "Canto romo bajo techo",
               "manos_juntas": "",
-              "definicion": "Inicia empotrando rodilla y va a buscar la regleta",
+              "definicion": "Inicia empotrando rodilla y va a buscar la regleta con izquierda",
               "salida": "TO",
               "expuesta": "",
-              "manos_fotos": ""
+              "manos_fotos": "fotos/CB_B4_1_A.1"
+            },
+            {
+              "linea_id": "A.2",
+              "nombre": "Octonauta",
+              "grado": "Pr",
+              "entrada": "Sit",
+              "mano_izq": "Canto romo bajo techo",
+              "mano_der": "Compresión en techo",
+              "manos_juntas": "",
+              "definicion": "Inicia empotrando rodilla y va a buscar la regleta con derecha",
+              "salida": "TO",
+              "expuesta": "",
+              "manos_fotos": "fotos/CB_B4_1_A.1"
             },
             {
               "linea_id": "B.1",
               "nombre": "Jenga",
               "grado": "6A",
-              "entrada": "Semi-Sit",
-              "mano_izq": "Fisura en techo",
+              "entrada": "Sit",
+              "mano_izq": "Fisura bajo techo",
               "mano_der": "Canto lateral",
               "manos_juntas": "",
               "definicion": "Sale por la piedra encastrada",
               "salida": "TO",
               "expuesta": "",
-              "manos_fotos": ""
+              "manos_fotos": "fotos/CB_B4_1_B.1"
             },
             {
               "linea_id": "B.2",
-              "nombre": "Torre Pokémon",
-              "grado": "7B",
-              "entrada": "Semi-Sit",
-              "mano_izq": "Fisura en techo",
+              "nombre": "Torrezno",
+              "grado": "6B",
+              "entrada": "Sit",
+              "mano_izq": "Fisura bajo techo",
               "mano_der": "Canto lateral",
               "manos_juntas": "",
-              "definicion": "¡Eliminatoria! No vale la piedra inferior",
+              "definicion": "¡Eliminatoria! No vale la piedra inferior. Sale por la piedra encastrada",
               "salida": "TO",
               "expuesta": "",
-              "manos_fotos": ""
+              "manos_fotos": "fotos/CB_B4_1_B.2"
+            },
+            {
+              "linea_id": "B.3",
+              "nombre": "Latorre Pokémon",
+              "grado": "7A+",
+              "entrada": "Sit",
+              "mano_izq": "Fisura bajo techo",
+              "mano_der": "Canto lateral",
+              "manos_juntas": "",
+              "definicion": "¡Eliminatoria! Solo vale la piedra grande flotante y la superior. No se usan las piedras medianas encastradas",
+              "salida": "TO",
+              "expuesta": "",
+              "manos_fotos": "fotos/CB_B4_1_B.3"
             }
           ]
         },
@@ -2047,7 +2073,7 @@
               "definicion": "Recorre la arista y sale por encima del bloque derecho",
               "salida": "TOD",
               "expuesta": "",
-              "manos_fotos": ""
+              "manos_fotos": "fotos/CB_B5_1_A.2"
             }
           ]
         },
@@ -2066,7 +2092,7 @@
               "definicion": "Travesía hacia la izquierda, hace top en presa a definir",
               "salida": "TO",
               "expuesta": "",
-              "manos_fotos": ""
+              "manos_fotos": "fotos/CB_B5_2_B"
             }
           ]
         },
@@ -2075,20 +2101,20 @@
           "foto_base": "fotos/CB_B6",
           "vias": [
             {
-              "linea_id": "A",
+              "linea_id": "A.1",
               "nombre": "Escolopendra",
               "grado": "7A+",
               "entrada": "Sit",
               "mano_izq": "",
               "mano_der": "",
-              "manos_juntas": "Cazo invertido",
+              "manos_juntas": "Repisa bajo techo",
               "definicion": "Entra bajo el techo, sale por la pared de la izquierda",
               "salida": "TO",
               "expuesta": "",
-              "manos_fotos": ""
+              "manos_fotos": "fotos/CB_B6_A.1"
             },
             {
-              "linea_id": "B",
+              "linea_id": "A.2",
               "nombre": "Mi primer 7A",
               "grado": "6A+",
               "entrada": "Sit",
@@ -2098,7 +2124,7 @@
               "definicion": "Atraviesa el techo con cantos buenos",
               "salida": "TO",
               "expuesta": "",
-              "manos_fotos": ""
+              "manos_fotos": "fotos/CB_B6_A.1"
             }
           ]
         }
