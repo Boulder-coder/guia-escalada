@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg1"
+   width="1200"
+   height="1294"
+   viewBox="0 0 1200 1294"
+   sodipodi:docname="CB_B2.svg"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.1574575"
+     inkscape:cx="-92.088343"
+     inkscape:cy="1514.6945"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g1" />
+  <g
+     inkscape:groupmode="layer"
+     inkscape:label="Image"
+     id="g1">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:8;stroke-linejoin:round;paint-order:markers fill stroke"
+       d="m 806.56687,709.71534 c -0.4518,-6.33681 -3.61487,-50.90692 0,-76.21105 11.58889,-81.12224 35.22892,-283.20747 11.11411,-363.59018 C 784.28482,158.59358 704.56634,152.71893 707.33374,33.342332"
+       id="path1"
+       sodipodi:nodetypes="cssc"
+       inkscape:label="A_linea" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2.22333;stroke-opacity:1"
+       id="path7"
+       cx="807.15833"
+       cy="719.79938"
+       r="38.888336"
+       inkscape:label="A_entrada"
+       inkscape:transform-center-x="185.76442"
+       inkscape:transform-center-y="6.3509202" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.52853;stroke-opacity:1"
+       id="circle10"
+       cx="707.89508"
+       cy="36.376072"
+       inkscape:label="A_salida"
+       r="26.735735" />
+  </g>
+</svg>
