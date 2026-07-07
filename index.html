@@ -225,7 +225,7 @@
             color: white;
         }
         
-        /* ===== ESTILOS PARA MANUAL DE USO ===== */
+        /* ===== ESTILOS PARA MANUAL DE USO (OVERLAY INICIAL) ===== */
         #legalManual .legal-content {
             display: flex;
             flex-direction: column;
@@ -269,6 +269,39 @@
         /* El botón se oculta/muestra con JavaScript */
         #acceptManual {
             display: none;
+        }
+        
+        /* ===== ESTILOS PARA LA PANTALLA MANUAL (DENTRO DE LA APP) ===== */
+        .manual-screen-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            min-height: 80vh;
+        }
+        .manual-screen-container .manual-title {
+            font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
+            font-size: 1.5rem;
+            color: #6674FF;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .manual-screen-container .manual-image-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .manual-screen-container .manual-image-container img {
+            width: 100%;
+            height: auto;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
         .drawer {
@@ -356,7 +389,7 @@
             margin: 12px 20px;
         }
         
-        .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title, #legalManual .manual-title {
+        .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title, #legalManual .manual-title, .manual-screen-container .manual-title {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
         }
         .header-top { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
@@ -713,7 +746,7 @@
         </div>
     </div>
 
-    <!-- ===== OVERLAY: MANUAL DE USO ===== -->
+    <!-- ===== OVERLAY INICIAL: MANUAL DE USO (con botón) ===== -->
     <div id="legalManual" class="legal-overlay">
         <div class="legal-content">
             <div class="manual-title">📖 MANUAL DE USO</div>
@@ -787,6 +820,16 @@
                 Esta aplicación no recopila ni almacena ningún dato personal (como nombre, correo electrónico o dirección IP). Únicamente guarda en tu dispositivo tus marcadores de progreso (Flash, Red-Point, Proyecto) para recordar tu historial de escalada.<br><br>
                 Por este mismo motivo, si cambias de dispositivo, formateas o borras el caché de la Guía, perderás tu historial de escalada.<br><br>
                 Estos datos no son accesibles por terceros ni se transmiten a ningún servidor. El uso de la app implica tu consentimiento para esta funcionalidad local.
+            </div>
+        </div>
+
+        <!-- NUEVA PANTALLA: MANUAL DE USO -->
+        <div id="screen-manual" class="screen">
+            <div class="manual-screen-container">
+                <div class="manual-title">📖 MANUAL DE USO</div>
+                <div class="manual-image-container">
+                    <img src="fotos/MANUAL_DE_USO.jpg" alt="Manual de uso" onerror="this.src='https://picsum.photos/id/20/800/600'">
+                </div>
             </div>
         </div>
 
@@ -924,11 +967,12 @@
         function acceptManual() {
             localStorage.setItem(STORAGE_MANUAL, 'true');
             document.getElementById('legalManual').classList.remove('active');
+            // Después de aceptar, vamos directamente a la app
             initAppAfterLegal();
         }
 
-        // ===== FUNCIÓN PARA MOSTRAR EL MANUAL (CON O SIN BOTÓN) =====
-        function mostrarManual(conBoton) {
+        // ===== FUNCIÓN PARA MOSTRAR EL MANUAL (OVERLAY INICIAL) =====
+        function mostrarManualOverlay(conBoton) {
             const boton = document.getElementById('acceptManual');
             if (conBoton) {
                 boton.style.display = 'block';
@@ -940,7 +984,7 @@
 
         function proceedToManual() {
             if (!isManualAccepted()) {
-                mostrarManual(true); // flujo inicial: con botón
+                mostrarManualOverlay(true); // flujo inicial: con botón
             } else {
                 initAppAfterLegal();
             }
@@ -960,9 +1004,11 @@
             }
         }
 
-        // Función para abrir el manual desde el drawer (sin botón)
-        function openManualFromDrawer() {
-            mostrarManual(false); // sin botón
+        // Función para abrir la pantalla Manual desde el drawer (sin overlay)
+        function openManualScreen() {
+            navigateToScreen('screen-manual');
+            currentSector = null;
+            isInFichaBloque = false;
         }
 
         async function enableScreenProtection() {
@@ -1429,6 +1475,11 @@
             if (screenId === 'screen-sector-detalle' || screenId === 'screen-ficha-bloque') bottomTabs.style.display = 'flex';
             else bottomTabs.style.display = 'none';
             if (screenId === 'screen-ficha-bloque') actualizarBotonActivo('bloques');
+            // Limpiar currentSector si navegamos a pantallas no sector
+            if (screenId === 'screen-condiciones' || screenId === 'screen-proteccion' || screenId === 'screen-manual' || screenId === 'screen-mis-ascensiones') {
+                currentSector = null;
+                isInFichaBloque = false;
+            }
         }
 
         function goBack() {
@@ -1779,10 +1830,11 @@
                 if (datosApp) cargarMisAscensiones(); 
                 else setTimeout(() => cargarMisAscensiones(), 500);
             });
+            // Manual desde el drawer -> pantalla normal
             document.getElementById('drawerManualBtn').addEventListener('click', (e) => {
                 e.preventDefault();
                 closeDrawer();
-                openManualFromDrawer();
+                openManualScreen();
             });
         }
 
@@ -2007,6 +2059,7 @@
         document.getElementById('acceptProteccion').addEventListener('click', acceptPrivacy);
         document.getElementById('declineProteccion').addEventListener('click', decline);
         document.getElementById('acceptManual').addEventListener('click', function() {
+            // Solo se usa en el overlay inicial
             if (!isManualAccepted()) {
                 acceptManual();
             } else {
@@ -2014,7 +2067,7 @@
             }
         });
 
-        // Clic fuera del contenido en el manual: solo cierra si ya está aceptado (desde el drawer)
+        // Clic fuera del contenido en el overlay manual: no se cierra si no está aceptado, para obligar a aceptar.
         document.getElementById('legalManual').addEventListener('click', function(e) {
             if (e.target === this) {
                 if (isManualAccepted()) {
