@@ -226,16 +226,33 @@
         }
         
         /* ===== ESTILOS PARA MANUAL DE USO ===== */
+        #legalManual .legal-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 0;
+            flex: 1;
+        }
+        #legalManual .manual-title {
+            font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
+            font-size: 1.5rem;
+            color: #6674FF;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
         #legalManual .manual-image-container {
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            width: 100%;
         }
         #legalManual .manual-image-container img {
             max-width: 100%;
-            max-height: 75vh;
+            max-height: 70vh;
             object-fit: contain;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -244,6 +261,10 @@
             border-top: none;
             margin-top: 10px;
             padding-top: 0;
+            background: transparent;
+        }
+        #legalManual .legal-btn {
+            max-width: 200px;
         }
         
         .drawer {
@@ -331,7 +352,7 @@
             margin: 12px 20px;
         }
         
-        .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title {
+        .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title, #legalManual .manual-title {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
         }
         .header-top { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
@@ -690,13 +711,14 @@
 
     <!-- ===== NUEVO OVERLAY: MANUAL DE USO ===== -->
     <div id="legalManual" class="legal-overlay">
-        <div class="legal-content" style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:10px 0;">
+        <div class="legal-content">
+            <div class="manual-title">📖 MANUAL DE USO</div>
             <div class="manual-image-container">
                 <img src="fotos/MANUAL_DE_USO.jpg" alt="Manual de uso" onerror="this.src='https://picsum.photos/id/20/800/600'">
             </div>
         </div>
-        <div class="legal-buttons" style="justify-content:center;">
-            <button id="acceptManual" class="legal-btn btn-accept" style="max-width:200px;">ACEPTAR</button>
+        <div class="legal-buttons">
+            <button id="acceptManual" class="legal-btn btn-accept">ACEPTAR</button>
         </div>
     </div>
 
@@ -888,7 +910,6 @@
             if (!isPrivacyAccepted()) {
                 document.getElementById('legalProteccion').classList.add('active');
             } else {
-                // Si privacidad ya estaba aceptada, pasar al manual
                 proceedToManual();
             }
         }
@@ -928,11 +949,10 @@
             }
         }
 
-        // Función para abrir el manual desde el drawer (solo muestra, no cambia estado)
+        // Función para abrir el manual desde el drawer
         function openManualFromDrawer() {
             document.getElementById('legalManual').classList.add('active');
-            // El botón de aceptar cerrará el overlay sin modificar el estado (porque ya está aceptado o simplemente lo cierra)
-            // Pero si por casualidad no está aceptado, al hacer clic en Aceptar lo aceptará (comportamiento deseado).
+            // El botón Aceptar siempre está visible y su evento está definido abajo.
         }
 
         async function enableScreenProtection() {
@@ -950,7 +970,7 @@
         function setupBackButtonHandler() {
             if (window.Capacitor && Capacitor.isNativePlatform()) {
                 document.addEventListener('backbutton', (e) => {
-                    e.preventDefault(); // Evita que la app se cierre o que el navegador vaya atrás
+                    e.preventDefault();
                 }, false);
             }
         }
@@ -1131,10 +1151,8 @@
             const wrapper = document.getElementById('manosSwiperWrapper');
             const title = document.getElementById('manosModalTitle');
 
-            // Limpiar wrapper
             wrapper.innerHTML = '';
 
-            // Si solo hay un elemento, mostrar imagen sin Swiper
             if (manosData.length === 1) {
                 const item = manosData[0];
                 const img = document.createElement('img');
@@ -1150,7 +1168,6 @@
                 wrapper.appendChild(img);
                 title.textContent = 'Manos de entrada · ' + item.nombre;
                 
-                // Ocultar flechas y paginación
                 document.getElementById('manosSwiperNext').style.display = 'none';
                 document.getElementById('manosSwiperPrev').style.display = 'none';
                 document.getElementById('manosSwiperPagination').style.display = 'none';
@@ -1163,7 +1180,6 @@
                 return;
             }
 
-            // Si hay varios, usar Swiper
             manosData.forEach((item, idx) => {
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
@@ -1177,7 +1193,6 @@
 
             title.textContent = 'Manos de entrada · ' + manosData[indice].nombre;
 
-            // Mostrar flechas y paginación
             document.getElementById('manosSwiperNext').style.display = '';
             document.getElementById('manosSwiperPrev').style.display = '';
             document.getElementById('manosSwiperPagination').style.display = '';
@@ -1209,7 +1224,6 @@
                 }
             });
 
-            // Forzar actualización después de que se renderice
             setTimeout(() => {
                 if (manosSwiperInstance) {
                     manosSwiperInstance.update();
@@ -1224,19 +1238,17 @@
                 manosSwiperInstance = null;
             }
             document.getElementById('manosSwiperWrapper').innerHTML = '';
-            // Restaurar visibilidad de controles (por si se ocultaron)
             document.getElementById('manosSwiperNext').style.display = '';
             document.getElementById('manosSwiperPrev').style.display = '';
             document.getElementById('manosSwiperPagination').style.display = '';
         }
 
-        // Eventos para cerrar el modal de manos
         document.getElementById('manosModalClose').addEventListener('click', cerrarPopupManos);
         document.getElementById('manosModal').addEventListener('click', function(e) {
             if (e.target === this) cerrarPopupManos();
         });
 
-        // ===== MODIFICACIÓN: aplicarColoresSVG recibe gruposMap en lugar de manosData =====
+        // ===== aplicarColoresSVG recibe gruposMap =====
         function aplicarColoresSVG(svgDoc, bloque, vias, gruposMap) {
             if (!svgDoc) return;
             vias.forEach(via => {
@@ -1254,7 +1266,6 @@
                     circuloEntrada.setAttribute('stroke-width', '2');
                     
                     if (via.manos_fotos) {
-                        // 1. Evento en el círculo original
                         circuloEntrada.style.cursor = 'pointer';
                         circuloEntrada.addEventListener('click', function(e) {
                             e.stopPropagation();
@@ -1265,7 +1276,6 @@
                             }
                         });
                 
-                        // 2. Crear un círculo transparente más grande para ampliar el área de clic
                         let cx = parseFloat(circuloEntrada.getAttribute('cx'));
                         let cy = parseFloat(circuloEntrada.getAttribute('cy'));
                         let radio = parseFloat(circuloEntrada.getAttribute('r')) || 17.5;
@@ -1476,7 +1486,6 @@
                         const gradoColor = getColorByGrado(via.grado);
                         const status = getLineStatus(currentSector.nombre, bloqueInfo.id, via.linea_id);
                         const statusIndicator = getLineaStatusIndicator(status);
-                        // Mostrar siempre el badge, usando '*' si el grado está vacío
                         const gradoMostrar = via.grado || '*';
                         resumenHtml += `<div class="linea-item" data-bloque-id="${bloqueInfo.id}" data-bloque-index="${bloqueInfo.idx}">
                             <span class="linea-nombre">${via.linea_id} · ${via.nombre}</span>
@@ -1553,7 +1562,6 @@
 
         function dibujarGrafica(sector) {
             const conteo = {};
-            // Contar todos los grados, tratando los vacíos como '*'
             sector.bloques.forEach(bloque => { 
                 bloque.vias.forEach(via => { 
                     let gradoNorm = via.grado ? via.grado.trim() : '*';
@@ -1601,18 +1609,15 @@
 
         function getTextoManos(via) { if (via.manos_juntas && via.manos_juntas.trim() !== "") return `Manos juntas: ${via.manos_juntas}`; let partes = []; if (via.mano_izq && via.mano_izq.trim() !== "") partes.push(`Izq: ${via.mano_izq}`); if (via.mano_der && via.mano_der.trim() !== "") partes.push(`Der: ${via.mano_der}`); return partes.length > 0 ? partes.join(" · ") : ""; }
 
-        // ===== MODIFICACIÓN: cargarYColorearSVGBloque construye gruposMap =====
         function cargarYColorearSVGBloque(bloque, slideIndex, vias) {
             const svgUrl = `${bloque.foto_base}.svg`;
             const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
             if (!mediaContainer) return;
 
-            // --- Construir grupos de variantes ---
-            const grupos = {}; // base -> array de {lineaId, nombre, ruta}
+            const grupos = {};
             vias.forEach(via => {
                 if (!via.manos_fotos) return;
                 const lineaId = via.linea_id;
-                // Determinar la base: si tiene punto, la parte antes del punto; si no, el propio id
                 const base = lineaId.includes('.') ? lineaId.split('.')[0] : lineaId;
                 if (!grupos[base]) grupos[base] = [];
                 grupos[base].push({
@@ -1622,12 +1627,9 @@
                 });
             });
 
-            // Construir mapa: lineaId -> array de datos (grupo completo si hay >1, o array de 1)
             const gruposMap = {};
             Object.keys(grupos).forEach(base => {
                 const grupo = grupos[base];
-                // Si el grupo tiene más de un elemento, asignar el grupo completo a cada lineaId
-                // Si tiene uno solo, asignar ese único elemento (array de 1)
                 const arrayParaMostrar = grupo.length > 1 ? grupo : [grupo[0]];
                 grupo.forEach(item => {
                     gruposMap[item.lineaId] = arrayParaMostrar;
@@ -1647,7 +1649,6 @@
                     const svgElement = svgDoc.documentElement;
                     if (!svgElement) return;
                     
-                    // Pasamos gruposMap a aplicarColoresSVG
                     aplicarColoresSVG(svgDoc, bloque, vias, gruposMap);
                     svgElement.setAttribute('preserveAspectRatio', 'none');
                     svgElement.style.width = '100%';
@@ -1761,7 +1762,6 @@
             document.getElementById('drawerSectoresBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-portada'); if (datosApp) renderSectoresList(); else cargarDatos(); currentSector = null; isInFichaBloque = false; });
             document.getElementById('drawerCondicionesBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-condiciones'); currentSector = null; isInFichaBloque = false; });
             document.getElementById('drawerProteccionBtn').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); navigateToScreen('screen-proteccion'); currentSector = null; isInFichaBloque = false; });
-            // NUEVO: Evento para MIS ASCENSIONES
             document.getElementById('drawerMisAscensionesBtn').addEventListener('click', (e) => { 
                 e.preventDefault(); 
                 closeDrawer(); 
@@ -1769,7 +1769,6 @@
                 if (datosApp) cargarMisAscensiones(); 
                 else setTimeout(() => cargarMisAscensiones(), 500);
             });
-            // NUEVO: Evento para MANUAL DE USO
             document.getElementById('drawerManualBtn').addEventListener('click', (e) => {
                 e.preventDefault();
                 closeDrawer();
@@ -1777,7 +1776,6 @@
             });
         }
 
-        // ---- NUEVO: CERRAR DRAWER CON SWIPE (DESLIZAMIENTO) ----
         function setupSwipeToCloseDrawer() {
             let touchStartX = 0;
             let touchEndX = 0;
@@ -1810,7 +1808,6 @@
             }
         }
 
-        // Llamar a la función después de que el DOM esté listo (dentro de initMenu o similar)
         const originalInitMenu = initMenu;
         initMenu = function() {
             originalInitMenu();
@@ -1878,7 +1875,6 @@
                             </div>
                         </div>`;
         
-            // Ascensiones (Flash + Red-Point)
             html += `<div class="mis-ascensiones-card">
                         <h3 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'" style="cursor:pointer;">📈 Ascensiones (Flash + Red-Point) <span style="font-size:0.7rem;">▾</span></h3>
                         <div class="grafica-container"><canvas id="grafica-todas"></canvas></div>
@@ -1898,7 +1894,6 @@
             }
             html += `</div></div>`;
         
-            // Ascensiones a Flash
             html += `<div class="mis-ascensiones-card">
                         <h3 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'" style="cursor:pointer;">⚡ Ascensiones a Flash <span style="font-size:0.7rem;">▾</span></h3>
                         <div class="grafica-container"><canvas id="grafica-flash"></canvas></div>
@@ -1918,7 +1913,6 @@
             }
             html += `</div></div>`;
         
-            // Mis proyectos
             html += `<div class="mis-ascensiones-card">
                         <h3 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'" style="cursor:pointer;">⚫ Mis Proyectos <span style="font-size:0.7rem;">▾</span></h3>
                         <div id="lista-proyectos" style="display:block; margin-top:10px;">
@@ -1996,15 +1990,13 @@
                 ctx.fillText(valor, x + barWidth/2 - 5, y - 5);
             });
         }
-        // --------------------------------------------
 
-        // Eventos de los botones legales
+        // ===== EVENTOS LEGALES =====
         document.getElementById('acceptCondiciones').addEventListener('click', acceptTerms);
         document.getElementById('declineCondiciones').addEventListener('click', decline);
         document.getElementById('acceptProteccion').addEventListener('click', acceptPrivacy);
         document.getElementById('declineProteccion').addEventListener('click', decline);
         document.getElementById('acceptManual').addEventListener('click', function() {
-            // Si no está aceptado, lo guardamos; si ya lo está, simplemente cerramos.
             if (!isManualAccepted()) {
                 acceptManual();
             } else {
@@ -2012,17 +2004,9 @@
             }
         });
 
-        // También cerrar el manual haciendo clic fuera del contenido (opcional)
+        // Clic fuera del contenido en el manual: solo cierra si ya está aceptado (desde el drawer)
         document.getElementById('legalManual').addEventListener('click', function(e) {
             if (e.target === this) {
-                // Si no está aceptado, no se debe cerrar sin aceptar (en el flujo inicial).
-                // Pero si se abre desde el drawer, podemos cerrar.
-                // Para simplificar, cerramos siempre (el botón de aceptar ya guarda si es necesario).
-                // Si no está aceptado y se cierra haciendo clic fuera, no se acepta, lo cual puede ser problemático.
-                // Por eso, mejor no cerrar con clic fuera en el flujo inicial.
-                // Para el drawer, el usuario puede usar el botón Aceptar (que cierra).
-                // Deshabilitamos el cierre por clic fuera para evitar que se salte la aceptación.
-                // Si se quiere, se puede habilitar comprobando si ya está aceptado.
                 if (isManualAccepted()) {
                     document.getElementById('legalManual').classList.remove('active');
                 }
