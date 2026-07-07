@@ -788,7 +788,6 @@
 
         // ---- Variables globales para el modal de manos ----
         let manosSwiperInstance = null;
-        let currentManosData = []; // Array de {lineaId, nombre, ruta}
 
         async function sha256(message) {
             const encoder = new TextEncoder();
@@ -1061,10 +1060,9 @@
             return null;
         }
 
-        // ===== NUEVA FUNCIÓN: Mostrar pop-up de manos con Swiper =====
-        function mostrarPopupManosConIndice(indice) {
-            if (!currentManosData || currentManosData.length === 0) return;
-            if (indice < 0 || indice >= currentManosData.length) return;
+        // ===== FUNCIÓN PARA MOSTRAR POP-UP DE MANOS CON SWIPER =====
+        function mostrarPopupManosConIndice(indice, manosData) {
+            if (!manosData || manosData.length === 0 || indice < 0 || indice >= manosData.length) return;
 
             const modal = document.getElementById('manosModal');
             const wrapper = document.getElementById('manosSwiperWrapper');
@@ -1072,7 +1070,7 @@
 
             // Construir slides
             wrapper.innerHTML = '';
-            currentManosData.forEach((item, idx) => {
+            manosData.forEach((item, idx) => {
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
                 const img = document.createElement('img');
@@ -1087,7 +1085,7 @@
             });
 
             // Actualizar título
-            title.textContent = 'Manos de entrada · ' + currentManosData[indice].nombre;
+            title.textContent = 'Manos de entrada · ' + manosData[indice].nombre;
 
             // Mostrar modal
             modal.classList.add('active');
@@ -1112,8 +1110,8 @@
                 on: {
                     slideChange: function() {
                         const realIndex = this.realIndex;
-                        if (currentManosData[realIndex]) {
-                            title.textContent = 'Manos de entrada · ' + currentManosData[realIndex].nombre;
+                        if (manosData[realIndex]) {
+                            title.textContent = 'Manos de entrada · ' + manosData[realIndex].nombre;
                         }
                     }
                 }
@@ -1126,7 +1124,6 @@
                 manosSwiperInstance.destroy(true, true);
                 manosSwiperInstance = null;
             }
-            // Limpiar slides para no dejar imágenes cargadas
             document.getElementById('manosSwiperWrapper').innerHTML = '';
         }
 
@@ -1137,7 +1134,8 @@
         });
 
         // Modificación de aplicarColoresSVG para añadir eventos click en círculos de entrada
-        function aplicarColoresSVG(svgDoc, bloque, vias) {
+        // Ahora recibe también 'manosData' (array con los datos de manos de este bloque)
+        function aplicarColoresSVG(svgDoc, bloque, vias, manosData) {
             if (!svgDoc) return;
             vias.forEach(via => {
                 const lineaId = via.linea_id;
@@ -1158,9 +1156,9 @@
                         circuloEntrada.style.cursor = 'pointer';
                         circuloEntrada.addEventListener('click', function(e) {
                             e.stopPropagation();
-                            const idx = currentManosData.findIndex(d => d.lineaId === via.linea_id);
+                            const idx = manosData.findIndex(d => d.lineaId === via.linea_id);
                             if (idx !== -1) {
-                                mostrarPopupManosConIndice(idx);
+                                mostrarPopupManosConIndice(idx, manosData);
                             }
                         });
                 
@@ -1189,9 +1187,9 @@
                         bigCircle.style.cursor = 'pointer';
                         bigCircle.addEventListener('click', function(e) {
                             e.stopPropagation();
-                            const idx = currentManosData.findIndex(d => d.lineaId === via.linea_id);
+                            const idx = manosData.findIndex(d => d.lineaId === via.linea_id);
                             if (idx !== -1) {
-                                mostrarPopupManosConIndice(idx);
+                                mostrarPopupManosConIndice(idx, manosData);
                             }
                         });
                         const svgRoot = svgDoc.documentElement;
@@ -1504,8 +1502,8 @@
             const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
             if (!mediaContainer) return;
 
-            // Guardar datos de manos de entrada para el pop-up
-            currentManosData = vias.filter(v => v.manos_fotos).map(v => ({
+            // Datos de manos de entrada para este bloque
+            const manosData = vias.filter(v => v.manos_fotos).map(v => ({
                 lineaId: v.linea_id,
                 nombre: v.nombre || v.linea_id,
                 ruta: v.manos_fotos
@@ -1524,7 +1522,8 @@
                     const svgElement = svgDoc.documentElement;
                     if (!svgElement) return;
                     
-                    aplicarColoresSVG(svgDoc, bloque, vias);
+                    // Pasamos 'manosData' como cuarto parámetro
+                    aplicarColoresSVG(svgDoc, bloque, vias, manosData);
                     svgElement.setAttribute('preserveAspectRatio', 'none');
                     svgElement.style.width = '100%';
                     svgElement.style.height = '100%';
