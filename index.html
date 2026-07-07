@@ -271,6 +271,19 @@
             display: none;
         }
         
+        /* ===== ESTILOS PARA TÍTULOS DE PANTALLAS ===== */
+        .screen-title {
+            font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
+            color: #6674FF;
+            text-align: left;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+        .screen-title.small {
+            font-size: 1.1rem;
+        }
+        
         /* ===== ESTILOS PARA LA PANTALLA MANUAL (DENTRO DE LA APP) ===== */
         .manual-content {
             background: #ffffff;
@@ -281,14 +294,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-        .manual-content .manual-title {
-            font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
-            font-size: 1.3rem;
-            color: #6674FF;
-            margin-bottom: 15px;
-            text-align: center;
-            letter-spacing: 0.5px;
         }
         .manual-content .manual-image-container {
             width: 100%;
@@ -359,8 +364,8 @@
             font-size: 1rem;
             cursor: pointer;
             transition: background 0.2s;
-            font-family: 'Roboto', sans-serif;
-            font-weight: bold;
+            font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
+            font-weight: normal;
             color: #ffffff;
         }
         .drawer-section-title:hover, .drawer-section-title:active,
@@ -389,7 +394,7 @@
             margin: 12px 20px;
         }
         
-        .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title, #legalManual .manual-title, .manual-content .manual-title {
+        .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title, #legalManual .manual-title, .screen-title {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
         }
         .header-top { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
@@ -788,9 +793,10 @@
     <div class="app-content">
         <div id="screen-portada" class="screen active"><h2>🏔️ SECTORES</h2><div id="sectores-list"><div class="loader">Cargando...</div></div></div>
         
+        <!-- ===== PANTALLA: CONDICIONES DE USO ===== -->
         <div id="screen-condiciones" class="screen">
+            <h2 class="screen-title">📋 CONDICIONES DE USO Y AVISO LEGAL</h2>
             <div class="condiciones-content">
-                <strong>CONDICIONES DE USO Y AVISO LEGAL</strong><br><br>
                 <strong>1. Ámbito de aplicación</strong><br>
                 Esta aplicación (en adelante, «la Guía») es un instrumento digital de uso exclusivo para los socios del club Grupo Espeleo Carcalín. El acceso y la utilización de la Guía implican la aceptación íntegra de las presentes condiciones.<br><br>
                 <strong>2. Acceso y renovación</strong><br>
@@ -814,9 +820,10 @@
             </div>
         </div>
         
+        <!-- ===== PANTALLA: PROTECCIÓN DE DATOS ===== -->
         <div id="screen-proteccion" class="screen">
+            <h2 class="screen-title">🔒 PROTECCIÓN DE DATOS</h2>
             <div class="proteccion-content">
-                <strong>PROTECCIÓN DE DATOS</strong><br><br>
                 Esta aplicación no recopila ni almacena ningún dato personal (como nombre, correo electrónico o dirección IP). Únicamente guarda en tu dispositivo tus marcadores de progreso (Flash, Red-Point, Proyecto) para recordar tu historial de escalada.<br><br>
                 Por este mismo motivo, si cambias de dispositivo, formateas o borras el caché de la Guía, perderás tu historial de escalada.<br><br>
                 Estos datos no son accesibles por terceros ni se transmiten a ningún servidor. El uso de la app implica tu consentimiento para esta funcionalidad local.
@@ -825,18 +832,20 @@
 
         <!-- ===== PANTALLA: MANUAL DE USO (desde el menú) ===== -->
         <div id="screen-manual" class="screen">
+            <h2 class="screen-title small">📖 MANUAL DE USO</h2>
             <div class="manual-content">
-                <div class="manual-title">📖 MANUAL DE USO</div>
                 <div class="manual-image-container">
                     <img src="fotos/MANUAL_DE_USO.jpg" alt="Manual de uso" onerror="this.src='https://picsum.photos/id/20/800/600'">
                 </div>
             </div>
         </div>
 
+        <!-- ===== PANTALLA: MIS ASCENSIONES ===== -->
         <div id="screen-mis-ascensiones" class="screen">
             <div id="mis-ascensiones-content"></div>
         </div>
         
+        <!-- ===== PANTALLAS DE SECTORES ===== -->
         <div id="screen-sector-detalle" class="screen">
             <div id="sector-detalle-content"></div>
         </div>
@@ -967,7 +976,6 @@
         function acceptManual() {
             localStorage.setItem(STORAGE_MANUAL, 'true');
             document.getElementById('legalManual').classList.remove('active');
-            // Después de aceptar, vamos directamente a la app
             initAppAfterLegal();
         }
 
@@ -984,7 +992,7 @@
 
         function proceedToManual() {
             if (!isManualAccepted()) {
-                mostrarManualOverlay(true); // flujo inicial: con botón
+                mostrarManualOverlay(true);
             } else {
                 initAppAfterLegal();
             }
@@ -1004,7 +1012,7 @@
             }
         }
 
-        // Función para abrir la pantalla Manual desde el drawer (sin overlay)
+        // Función para abrir la pantalla Manual desde el drawer
         function openManualScreen() {
             navigateToScreen('screen-manual');
             currentSector = null;
@@ -1475,7 +1483,6 @@
             if (screenId === 'screen-sector-detalle' || screenId === 'screen-ficha-bloque') bottomTabs.style.display = 'flex';
             else bottomTabs.style.display = 'none';
             if (screenId === 'screen-ficha-bloque') actualizarBotonActivo('bloques');
-            // Limpiar currentSector si navegamos a pantallas no sector
             if (screenId === 'screen-condiciones' || screenId === 'screen-proteccion' || screenId === 'screen-manual' || screenId === 'screen-mis-ascensiones') {
                 currentSector = null;
                 isInFichaBloque = false;
@@ -1830,7 +1837,6 @@
                 if (datosApp) cargarMisAscensiones(); 
                 else setTimeout(() => cargarMisAscensiones(), 500);
             });
-            // Manual desde el drawer -> pantalla normal
             document.getElementById('drawerManualBtn').addEventListener('click', (e) => {
                 e.preventDefault();
                 closeDrawer();
@@ -2059,7 +2065,6 @@
         document.getElementById('acceptProteccion').addEventListener('click', acceptPrivacy);
         document.getElementById('declineProteccion').addEventListener('click', decline);
         document.getElementById('acceptManual').addEventListener('click', function() {
-            // Solo se usa en el overlay inicial
             if (!isManualAccepted()) {
                 acceptManual();
             } else {
@@ -2067,7 +2072,7 @@
             }
         });
 
-        // Clic fuera del contenido en el overlay manual: no se cierra si no está aceptado, para obligar a aceptar.
+        // Clic fuera del contenido en el overlay manual: no se cierra si no está aceptado.
         document.getElementById('legalManual').addEventListener('click', function(e) {
             if (e.target === this) {
                 if (isManualAccepted()) {
