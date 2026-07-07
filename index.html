@@ -1068,35 +1068,64 @@
             const wrapper = document.getElementById('manosSwiperWrapper');
             const title = document.getElementById('manosModalTitle');
 
-            // Construir slides
+            // Limpiar wrapper
             wrapper.innerHTML = '';
+
+            // Si solo hay un elemento, mostrar imagen sin Swiper
+            if (manosData.length === 1) {
+                const item = manosData[0];
+                const img = document.createElement('img');
+                img.src = item.ruta + '.jpg';
+                img.onerror = function() { this.src = item.ruta + '.png'; };
+                img.alt = 'Manos de ' + item.nombre;
+                img.style.width = '100%';
+                img.style.height = 'auto';
+                img.style.maxHeight = '70vh';
+                img.style.objectFit = 'contain';
+                img.style.borderRadius = '10px';
+                img.style.background = '#f0f0f0';
+                wrapper.appendChild(img);
+                title.textContent = 'Manos de entrada · ' + item.nombre;
+                
+                // Ocultar flechas y paginación
+                document.getElementById('manosSwiperNext').style.display = 'none';
+                document.getElementById('manosSwiperPrev').style.display = 'none';
+                document.getElementById('manosSwiperPagination').style.display = 'none';
+                
+                modal.classList.add('active');
+                if (manosSwiperInstance) {
+                    manosSwiperInstance.destroy(true, true);
+                    manosSwiperInstance = null;
+                }
+                return;
+            }
+
+            // Si hay varios, usar Swiper
             manosData.forEach((item, idx) => {
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
                 const img = document.createElement('img');
-                // Intentar .jpg, si falla .png (manejado por onerror)
                 img.src = item.ruta + '.jpg';
-                img.onerror = function() {
-                    this.src = item.ruta + '.png';
-                };
+                img.onerror = function() { this.src = item.ruta + '.png'; };
                 img.alt = 'Manos de ' + item.nombre;
                 slide.appendChild(img);
                 wrapper.appendChild(slide);
             });
 
-            // Actualizar título
             title.textContent = 'Manos de entrada · ' + manosData[indice].nombre;
 
-            // Mostrar modal
+            // Mostrar flechas y paginación
+            document.getElementById('manosSwiperNext').style.display = '';
+            document.getElementById('manosSwiperPrev').style.display = '';
+            document.getElementById('manosSwiperPagination').style.display = '';
+
             modal.classList.add('active');
 
-            // Si ya existe un Swiper, destruirlo
             if (manosSwiperInstance) {
                 manosSwiperInstance.destroy(true, true);
                 manosSwiperInstance = null;
             }
 
-            // Inicializar Swiper
             manosSwiperInstance = new Swiper('.manos-swiper', {
                 initialSlide: indice,
                 navigation: {
@@ -1116,6 +1145,13 @@
                     }
                 }
             });
+
+            // Forzar actualización después de que se renderice
+            setTimeout(() => {
+                if (manosSwiperInstance) {
+                    manosSwiperInstance.update();
+                }
+            }, 100);
         }
 
         function cerrarPopupManos() {
@@ -1125,6 +1161,10 @@
                 manosSwiperInstance = null;
             }
             document.getElementById('manosSwiperWrapper').innerHTML = '';
+            // Restaurar visibilidad de controles (por si se ocultaron)
+            document.getElementById('manosSwiperNext').style.display = '';
+            document.getElementById('manosSwiperPrev').style.display = '';
+            document.getElementById('manosSwiperPagination').style.display = '';
         }
 
         // Eventos para cerrar el modal de manos
