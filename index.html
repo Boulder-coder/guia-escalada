@@ -276,12 +276,12 @@
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
             color: #6674FF;
             text-align: left;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             margin-bottom: 10px;
             letter-spacing: 0.5px;
         }
         .screen-title.small {
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
         
         /* ===== ESTILOS PARA LA PANTALLA MANUAL (DENTRO DE LA APP) ===== */
@@ -364,8 +364,8 @@
             font-size: 1rem;
             cursor: pointer;
             transition: background 0.2s;
-            font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
-            font-weight: normal;
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
             color: #ffffff;
         }
         .drawer-section-title:hover, .drawer-section-title:active,
@@ -2072,7 +2072,6 @@
             }
         });
 
-        // Clic fuera del contenido en el overlay manual: no se cierra si no está aceptado.
         document.getElementById('legalManual').addEventListener('click', function(e) {
             if (e.target === this) {
                 if (isManualAccepted()) {
