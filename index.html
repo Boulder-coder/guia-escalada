@@ -1133,9 +1133,8 @@
             if (e.target === this) cerrarPopupManos();
         });
 
-        // Modificación de aplicarColoresSVG para añadir eventos click en círculos de entrada
-        // Ahora recibe también 'manosData' (array con los datos de manos de este bloque)
-        function aplicarColoresSVG(svgDoc, bloque, vias, manosData) {
+        // ===== MODIFICACIÓN: aplicarColoresSVG recibe gruposMap en lugar de manosData =====
+        function aplicarColoresSVG(svgDoc, bloque, vias, gruposMap) {
             if (!svgDoc) return;
             vias.forEach(via => {
                 const lineaId = via.linea_id;
@@ -1156,9 +1155,10 @@
                         circuloEntrada.style.cursor = 'pointer';
                         circuloEntrada.addEventListener('click', function(e) {
                             e.stopPropagation();
-                            const idx = manosData.findIndex(d => d.lineaId === via.linea_id);
-                            if (idx !== -1) {
-                                mostrarPopupManosConIndice(idx, manosData);
+                            const grupo = gruposMap[via.linea_id];
+                            if (grupo && grupo.length > 0) {
+                                const idx = grupo.findIndex(d => d.lineaId === via.linea_id);
+                                mostrarPopupManosConIndice(idx, grupo);
                             }
                         });
                 
@@ -1187,9 +1187,10 @@
                         bigCircle.style.cursor = 'pointer';
                         bigCircle.addEventListener('click', function(e) {
                             e.stopPropagation();
-                            const idx = manosData.findIndex(d => d.lineaId === via.linea_id);
-                            if (idx !== -1) {
-                                mostrarPopupManosConIndice(idx, manosData);
+                            const grupo = gruposMap[via.linea_id];
+                            if (grupo && grupo.length > 0) {
+                                const idx = grupo.findIndex(d => d.lineaId === via.linea_id);
+                                mostrarPopupManosConIndice(idx, grupo);
                             }
                         });
                         const svgRoot = svgDoc.documentElement;
@@ -1497,18 +1498,39 @@
 
         function getTextoManos(via) { if (via.manos_juntas && via.manos_juntas.trim() !== "") return `Manos juntas: ${via.manos_juntas}`; let partes = []; if (via.mano_izq && via.mano_izq.trim() !== "") partes.push(`Izq: ${via.mano_izq}`); if (via.mano_der && via.mano_der.trim() !== "") partes.push(`Der: ${via.mano_der}`); return partes.length > 0 ? partes.join(" · ") : ""; }
 
+        // ===== MODIFICACIÓN: cargarYColorearSVGBloque construye gruposMap =====
         function cargarYColorearSVGBloque(bloque, slideIndex, vias) {
             const svgUrl = `${bloque.foto_base}.svg`;
             const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
             if (!mediaContainer) return;
 
-            // Datos de manos de entrada para este bloque
-            const manosData = vias.filter(v => v.manos_fotos).map(v => ({
-                lineaId: v.linea_id,
-                nombre: v.nombre || v.linea_id,
-                ruta: v.manos_fotos
-            }));
-            
+            // --- Construir grupos de variantes ---
+            const grupos = {}; // base -> array de {lineaId, nombre, ruta}
+            vias.forEach(via => {
+                if (!via.manos_fotos) return;
+                const lineaId = via.linea_id;
+                // Determinar la base: si tiene punto, la parte antes del punto; si no, el propio id
+                const base = lineaId.includes('.') ? lineaId.split('.')[0] : lineaId;
+                if (!grupos[base]) grupos[base] = [];
+                grupos[base].push({
+                    lineaId: lineaId,
+                    nombre: via.nombre || via.lineaId,
+                    ruta: via.manos_fotos
+                });
+            });
+
+            // Construir mapa: lineaId -> array de datos (grupo completo si hay >1, o array de 1)
+            const gruposMap = {};
+            Object.keys(grupos).forEach(base => {
+                const grupo = grupos[base];
+                // Si el grupo tiene más de un elemento, asignar el grupo completo a cada lineaId
+                // Si tiene uno solo, asignar ese único elemento (array de 1)
+                const arrayParaMostrar = grupo.length > 1 ? grupo : [grupo[0]];
+                grupo.forEach(item => {
+                    gruposMap[item.lineaId] = arrayParaMostrar;
+                });
+            });
+
             fetch(svgUrl)
                 .then(response => {
                     if (response.ok) {
@@ -1522,8 +1544,8 @@
                     const svgElement = svgDoc.documentElement;
                     if (!svgElement) return;
                     
-                    // Pasamos 'manosData' como cuarto parámetro
-                    aplicarColoresSVG(svgDoc, bloque, vias, manosData);
+                    // Pasamos gruposMap a aplicarColoresSVG
+                    aplicarColoresSVG(svgDoc, bloque, vias, gruposMap);
                     svgElement.setAttribute('preserveAspectRatio', 'none');
                     svgElement.style.width = '100%';
                     svgElement.style.height = '100%';
