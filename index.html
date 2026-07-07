@@ -272,36 +272,36 @@
         }
         
         /* ===== ESTILOS PARA LA PANTALLA MANUAL (DENTRO DE LA APP) ===== */
-        .manual-screen-container {
+        .manual-content {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 10px 0;
-            min-height: 80vh;
         }
-        .manual-screen-container .manual-title {
+        .manual-content .manual-title {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: #6674FF;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
-        .manual-screen-container .manual-image-container {
+        .manual-content .manual-image-container {
             width: 100%;
-            max-width: 800px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        .manual-screen-container .manual-image-container img {
+        .manual-content .manual-image-container img {
             width: 100%;
             height: auto;
             max-height: 70vh;
             object-fit: contain;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
         }
         
         .drawer {
@@ -389,7 +389,7 @@
             margin: 12px 20px;
         }
         
-        .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title, #legalManual .manual-title, .manual-screen-container .manual-title {
+        .cocogoose-font, h1, .ficha-footer, h2, h3, h4, .tab-btn, .sector-nombre, .bottom-tab-btn, .grafica-titulo, .croquis-titulo, .drawer-nav a, .drawer-nav .drawer-header, .drawer-section-title, #legalManual .manual-title, .manual-content .manual-title {
             font-family: 'Cocogoose', 'Arial Black', 'Impact', sans-serif;
         }
         .header-top { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
@@ -823,9 +823,9 @@
             </div>
         </div>
 
-        <!-- NUEVA PANTALLA: MANUAL DE USO -->
+        <!-- ===== PANTALLA: MANUAL DE USO (desde el menú) ===== -->
         <div id="screen-manual" class="screen">
-            <div class="manual-screen-container">
+            <div class="manual-content">
                 <div class="manual-title">📖 MANUAL DE USO</div>
                 <div class="manual-image-container">
                     <img src="fotos/MANUAL_DE_USO.jpg" alt="Manual de uso" onerror="this.src='https://picsum.photos/id/20/800/600'">
