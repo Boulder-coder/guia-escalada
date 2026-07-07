@@ -446,18 +446,56 @@
             padding: 15px;
             border-radius: 20px;
             background: #ffffff;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
         }
         #manosModal .modal-container h4 {
             margin-bottom: 10px;
             font-size: 1rem;
             color: #2c2c2c;
+            flex-shrink: 0;
         }
-        #manosModal .modal-container img {
+        #manosModal .modal-container .manos-swiper {
+            flex: 1;
             width: 100%;
+            min-height: 200px;
             max-height: 70vh;
+        }
+        #manosModal .modal-container .manos-swiper .swiper-wrapper {
+            align-items: center;
+        }
+        #manosModal .modal-container .manos-swiper .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #manosModal .modal-container .manos-swiper img {
+            width: 100%;
+            height: auto;
+            max-height: 60vh;
             object-fit: contain;
             border-radius: 10px;
             background: #f0f0f0;
+        }
+        #manosModal .modal-container .swiper-pagination {
+            position: relative;
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+        #manosModal .modal-container .swiper-button-next,
+        #manosModal .modal-container .swiper-button-prev {
+            color: #6674FF;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            top: 50%;
+            margin-top: -14px;
+        }
+        #manosModal .modal-container .swiper-button-next:after,
+        #manosModal .modal-container .swiper-button-prev:after {
+            font-size: 12px;
         }
         #manosModal .modal-close-btn {
             margin-top: 12px;
@@ -470,6 +508,7 @@
             font-size: 0.9rem;
             cursor: pointer;
             transition: 0.1s;
+            flex-shrink: 0;
         }
         #manosModal .modal-close-btn:active {
             transform: scale(0.97);
@@ -724,11 +763,16 @@
         </div>
     </div>
 
-    <!-- ===== NUEVO MODAL PARA MANOS DE ENTRADA ===== -->
+    <!-- ===== MODAL PARA MANOS DE ENTRADA CON SWIPER ===== -->
     <div id="manosModal" class="modal-overlay">
         <div class="modal-container">
             <h4 id="manosModalTitle">Manos de entrada</h4>
-            <img id="manosModalImg" src="" alt="Manos de entrada">
+            <div class="manos-swiper swiper">
+                <div class="swiper-wrapper" id="manosSwiperWrapper"></div>
+                <div class="swiper-pagination" id="manosSwiperPagination"></div>
+                <div class="swiper-button-next" id="manosSwiperNext"></div>
+                <div class="swiper-button-prev" id="manosSwiperPrev"></div>
+            </div>
             <button id="manosModalClose" class="modal-close-btn">Cerrar</button>
         </div>
     </div>
@@ -741,6 +785,10 @@
         const STORAGE_PWD_VERSION = 'boulder_password_version';
         const STORAGE_TERMS = 'boulder_terms_accepted';
         const STORAGE_PRIVACY = 'boulder_privacy_accepted';
+
+        // ---- Variables globales para el modal de manos ----
+        let manosSwiperInstance = null;
+        let currentManosData = []; // Array de {lineaId, nombre, ruta}
 
         async function sha256(message) {
             const encoder = new TextEncoder();
@@ -1013,27 +1061,76 @@
             return null;
         }
 
-        // ===== NUEVA FUNCIÓN: Mostrar pop-up de manos =====
-        function mostrarPopupManos(rutaImagen, nombreLinea) {
+        // ===== NUEVA FUNCIÓN: Mostrar pop-up de manos con Swiper =====
+        function mostrarPopupManosConIndice(indice) {
+            if (!currentManosData || currentManosData.length === 0) return;
+            if (indice < 0 || indice >= currentManosData.length) return;
+
             const modal = document.getElementById('manosModal');
-            const img = document.getElementById('manosModalImg');
+            const wrapper = document.getElementById('manosSwiperWrapper');
             const title = document.getElementById('manosModalTitle');
-            // Asumimos que la imagen es .jpg (como en el resto de la app)
-            const url = rutaImagen + '.jpg';
-            img.src = url;
-            img.onerror = function() {
-                // Si falla, intentar con .png
-                this.src = rutaImagen + '.png';
-            };
-            title.textContent = 'Manos de entrada · ' + nombreLinea;
+
+            // Construir slides
+            wrapper.innerHTML = '';
+            currentManosData.forEach((item, idx) => {
+                const slide = document.createElement('div');
+                slide.className = 'swiper-slide';
+                const img = document.createElement('img');
+                // Intentar .jpg, si falla .png (manejado por onerror)
+                img.src = item.ruta + '.jpg';
+                img.onerror = function() {
+                    this.src = item.ruta + '.png';
+                };
+                img.alt = 'Manos de ' + item.nombre;
+                slide.appendChild(img);
+                wrapper.appendChild(slide);
+            });
+
+            // Actualizar título
+            title.textContent = 'Manos de entrada · ' + currentManosData[indice].nombre;
+
+            // Mostrar modal
             modal.classList.add('active');
+
+            // Si ya existe un Swiper, destruirlo
+            if (manosSwiperInstance) {
+                manosSwiperInstance.destroy(true, true);
+                manosSwiperInstance = null;
+            }
+
+            // Inicializar Swiper
+            manosSwiperInstance = new Swiper('.manos-swiper', {
+                initialSlide: indice,
+                navigation: {
+                    nextEl: '#manosSwiperNext',
+                    prevEl: '#manosSwiperPrev',
+                },
+                pagination: {
+                    el: '#manosSwiperPagination',
+                    clickable: true,
+                },
+                on: {
+                    slideChange: function() {
+                        const realIndex = this.realIndex;
+                        if (currentManosData[realIndex]) {
+                            title.textContent = 'Manos de entrada · ' + currentManosData[realIndex].nombre;
+                        }
+                    }
+                }
+            });
         }
 
         function cerrarPopupManos() {
             document.getElementById('manosModal').classList.remove('active');
+            if (manosSwiperInstance) {
+                manosSwiperInstance.destroy(true, true);
+                manosSwiperInstance = null;
+            }
+            // Limpiar slides para no dejar imágenes cargadas
+            document.getElementById('manosSwiperWrapper').innerHTML = '';
         }
 
-        // Evento para cerrar el modal de manos
+        // Eventos para cerrar el modal de manos
         document.getElementById('manosModalClose').addEventListener('click', cerrarPopupManos);
         document.getElementById('manosModal').addEventListener('click', function(e) {
             if (e.target === this) cerrarPopupManos();
@@ -1057,11 +1154,14 @@
                     circuloEntrada.setAttribute('stroke-width', '2');
                     
                     if (via.manos_fotos) {
-                        // 1. Evento en el círculo original (mantenemos por si acaso)
+                        // 1. Evento en el círculo original
                         circuloEntrada.style.cursor = 'pointer';
                         circuloEntrada.addEventListener('click', function(e) {
                             e.stopPropagation();
-                            mostrarPopupManos(via.manos_fotos, via.nombre || via.linea_id);
+                            const idx = currentManosData.findIndex(d => d.lineaId === via.linea_id);
+                            if (idx !== -1) {
+                                mostrarPopupManosConIndice(idx);
+                            }
                         });
                 
                         // 2. Crear un círculo transparente más grande para ampliar el área de clic
@@ -1082,16 +1182,18 @@
                         const bigCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                         bigCircle.setAttribute('cx', cx);
                         bigCircle.setAttribute('cy', cy);
-                        bigCircle.setAttribute('r', radio * 1.1); // área de clic 1.1 veces mayor
+                        bigCircle.setAttribute('r', radio * 1.1);
                         bigCircle.setAttribute('fill', 'transparent');
                         bigCircle.setAttribute('stroke', 'transparent');
                         bigCircle.setAttribute('pointer-events', 'all');
                         bigCircle.style.cursor = 'pointer';
                         bigCircle.addEventListener('click', function(e) {
                             e.stopPropagation();
-                            mostrarPopupManos(via.manos_fotos, via.nombre || via.linea_id);
+                            const idx = currentManosData.findIndex(d => d.lineaId === via.linea_id);
+                            if (idx !== -1) {
+                                mostrarPopupManosConIndice(idx);
+                            }
                         });
-                        // Añadir al SVG (después del original, por encima)
                         const svgRoot = svgDoc.documentElement;
                         svgRoot.appendChild(bigCircle);
                     }
@@ -1401,6 +1503,13 @@
             const svgUrl = `${bloque.foto_base}.svg`;
             const mediaContainer = document.getElementById(`mediaContainer-${slideIndex}`);
             if (!mediaContainer) return;
+
+            // Guardar datos de manos de entrada para el pop-up
+            currentManosData = vias.filter(v => v.manos_fotos).map(v => ({
+                lineaId: v.linea_id,
+                nombre: v.nombre || v.linea_id,
+                ruta: v.manos_fotos
+            }));
             
             fetch(svgUrl)
                 .then(response => {
@@ -1542,7 +1651,7 @@
         function setupSwipeToCloseDrawer() {
             let touchStartX = 0;
             let touchEndX = 0;
-            const minSwipeDistance = 50; // distancia mínima en píxeles para considerar swipe
+            const minSwipeDistance = 50;
 
             function handleTouchStart(event) {
                 touchStartX = event.changedTouches[0].screenX;
@@ -1552,9 +1661,7 @@
                 touchEndX = event.changedTouches[0].screenX;
                 const deltaX = touchEndX - touchStartX;
                 const drawer = document.getElementById('drawer');
-                // Si el drawer está abierto y se desliza hacia la izquierda (delta negativo) o derecha (delta positivo) más de la distancia
                 if (drawer.classList.contains('open')) {
-                    // Deslizar hacia la izquierda (cerrar) o hacia la derecha (también cerramos)
                     if (Math.abs(deltaX) > minSwipeDistance) {
                         closeDrawer();
                     }
@@ -1563,7 +1670,6 @@
 
             const content = document.querySelector('.app-content');
             const drawer = document.getElementById('drawer');
-            // Añadir listeners al contenido principal (la zona de scroll) y al propio drawer
             if (content) {
                 content.addEventListener('touchstart', handleTouchStart);
                 content.addEventListener('touchend', handleTouchEnd);
@@ -1575,8 +1681,6 @@
         }
 
         // Llamar a la función después de que el DOM esté listo (dentro de initMenu o similar)
-        // La añadimos en initMenu para que se ejecute tras la carga de la app
-        // (Ya existe initMenu, la modificamos para incluir esta configuración)
         const originalInitMenu = initMenu;
         initMenu = function() {
             originalInitMenu();
@@ -1723,7 +1827,6 @@
             const canvasId = tipo === 'todas' ? 'grafica-todas' : 'grafica-flash';
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
-            // Agrupar por grado
             const conteo = {};
             data.forEach(item => {
                 const grado = item.grado || '*';
