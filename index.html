@@ -266,6 +266,10 @@
         #legalManual .legal-btn {
             max-width: 200px;
         }
+        /* El botón se oculta/muestra con JavaScript */
+        #acceptManual {
+            display: none;
+        }
         
         .drawer {
             position: fixed;
@@ -709,7 +713,7 @@
         </div>
     </div>
 
-    <!-- ===== NUEVO OVERLAY: MANUAL DE USO ===== -->
+    <!-- ===== OVERLAY: MANUAL DE USO ===== -->
     <div id="legalManual" class="legal-overlay">
         <div class="legal-content">
             <div class="manual-title">📖 MANUAL DE USO</div>
@@ -739,12 +743,10 @@
             </div>
             <div class="drawer-bottom-links">
                 <div class="drawer-divider"></div>
-                <!-- NUEVO ENLACE: MIS ASCENSIONES -->
                 <div id="drawerMisAscensionesBtn" class="drawer-bottom-link">📊 MIS ASCENSIONES</div>
                 <div class="drawer-divider"></div>
                 <div id="drawerCondicionesBtn" class="drawer-bottom-link">📋 CONDICIONES</div>
                 <div id="drawerProteccionBtn" class="drawer-bottom-link">🔒 PROTECCIÓN DE DATOS</div>
-                <!-- NUEVO: MANUAL DE USO -->
                 <div id="drawerManualBtn" class="drawer-bottom-link">📖 MANUAL DE USO</div>
             </div>
         </div>
@@ -788,7 +790,6 @@
             </div>
         </div>
 
-        <!-- NUEVA PANTALLA: MIS ASCENSIONES -->
         <div id="screen-mis-ascensiones" class="screen">
             <div id="mis-ascensiones-content"></div>
         </div>
@@ -836,13 +837,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // ===== CÓDIGO EXISTENTE (con modificaciones para añadir eventos en círculos de entrada) =====
+        // ===== CONFIGURACIÓN =====
         const PASSWORD_VERSION = "2026.2";
         const VALID_PASSWORD_HASH = "749aa338a7abca24db6a4f63ea187c976f0e7d1abf43ce6513d45e355f98e037";
         const STORAGE_PWD_VERSION = 'boulder_password_version';
         const STORAGE_TERMS = 'boulder_terms_accepted';
         const STORAGE_PRIVACY = 'boulder_privacy_accepted';
-        const STORAGE_MANUAL = 'boulder_manual_accepted'; // NUEVO
+        const STORAGE_MANUAL = 'boulder_manual_accepted';
 
         // ---- Variables globales para el modal de manos ----
         let manosSwiperInstance = null;
@@ -926,10 +927,20 @@
             initAppAfterLegal();
         }
 
-        // Función que muestra el manual si no está aceptado, o continúa directamente
+        // ===== FUNCIÓN PARA MOSTRAR EL MANUAL (CON O SIN BOTÓN) =====
+        function mostrarManual(conBoton) {
+            const boton = document.getElementById('acceptManual');
+            if (conBoton) {
+                boton.style.display = 'block';
+            } else {
+                boton.style.display = 'none';
+            }
+            document.getElementById('legalManual').classList.add('active');
+        }
+
         function proceedToManual() {
             if (!isManualAccepted()) {
-                document.getElementById('legalManual').classList.add('active');
+                mostrarManual(true); // flujo inicial: con botón
             } else {
                 initAppAfterLegal();
             }
@@ -949,10 +960,9 @@
             }
         }
 
-        // Función para abrir el manual desde el drawer
+        // Función para abrir el manual desde el drawer (sin botón)
         function openManualFromDrawer() {
-            document.getElementById('legalManual').classList.add('active');
-            // El botón Aceptar siempre está visible y su evento está definido abajo.
+            mostrarManual(false); // sin botón
         }
 
         async function enableScreenProtection() {
@@ -1814,7 +1824,7 @@
             setupSwipeToCloseDrawer();
         };
 
-        // ===== NUEVO: FUNCIONES PARA MIS ASCENSIONES =====
+        // ===== FUNCIONES PARA MIS ASCENSIONES =====
         function cargarMisAscensiones() {
             if (!datosApp) {
                 document.getElementById('mis-ascensiones-content').innerHTML = '<div class="loader">Cargando datos...</div>';
