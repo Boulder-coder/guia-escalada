@@ -225,6 +225,27 @@
             color: white;
         }
         
+        /* ===== ESTILOS PARA MANUAL DE USO ===== */
+        #legalManual .manual-image-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        #legalManual .manual-image-container img {
+            max-width: 100%;
+            max-height: 75vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        #legalManual .legal-buttons {
+            border-top: none;
+            margin-top: 10px;
+            padding-top: 0;
+        }
+        
         .drawer {
             position: fixed;
             top: 0;
@@ -667,6 +688,18 @@
         </div>
     </div>
 
+    <!-- ===== NUEVO OVERLAY: MANUAL DE USO ===== -->
+    <div id="legalManual" class="legal-overlay">
+        <div class="legal-content" style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:10px 0;">
+            <div class="manual-image-container">
+                <img src="fotos/MANUAL_DE_USO.jpg" alt="Manual de uso" onerror="this.src='https://picsum.photos/id/20/800/600'">
+            </div>
+        </div>
+        <div class="legal-buttons" style="justify-content:center;">
+            <button id="acceptManual" class="legal-btn btn-accept" style="max-width:200px;">ACEPTAR</button>
+        </div>
+    </div>
+
     <div class="app-header">
         <div class="header-top">
             <button class="menu-toggle" id="menuToggle">☰</button>
@@ -689,6 +722,8 @@
                 <div class="drawer-divider"></div>
                 <div id="drawerCondicionesBtn" class="drawer-bottom-link">📋 CONDICIONES</div>
                 <div id="drawerProteccionBtn" class="drawer-bottom-link">🔒 PROTECCIÓN DE DATOS</div>
+                <!-- NUEVO: MANUAL DE USO -->
+                <div id="drawerManualBtn" class="drawer-bottom-link">📖 MANUAL DE USO</div>
             </div>
         </div>
     </div>
@@ -785,6 +820,7 @@
         const STORAGE_PWD_VERSION = 'boulder_password_version';
         const STORAGE_TERMS = 'boulder_terms_accepted';
         const STORAGE_PRIVACY = 'boulder_privacy_accepted';
+        const STORAGE_MANUAL = 'boulder_manual_accepted'; // NUEVO
 
         // ---- Variables globales para el modal de manos ----
         let manosSwiperInstance = null;
@@ -842,20 +878,40 @@
             return localStorage.getItem(STORAGE_PRIVACY) === 'true';
         }
 
+        function isManualAccepted() {
+            return localStorage.getItem(STORAGE_MANUAL) === 'true';
+        }
+
         function acceptTerms() {
             localStorage.setItem(STORAGE_TERMS, 'true');
             document.getElementById('legalCondiciones').classList.remove('active');
             if (!isPrivacyAccepted()) {
                 document.getElementById('legalProteccion').classList.add('active');
             } else {
-                initAppAfterLegal();
+                // Si privacidad ya estaba aceptada, pasar al manual
+                proceedToManual();
             }
         }
 
         function acceptPrivacy() {
             localStorage.setItem(STORAGE_PRIVACY, 'true');
             document.getElementById('legalProteccion').classList.remove('active');
+            proceedToManual();
+        }
+
+        function acceptManual() {
+            localStorage.setItem(STORAGE_MANUAL, 'true');
+            document.getElementById('legalManual').classList.remove('active');
             initAppAfterLegal();
+        }
+
+        // Función que muestra el manual si no está aceptado, o continúa directamente
+        function proceedToManual() {
+            if (!isManualAccepted()) {
+                document.getElementById('legalManual').classList.add('active');
+            } else {
+                initAppAfterLegal();
+            }
         }
 
         function decline() {
@@ -868,8 +924,15 @@
             } else if (!isPrivacyAccepted()) {
                 document.getElementById('legalProteccion').classList.add('active');
             } else {
-                initAppAfterLegal();
+                proceedToManual();
             }
+        }
+
+        // Función para abrir el manual desde el drawer (solo muestra, no cambia estado)
+        function openManualFromDrawer() {
+            document.getElementById('legalManual').classList.add('active');
+            // El botón de aceptar cerrará el overlay sin modificar el estado (porque ya está aceptado o simplemente lo cierra)
+            // Pero si por casualidad no está aceptado, al hacer clic en Aceptar lo aceptará (comportamiento deseado).
         }
 
         async function enableScreenProtection() {
@@ -1706,6 +1769,12 @@
                 if (datosApp) cargarMisAscensiones(); 
                 else setTimeout(() => cargarMisAscensiones(), 500);
             });
+            // NUEVO: Evento para MANUAL DE USO
+            document.getElementById('drawerManualBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                closeDrawer();
+                openManualFromDrawer();
+            });
         }
 
         // ---- NUEVO: CERRAR DRAWER CON SWIPE (DESLIZAMIENTO) ----
@@ -1929,6 +1998,37 @@
         }
         // --------------------------------------------
 
+        // Eventos de los botones legales
+        document.getElementById('acceptCondiciones').addEventListener('click', acceptTerms);
+        document.getElementById('declineCondiciones').addEventListener('click', decline);
+        document.getElementById('acceptProteccion').addEventListener('click', acceptPrivacy);
+        document.getElementById('declineProteccion').addEventListener('click', decline);
+        document.getElementById('acceptManual').addEventListener('click', function() {
+            // Si no está aceptado, lo guardamos; si ya lo está, simplemente cerramos.
+            if (!isManualAccepted()) {
+                acceptManual();
+            } else {
+                document.getElementById('legalManual').classList.remove('active');
+            }
+        });
+
+        // También cerrar el manual haciendo clic fuera del contenido (opcional)
+        document.getElementById('legalManual').addEventListener('click', function(e) {
+            if (e.target === this) {
+                // Si no está aceptado, no se debe cerrar sin aceptar (en el flujo inicial).
+                // Pero si se abre desde el drawer, podemos cerrar.
+                // Para simplificar, cerramos siempre (el botón de aceptar ya guarda si es necesario).
+                // Si no está aceptado y se cierra haciendo clic fuera, no se acepta, lo cual puede ser problemático.
+                // Por eso, mejor no cerrar con clic fuera en el flujo inicial.
+                // Para el drawer, el usuario puede usar el botón Aceptar (que cierra).
+                // Deshabilitamos el cierre por clic fuera para evitar que se salte la aceptación.
+                // Si se quiere, se puede habilitar comprobando si ya está aceptado.
+                if (isManualAccepted()) {
+                    document.getElementById('legalManual').classList.remove('active');
+                }
+            }
+        });
+
         (async () => {
             const passwordOk = await checkAndShowPassword();
             if (passwordOk) proceedToLegal();
@@ -1936,10 +2036,6 @@
 
         document.getElementById('submitPassword').addEventListener('click', verifyPassword);
         document.getElementById('passwordInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') verifyPassword(); });
-        document.getElementById('acceptCondiciones').addEventListener('click', acceptTerms);
-        document.getElementById('declineCondiciones').addEventListener('click', decline);
-        document.getElementById('acceptProteccion').addEventListener('click', acceptPrivacy);
-        document.getElementById('declineProteccion').addEventListener('click', decline);
     </script>
 </body>
 </html>
